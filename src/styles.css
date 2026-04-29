@@ -1,1 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+@theme {
+
+  --font-montserrat: "Gontserrat-Regular", sans-serif;
+}
+
+@font-face {
+    font-family: "Gontserrat-ExtraBold";
+    src: url(/assets/fonts/Gontserrat-ExtraBold.ttf) format("truetype");
+}
+@font-face {
+    font-family: "Gontserrat-Bold";
+    src: url(/assets/fonts/Gontserrat-Bold.ttf) format("truetype");
+}
+@font-face {
+    font-family: "Gontserrat-Regular";
+    src: url(/assets/fonts/Gontserrat-Regular.ttf) format("truetype");
+}
+@font-face {
+    font-family: "Gontserrat-Light";
+    src: url(/assets/fonts/Gontserrat-Light.ttf) format("truetype");
+}
+
+
