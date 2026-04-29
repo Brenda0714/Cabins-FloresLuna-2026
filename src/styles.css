@@ -6,6 +6,8 @@
   --font-montserrat: "Gontserrat-Regular", sans-serif;
 }
 
+
+
 @font-face {
     font-family: "Gontserrat-ExtraBold";
     src: url(/assets/fonts/Gontserrat-ExtraBold.ttf) format("truetype");
@@ -23,4 +25,74 @@
     src: url(/assets/fonts/Gontserrat-Light.ttf) format("truetype");
 }
 
+/* Definición del movimiento: de invisible y abajo -> a visible y en su sitio */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
+/* La clase que aplicamos al HTML */
+.animate-fade-up {
+  /* Duración de 0.8 segundos, inicio suave, y se queda en el estado final */
+  animation: fadeInUp 1s ease-out forwards;
+}
+
+/* --- ANIMACIÓN KEN BURNS (ZOOM LENTO) --- */
+@keyframes heroZoom {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08); /* Crece un 8% */
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-hero-zoom {
+  /* 20 segundos para que sea un movimiento fluido y natural de naturaleza */
+  animation: heroZoom 20s ease-in-out infinite;
+}
+
+/* --- OVERLAY DE PROFUNDIDAD (OPCIONAL) --- */
+.bg-radial-gradient {
+  background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.2) 100%);
+}
+
+@keyframes pulseSlow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+.animate-pulse-slow {
+  animation: pulseSlow 8s ease-in-out infinite;
+}
+
+
+
+/* Definición de la animación */
+@keyframes fadeCenter {
+  0% {
+    opacity: 0;
+    transform: scale(2); /* Empieza pequeño */
+    filter: blur(4px);    /* Opcional: un ligero desenfoque para más suavidad */
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);   /* Tamaño original */
+    filter: blur(0);
+  }
+}
+
+/* Clase para aplicar la animación */
+.animate-fade-center {
+  /* 0.6s es un tiempo ideal para que se sienta fluido pero rápido */
+  animation: fadeCenter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
