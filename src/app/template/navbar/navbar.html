@@ -8,9 +8,9 @@
       C.P. 67363
     </div>
 
-    <div class="flex justify-center gap-12 py-4">
-      <img src="/assets/img/LOGO.png" alt="Flores de la Luna" class="h-40 object-contain animate-fade-center">
-    </div>
+    <a [routerLink]="['/home']" class="flex justify-center gap-12 py-4">
+      <img src="/assets/img/LOGO.png" alt="Flores de la Luna" class="h-40 object-contain animate-fade-center cursor-pointer">
+    </a>
 
     <div class="font-montserrat text-right text-sm font-medium text-[#D18B73] animate-fade-up">
       +52 (812) 2329 9930
@@ -19,10 +19,13 @@
 
   <div class="">
     <div class="font-montserrat max-w-350 mx-auto px-3 py-3 flex justify-center gap-10">
-      <a href="#" class="font-bold text-lg uppercase tracking-widest text-olive-700 hover:text-[#D18B73] transition-colors animate-fade-up">Nosotros</a>
-      <a href="#" class="font-bold text-lg uppercase tracking-widest text-olive-700 hover:text-[#D18B73] transition-colors animate-fade-up">Galería</a>
-      <a href="#" class="font-bold text-lg uppercase tracking-widest text-olive-700 hover:text-[#D18B73] transition-colors animate-fade-up">Reservaciones</a>
-      <a href="#" class="font-bold text-lg uppercase tracking-widest text-olive-700 hover:text-[#D18B73] transition-colors animate-fade-up">Cómo llegar</a>
+      <a [routerLink]="['/about-us']" routerLinkActive="!text-[#D18B73]" class="font-bold text-lg uppercase tracking-widest text-olive-700 hover:text-[#D18B73] transition-colors animate-fade-up">Nosotros</a>
+      <a [routerLink]="['/gallery']" routerLinkActive="!text-[#D18B73]" class="font-bold text-lg uppercase tracking-widest text-olive-700 hover:text-[#D18B73] transition-colors animate-fade-up">Galería</a>
+      <a [routerLink]="['/reservations']" routerLinkActive="!text-[#D18B73]" class="font-bold text-lg uppercase tracking-widest text-olive-700 hover:text-[#D18B73] transition-colors animate-fade-up">Reservaciones</a>
+      <a [routerLink]="['/how-to-get']" routerLinkActive="!text-[#D18B73]" class="font-bold text-lg uppercase tracking-widest text-olive-700 hover:text-[#D18B73] transition-colors animate-fade-up">Cómo llegar</a>
+      <a [routerLink]="['/cancellations']" routerLinkActive="!text-[#D18B73]" class="font-bold text-lg uppercase tracking-widest text-olive-700 hover:text-[#D18B73] transition-colors animate-fade-up">Cancelaciones</a>
+      <a [routerLink]="['/regulation']" routerLinkActive="!text-[#D18B73]" class="font-bold text-lg uppercase tracking-widest text-olive-700 hover:text-[#D18B73] transition-colors animate-fade-up">Reglamento</a>
+
     </div>
   </div>
 
