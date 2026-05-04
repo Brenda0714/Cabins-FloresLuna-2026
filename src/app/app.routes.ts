@@ -3,7 +3,6 @@ import { Regulation } from './components/regulation/regulation';
 import { HowToGet } from './components/how-to-get/how-to-get';
 import { Reservations } from './components/reservations/reservations';
 import { Gallery } from './components/gallery/gallery';
-import { AboutUs } from './components/about-us/about-us';
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
@@ -11,10 +10,6 @@ export const routes: Routes = [
   {
     path: 'home',
     loadComponent: () => import('./components/home/home').then(c => c.Home)
-  },
-  {
-    path: 'about-us',
-    loadComponent: () => import('./components/about-us/about-us').then(c => c.AboutUs)
   },
   {
     path: 'gallery',
