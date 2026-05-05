@@ -1,1 +1,183 @@
-<p>reservations works!</p>,
+<main class="w-full overflow-x-hidden overflow-y-hidden  relative">
+@for (cabin of Cabins(); track cabin.id) {
+
+<section class="relative w-full py-20 px-6 md:px-20 flex items-center justify-center">
+
+  <!-- Fondo de la sección -->
+  <div class="absolute inset-0 z-0">
+    <img [src]="cabin.fondo" alt="Fondo" class="w-full h-full object-cover">
+  </div>
+
+  <!-- Contenedor del Card -->
+  <div class="relative z-10 max-w-6xl w-full mx-auto bg-transparent">
+
+    <!-- Card: IMPORTANTE 'overflow-visible' -->
+    <div class="relative grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-10  items-center rounded-[50px] p-6 md:p-10 z-10 overflow-visible">
+
+      <!-- Imagen de Cabaña -->
+      <div class="w-full lg:aspect-square shadow-lg z-20">
+        <img [src]="cabin.img" [alt]="cabin.title" class=" rounded-[30px] w-full h-full object-cover transition-transform duration-500 hover:scale-100">
+      </div>
+
+      <!-- Información de la Cabaña -->
+      <div class="flex flex-col px-4 z-20">
+        <div class="mb-6">
+          <span class="font-montserrat font-bold text-[#56B36E] text-3xl">${{cabin.precio}}</span>
+          <span class="font-montserrat text-olive-500 text-sm ml-1">por Noche</span>
+        </div>
+
+        <h3 class="font-montserrat font-extrabold text-4xl text-olive-800 uppercase mb-1">{{cabin.title}}</h3>
+        <p class="font-montserrat font-extrabold text-olive-600 text-lg mb-5 italic">{{cabin.subtitle}}</p>
+
+        <!-- Lista de Amenidades -->
+        <ul class="gap-y-4 mb-8">
+          @for (item of cabin.text; track item) {
+          <li class="flex items-center gap-5 py-2">
+            <div class="bg-[#56B36E] p-1 rounded-full text-white"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div>
+            <span class="font-montserrat font-bold text-olive-500">{{item}}</span>
+          </li>}
+
+        </ul>
+
+        <!-- Tags / Extras -->
+        <div class="border-t border-olive-300 pt-5 mb-5">
+          @for (amenities of cabin.amenities; track amenities) {
+          <h4 class="font-montserrat font-bold text-olive-400 uppercase tracking-widest leading-relaxed">
+            {{amenities}}
+          </h4>
+        }
+        </div>
+
+        <!-- Botón de Acción -->
+        <button (click)="scrollToForm()"  class="bg-[#D18B73] hover:bg-[#df9f88] cursor-pointer text-white font-montserrat font-extrabold py-4 rounded-full transition-all uppercase tracking-widest text-xs shadow-lg active:scale-115 hover:scale-110">
+          Hacer la Reservación
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+</section>
+
+}
+
+<section id="form" class="relative w-full py-20 px-6 md:px-20 flex items-center justify-center">
+  <!-- Contenedor de la Imagen: Usamos 'block' y 'w-full' para que ocupe todo el ancho y su altura sea natural -->
+  <div class="absolute inset-0 z-0">
+    <img src="assets/img/RESERVACIONES/section4.png" alt="Fondo" class="w-full h-full bg-gray-200 block">
+  </div>
+
+  <!-- Tarjeta del Formulario -->
+  <div  class="relative z-10 bg-white rounded-xl shadow-2xl p-8 md:p-12 w-full max-w-md text-center">
+
+    <h2 class="font-montserrat text-3xl font-bold text-olive-800 mb-2">Haz tu Reservación</h2>
+    <p class="font-montserrat text-sm text-olive-500 mb-8">Completa la información para hacer tu reservación</p>
+
+    <form class="space-y-4">
+      <!-- Input Nombre -->
+      <div>
+        <input type="text" placeholder="Nombre Completo"
+          class="font-montserrat w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
+      </div>
+
+      <!-- Input Correo -->
+      <div>
+        <input type="email" placeholder="Correo"
+          class="font-montserrat w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
+      </div>
+
+      <!-- Input Teléfono -->
+      <div>
+        <input type="number" placeholder="Teléfono"
+          class="font-montserrat w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
+      </div>
+
+      <!-- Input Llegada -->
+      <div>
+        <input type="text" placeholder="Llegada" onfocus="(this.type='date')"
+          class="font-montserrat w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
+      </div>
+
+      <!-- Input Salida -->
+      <div>
+        <input type="text" placeholder="Salida" onfocus="(this.type='date')"
+          class="font-montserrat w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
+      </div>
+
+      <!-- Select Tipo de Cabaña -->
+      <div class="relative w-full">
+        <select class="font-montserrat w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-500 focus:ring-2 focus:ring-orange-400 outline-none transition-all appearance-none cursor-pointer">
+          <option value="" disabled selected>Tipo de Cabaña</option>
+          <option value="Orquídea" class="uppercase">Orquídea</option>
+          <option value="Girasol"  class="uppercase">Girasol</option>
+          <option value="Tulipán"  class="uppercase">Tulipán</option>
+          <option value="Cabaña Grande"  class="uppercase">Cabaña Grande</option>
+          <option value="Cabaña Grande"  class="uppercase">Cabaña Grande</option>
+        </select>
+
+        <!-- Icono de Flecha -->
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-5 text-olive-500">
+          <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Botón -->
+      <button type="submit"
+        class="w-full mt-6 bg-[#D18B73] hover:bg-[#df9f88] cursor-pointer text-white font-bold py-3 px-6 rounded-full uppercase tracking-wider text-sm transition-all shadow-lg active:scale-115 hover:scale-110">
+        Hacer la reservación
+      </button>
+    </form>
+
+  </div>
+</section>
+
+
+      <!-- ÁRBOL DECORATIVO A LA IZQUIERDA -->
+      <!-- Cambiamos '-right-...' por '-left-...' -->
+      <div class="absolute right-0 md:-right-130 top-50 h-full w-250 md:w-300 z-0 pointer-events-none overflow-visible">
+        <!-- 'object-left-top' para anclar las ramas a la esquina superior izquierda -->
+        <img src="assets/img/RESERVACIONES/Recurso 9.png"
+             class="w-full h-full object-contain object-top-right opacity-90 transition-transform duration-700">
+      </div>
+
+
+            <!-- ÁRBOL DECORATIVO A LA DERECHA -->
+      <!-- Cambiamos '-right-...' por '-left-...' -->
+      <div class="absolute left-500 md:-left-600 -top-200 h-full w-250 md:w-300 z-0 pointer-events-none overflow-visible rotate-90">
+        <!-- 'object-left-top' para anclar las ramas a la esquina superior izquierda -->
+        <img src="assets/img/RESERVACIONES/Recurso 9.png"
+             class="w-full h-full object-contain object-top-left opacity-90 transition-transform duration-700">
+      </div>
+
+
+
+
+            <!-- ÁRBOL DECORATIVO A LA IZQUIERDA -->
+      <!-- Cambiamos '-right-...' por '-left-...' -->
+      <div class="absolute right-0 md:-right-130 top-500 h-full w-250 md:w-300 z-0 pointer-events-none overflow-visible">
+        <!-- 'object-left-top' para anclar las ramas a la esquina superior izquierda -->
+        <img src="assets/img/RESERVACIONES/Recurso 9.png"
+             class="w-full h-full object-contain object-top-right opacity-90 transition-transform duration-700">
+      </div>
+
+
+            <!-- ÁRBOL DECORATIVO A LA DERECHA -->
+      <!-- Cambiamos '-right-...' por '-left-...' -->
+      <div class="absolute left-500 md:-left-600 top-250 h-full w-250 md:w-300 z-0 pointer-events-none overflow-visible rotate-90">
+        <!-- 'object-left-top' para anclar las ramas a la esquina superior izquierda -->
+        <img src="assets/img/RESERVACIONES/Recurso 9.png"
+             class="w-full h-full object-contain object-top-left opacity-90 transition-transform duration-700">
+      </div>
+
+
+</main>
+
+
+
+
+
+
+
+

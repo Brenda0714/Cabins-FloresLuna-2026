@@ -10,7 +10,7 @@
     <!-- LADO IZQUIERDO -->
     <div class="grid gap-4">
       <!-- Imagen Larga Vertical -->
-      <div class="group relative overflow-hidden rounded-3xl h-150 cursor-pointer animate-reveal delay-1" (click)="openModal(0)">
+      <div class="group relative overflow-hidden rounded-[10px] h-150 cursor-pointer animate-reveal delay-1" (click)="openModal(0)">
         <img src="assets/img/GALERIA/tu-imagen-1.png" alt="Cabaña" class="w-full h-full object-cover cursor-pointer transition-transform duration-500 group-hover:scale-110">
       <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-[inset_0_0_100px_rgba(0,0,0,0.5)]">
         <span class="text-white font-montserrat text-xl font-bold tracking-[0.3em] uppercase border-b-2 border-white pb-1 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
@@ -19,7 +19,7 @@
       </div>
       </div>
       <!-- Imagen Horizontal -->
-      <div class="group relative overflow-hidden rounded-3xl h-75 cursor-pointer animate-reveal delay-4" (click)="openModal(3)">
+      <div class="group relative overflow-hidden rounded-[10px] h-75 cursor-pointer animate-reveal delay-4" (click)="openModal(3)">
         <img src="assets/img/GALERIA/tu-imagen-4.png"  alt="Vista" class="w-full h-full object-cover cursor-pointer transition-transform duration-500 group-hover:scale-110">
       <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-[inset_0_0_100px_rgba(0,0,0,0.5)]">
         <span class="text-white font-montserrat text-xl font-bold tracking-[0.3em] uppercase border-b-2 border-white pb-1 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
@@ -28,7 +28,7 @@
       </div>
       </div>
       <!-- Imagen Horizontal 2 -->
-      <div class="group relative overflow-hidden rounded-3xl h-75 cursor-pointer animate-reveal delay-5" (click)="openModal(1)">
+      <div class="group relative overflow-hidden rounded-[10px] h-75 cursor-pointer animate-reveal delay-5" (click)="openModal(1)">
         <img src="assets/img/GALERIA/tu-imagen-5.png"  alt="Fachada" class="w-full h-full object-cover cursor-pointer transition-transform duration-500 group-hover:scale-110">
       <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-[inset_0_0_100px_rgba(0,0,0,0.5)]">
         <span class="text-white font-montserrat text-xl font-bold tracking-[0.3em] uppercase border-b-2 border-white pb-1 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
@@ -41,7 +41,7 @@
     <!-- LADO DERECHO -->
     <div class="grid gap-4">
       <!-- Imagen Horizontal Superior -->
-      <div class="group relative overflow-hidden rounded-3xl h-75 cursor-pointer animate-reveal delay-2" (click)="openModal(4)">
+      <div class="group relative overflow-hidden rounded-[10px] h-75 cursor-pointer animate-reveal delay-2" (click)="openModal(4)">
         <img src="assets/img/GALERIA/tu-imagen-5.png"  alt="Exterior" class="w-full h-full object-cover cursor-pointer transition-transform duration-500 group-hover:scale-110">
       <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-[inset_0_0_100px_rgba(0,0,0,0.5)]">
         <span class="text-white font-montserrat text-xl font-bold tracking-[0.3em] uppercase border-b-2 border-white pb-1 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
@@ -50,7 +50,7 @@
       </div>
       </div>
       <!-- Imagen Horizontal Media -->
-      <div class="group relative overflow-hidden rounded-3xl h-75 cursor-pointer animate-reveal delay-3" (click)="openModal(2)">
+      <div class="group relative overflow-hidden rounded-[10px] h-75 cursor-pointer animate-reveal delay-3" (click)="openModal(2)">
         <img src="assets/img/GALERIA/tu-imagen-3.png"  alt="Entorno" class="w-full h-full object-cover cursor-pointer transition-transform duration-500 group-hover:scale-110">
       <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-[inset_0_0_100px_rgba(0,0,0,0.5)]">
         <span class="text-white font-montserrat text-xl font-bold tracking-[0.3em] uppercase border-b-2 border-white pb-1 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
@@ -59,7 +59,7 @@
       </div>
       </div>
       <!-- Imagen Larga Vertical Inferior -->
-      <div class="group relative overflow-hidden rounded-3xl h-150 cursor-pointer animate-reveal delay-6" (click)="openModal(5)">
+      <div class="group relative overflow-hidden rounded-[10px] h-150 cursor-pointer animate-reveal delay-6" (click)="openModal(5)">
         <img src="assets/img/GALERIA/tu-imagen-6.png"  alt="Piscina" class="w-full h-full object-cover cursor-pointer transition-transform duration-500 group-hover:scale-110">
       <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-[inset_0_0_100px_rgba(0,0,0,0.5)]">
         <span class="text-white font-montserrat text-xl font-bold tracking-[0.3em] uppercase border-b-2 border-white pb-1 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
@@ -100,7 +100,7 @@
               [style.transform]="'translateX(-' + (currentIndex() * (100 / testimonials().length)) + '%)'">
 
             @for (item of extendedTestimonials(); track $index) {
-              <div class="group/item relative min-w-full md:min-w-[33.33%] lg:min-w-[25%] h-112.5 overflow-hidden">
+              <div class="group/item relative min-w-full md:min-w-[33.33%] lg:min-w-[25%] h-112.5 overflow-hidden rounded-[10px]">
                 <img [src]="item.img"
                     [alt]="item.alt"
                     class="w-full h-full border-radius object-cover brightness-90 transition-all duration-500 cursor-pointer group-hover/item:scale-110 group-hover/item:brightness-50">
