@@ -1,1 +1,105 @@
-<p>how-to-get works!</p>,
+<section class="relative w-full min-h-screen flex flex-col items-center py-10 px-6 md:px-20 mt-5 bg-[#f2f2f0]">
+
+  <h2 class="font-montserrat text-5xl font-extrabold tracking-widest uppercase mt-20 text-olive-600">
+    Cómo llegar
+  </h2>
+
+<div class="items-center py-10 px-80 text-center">
+    <h5 class="font-montserrat text-xl tracking-widest mb-10 mt-20 text-olive-400">
+    Las Cabañas FLORES DE LUNA, se encuentran en la comunidad del Porvenir.
+    Estamos a tan solo 15 minutos del Municipio de Allende.  A 5 minutos del Rio Fraile y a 8 minutos en auto (33 km) del Pueblo Mágico de Santiago.
+    </h5>
+
+  <div class="grid grid-cols-12 gap-6 items-center">
+
+    <!-- Columna del Icono (ocupa 3 de 12 en móvil, 2 en escritorio) -->
+    <div class="col-span-3 md:col-span-2 flex justify-center">
+      <img src="assets/img/COMO_LLEGAR/Icon_Car.png"
+          alt="Icono Coche"
+          class="w-45 h-45 md:w-50 md:h-50 object-contain">
+    </div>
+
+    <!-- Columna del Texto (ocupa 9 de 12 en móvil, 10 en escritorio) -->
+    <div class="col-span-9 md:col-span-10">
+      <h5 class="font-montserrat text-xl md:text-xl font-medium tracking-wide text-olive-400">
+        Seguir la Ruta 85 de Monterrey - Allende. Llegando al Municipio de Allende, dar vuelta a la Izquierda rumbo a la calle Simon Bolivar. Seguir esa ruta hasta llegar a la comunidad del Porvenir. Pasando el Pueblo, del lado izquierdo encontraran una entrada de piedra que los llevara a las cabañas <span class="font-bold">FLORES DE LUNA</span>.
+      </h5>
+    </div>
+
+  </div>
+</div>
+
+
+
+</section>
+
+
+
+
+<section class="relative w-full py-16 px-6 md:px-20 overflow-hidden">
+
+  <!-- Fondo de la sección: con inset-0 y z-0 queda detrás de todo -->
+  <div class="absolute inset-0 z-0">
+    <img
+      src="assets/img/COMO_LLEGAR/section1.png"
+      alt="Fondo decorativo"
+      class="w-full h-full object-cover">
+  </div>
+
+  <!-- Contenedor principal: z-10 para estar sobre el fondo -->
+  <div class="relative z-10 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+
+    <!-- LADO IZQUIERDO: Imagen Grande -->
+    <div class="w-full aspect-4/5 md:aspect-auto">
+      <img src="assets/img/COMO_LLEGAR/map3.png"
+           alt="Punto de referencia 1"
+           class="w-full h-full object-cover rounded-3xl shadow-lg">
+    </div>
+
+    <!-- LADO DERECHO: Dos imágenes apiladas -->
+    <div class="grid grid-rows-2 gap-8">
+      <div class="w-full aspect-video md:aspect-auto">
+        <img src="assets/img/COMO_LLEGAR/map1.png"
+             alt="Punto de referencia 2"
+             class="w-full h-full object-cover rounded-3xl shadow-lg">
+      </div>
+      <div class="w-full aspect-video md:aspect-auto">
+        <img src="assets/img/COMO_LLEGAR/map2.png"
+             alt="Punto de referencia 3"
+             class="w-full h-full object-cover rounded-3xl shadow-lg">
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+<section id="como-llegar" class="relative w-full py-10 px-10 md:px-20 overflow-hidden bg-gray-200">
+
+  <div class="max-w-8xl mx-auto">
+    <!-- Contenedor del Mapa con bordes redondeados y sombra -->
+    <div class="relative w-full h-112.5 rounded-3xl overflow-hidden shadow-xl border-4 border-white">
+
+      <!-- Iframe de Google Maps -->
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14382.433878278!2d-99.9429273!3d25.3510703!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8662d517b633acfb%3A0xc80870df1053b893!2sRio%20El%20Fraile!5e0!3m2!1ses-419!2smx!4v1714940000000!5m2!1ses-419!2smx"
+        class="absolute inset-0 w-full h-full border-0"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+
+    </div>
+
+    <!-- Botón opcional para abrir directamente en la App de Google Maps -->
+    <div class="flex justify-center mt-16">
+      <a href="https://maps.app.goo.gl/1j6GsXKm4B8GUrrW7" target="_blank"
+         class=" hover:scale-110 bg-[#D18B73] hover:bg-[#df9f88] text-white font-montserrat font-extrabold py-4 px-10 rounded-full transition-all uppercase tracking-widest text-xs shadow-lg active:scale-95 flex items-center gap-3">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+        Abrir en Google Maps
+      </a>
+    </div>
+  </div>
+
+</section>
