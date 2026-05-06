@@ -11,12 +11,12 @@ import { CommonModule } from '@angular/common';
 export class Gallery implements OnInit, OnDestroy {
 
   images = signal<string[]>([
-    'assets/img/GALERIA/tu-imagen-1.png',
-    'assets/img/GALERIA/tu-imagen-2.png',
-    'assets/img/GALERIA/tu-imagen-3.png',
-    'assets/img/GALERIA/tu-imagen-4.png',
-    'assets/img/GALERIA/tu-imagen-5.png',
-    'assets/img/GALERIA/tu-imagen-6.png',
+    'assets/img/GALERIA/tu-imagen-1.jpg',
+    'assets/img/GALERIA/tu-imagen-2.jpg',
+    'assets/img/GALERIA/tu-imagen-3.jpg',
+    'assets/img/GALERIA/tu-imagen-4.jpg',
+    'assets/img/GALERIA/tu-imagen-5.jpg',
+    'assets/img/GALERIA/tu-imagen-6.jpg',
   ]);
 
   testimonials = signal([
