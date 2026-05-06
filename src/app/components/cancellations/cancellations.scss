@@ -1,3 +1,27 @@
 :host {
   display: block;
 }
+
+
+@keyframes balanceo {
+  0% { transform: rotate(-5deg); }
+  50% { transform: rotate(0deg); } /* Gira un poco a la derecha */
+  100% { transform: rotate(-5deg); }
+}
+
+.animate-viento {
+  animation: balanceo 6s ease-in-out infinite;
+  transform-origin: top center; /* El punto de rotación */
+}
+
+/* Para los que ya tienen una rotación base de 90 grados */
+@keyframes balanceo-90 {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(3deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.animate-viento-90 {
+  animation: balanceo-90 8s ease-in-out infinite;
+  transform-origin: top center;
+}
