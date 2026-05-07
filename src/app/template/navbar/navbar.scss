@@ -1,3 +1,16 @@
 :host {
   display: block;
 }
+
+
+.nav-link {
+  font-weight: 700; /* font-bold */
+  font-size: 1rem;  /* text-md */
+  letter-spacing: 0.1em; /* tracking-widest */
+  color: #3f4237; /* Reemplaza por tu color exacto de olive-700 */
+  transition: color 0.3s;
+
+  &:hover {
+    color: #D18B73;
+  }
+}

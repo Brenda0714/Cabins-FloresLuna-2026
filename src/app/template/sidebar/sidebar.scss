@@ -1,0 +1,111 @@
+:host {
+  display: block;
+}
+
+
+
+
+.side-link {
+  display: block;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  color: #474739;
+  padding: 1rem; // Aumenta el área de toque para móvil
+  transition: all 0.2s ease;
+  border-radius: 8px;
+
+  /* Hover para computadoras */
+  @media (hover: hover) {
+    &:hover {
+      color: #D18B73;
+      background-color: rgba(209, 139, 115, 0.05);
+    }
+  }
+
+  /* FEEDBACK TÁCTIL PARA MÓVIL (Lo que preguntaste) */
+  &:active {
+    color: #D18B73 !important;
+    background-color: rgba(209, 139, 115, 0.1); // Color terracota sutil al presionar
+    transform: scale(0.98); // Efecto de hundimiento al tocar
+    padding-left: 1.5rem; // Pequeño desplazamiento a la derecha
+  }
+}
+
+
+/* Contenedor del panel blanco */
+.sidebar-panel {
+position: fixed;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 18rem;
+  background-color: white;
+  z-index: 110;
+
+  /* Estado inicial: Fuera de pantalla */
+  transform: translateX(100%);
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s, visibility 0.4s;
+
+  &.is-active {
+    transform: translateX(0);
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* Fondo oscuro */
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+
+  /* Estado inicial: Invisible */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease-in-out, visibility 0.4s;
+
+  &.is-active {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.link-activo {
+  color: #D18B73 !important;
+  background-color: rgba(209, 139, 115, 0.05);
+  border-left: 4px solid #D18B73;
+}
+
+/* Animación de entrada para el panel blanco */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Animación de entrada para el fondo oscuro */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-custom-sidebar {
+  animation: slideInRight 0.3s ease-out forwards;
+}
+
+.animate-custom-backdrop {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+
+

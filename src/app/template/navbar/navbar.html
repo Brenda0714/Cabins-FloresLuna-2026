@@ -1,32 +1,43 @@
 <nav class="w-full bg-white z-50 relative">
 
-  <div class="max-w-350 mx-auto px-10 py-2 grid grid-cols-3 items-center">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-2 grid grid-cols-2 lg:grid-cols-3 items-center">
 
-    <div class="font-montserrat text-sm text-olive-500 font-light leading-relaxed animate-fade-up">
+    <div class="hidden lg:block font-montserrat text-sm text-olive-500 font-light leading-relaxed animate-fade-up">
       Jose Felipe Silva S/N<br>
       El Porvenir, N.L.<br>
       C.P. 67363
     </div>
 
-    <a [routerLink]="['/home']" class="flex justify-center gap-12 py-4">
-      <img src="/assets/img/LOGO.png" alt="Flores de la Luna" class="h-40 object-contain animate-fade-center cursor-pointer">
+    <a [routerLink]="['/home']" class="flex justify-start lg:justify-center py-4">
+      <img src="/assets/img/LOGO.png" alt="Flores de la Luna"
+           class="h-20 lg:h-40 object-contain animate-fade-center cursor-pointer">
     </a>
 
-    <div class="font-montserrat text-right text-sm font-medium text-[#D18B73] animate-fade-up">
-      +52 (812) 2329 9930
+    <div class="flex justify-end items-center gap-4 animate-fade-up">
+      <div class="hidden sm:block font-montserrat text-right text-sm font-medium text-[#D18B73]">
+        +52 (812) 2329 9930
+      </div>
+
+      <button (click)="isMenuOpen = true" class="lg:hidden text-olive-700 hover:scale-110 transition-transform">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+        </svg>
+      </button>
     </div>
   </div>
 
-  <div class="">
-    <div class="font-montserrat max-w-350 mx-auto px-3 py-3 flex justify-center gap-10 text-center">
-      <a [routerLink]="['/home']" routerLinkActive="!text-[#D18B73]" class="font-bold text-md  tracking-widest text-olive-700 hover:text-[#D18B73] transition-colors animate-fade-up">Nosotros</a>
-      <a [routerLink]="['/gallery']" routerLinkActive="!text-[#D18B73]" class="font-bold text-md  tracking-widest text-olive-700 hover:text-[#D18B73] transition-colors animate-fade-up">Galería</a>
-      <a [routerLink]="['/reservations']" routerLinkActive="!text-[#D18B73]" class="font-bold text-md  tracking-widest text-olive-700 hover:text-[#D18B73] transition-colors animate-fade-up">Reservaciones</a>
-      <a [routerLink]="['/how-to-get']" routerLinkActive="!text-[#D18B73]" class="font-bold text-md  tracking-widest text-olive-700 hover:text-[#D18B73] transition-colors animate-fade-up">Cómo llegar</a>
-      <a [routerLink]="['/cancellations']" routerLinkActive="!text-[#D18B73]" class="font-bold text-md  tracking-widest text-olive-700 hover:text-[#D18B73] transition-colors animate-fade-up">Políticas y Cancelaciones</a>
-      <a [routerLink]="['/regulation']" routerLinkActive="!text-[#D18B73]" class="font-bold text-md  tracking-widest text-olive-700 hover:text-[#D18B73] transition-colors animate-fade-up">Reglamento</a>
-
+  <div class="hidden lg:block border-t border-gray-50">
+    <div class="font-montserrat max-w-7xl mx-auto px-3 py-3 flex justify-center gap-10 text-center">
+      <a [routerLink]="['/home']" routerLinkActive="!text-[#D18B73]" class="nav-link">Nosotros</a>
+      <a [routerLink]="['/gallery']" routerLinkActive="!text-[#D18B73]" class="nav-link">Galería</a>
+      <a [routerLink]="['/reservations']" routerLinkActive="!text-[#D18B73]" class="nav-link">Reservaciones</a>
+      <a [routerLink]="['/how-to-get']" routerLinkActive="!text-[#D18B73]" class="nav-link">Cómo llegar</a>
+      <a [routerLink]="['/cancellations']" routerLinkActive="!text-[#D18B73]" class="nav-link">Políticas y Cancelaciones</a>
+      <a [routerLink]="['/regulation']" routerLinkActive="!text-[#D18B73]" class="nav-link">Reglamento</a>
     </div>
   </div>
 
 </nav>
+
+
+<app-sidebar [isOpen]="isMenuOpen" (close)="isMenuOpen = false"></app-sidebar>

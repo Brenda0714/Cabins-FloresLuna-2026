@@ -1,0 +1,35 @@
+<div class="fixed inset-0 z-100 lg:hidden flex justify-end pointer-events-none"
+     [class.pointer-events-none]="!isOpen">
+
+  <div class="sidebar-backdrop backdrop-blur-sm"
+       [class.is-active]="isOpen"
+       (click)="onClose()">
+  </div>
+
+  <div class="sidebar-panel shadow-2xl flex flex-col"
+       [class.is-active]="isOpen">
+
+    <div class="p-6 flex justify-between items-center border-b border-gray-100">
+      <span class="font-montserrat font-bold text-[#D18B73] tracking-widest uppercase text-lg">Menú</span>
+      <button (click)="onClose()" class="text-olive-700">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="flex flex-col p-3 gap-4 font-montserrat">
+      <a [routerLink]="['/home']" routerLinkActive="link-activo" (click)="onClose()" class="side-link">Nosotros</a>
+      <a [routerLink]="['/gallery']" routerLinkActive="link-activo" (click)="onClose()" class="side-link">Galería</a>
+      <a [routerLink]="['/reservations']" routerLinkActive="link-activo" (click)="onClose()" class="side-link">Reservaciones</a>
+      <a [routerLink]="['/how-to-get']" routerLinkActive="link-activo" (click)="onClose()" class="side-link">Cómo llegar</a>
+      <a [routerLink]="['/cancellations']" routerLinkActive="link-activo" (click)="onClose()" class="side-link">Políticas y Cancelaciones</a>
+      <a [routerLink]="['/regulation']" routerLinkActive="link-activo" (click)="onClose()" class="side-link">Reglamento</a>
+    </div>
+
+    <div class="mt-auto p-6 bg-gray-50 border-t border-gray-100">
+      <p class="text-[#D18B73] font-medium text-sm mb-2">+52 (812) 2329 9930</p>
+      <p class="text-olive-500 text-xs font-light">Jose Felipe Silva S/N El Porvenir, N.L.<br>C.P. 67363</p>
+    </div>
+  </div>
+</div>
