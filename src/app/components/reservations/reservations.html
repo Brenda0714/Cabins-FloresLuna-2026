@@ -1,7 +1,7 @@
 <main class="w-full overflow-x-hidden overflow-y-hidden  relative">
 
   <div class="relative w-full flex flex-col items-center  bg-[#f2f2f0] py-10 px-6 md:px-20">
-<h2 class="font-montserrat text-4xl sm:text-4xl md:text-5xl font-extrabold tracking-widest uppercase mb-20 mt-20 text-olive-600 text-center">
+<h2 class="g-text-extrabold text-4xl sm:text-4xl md:text-5xl tracking-widest uppercase mb-20 mt-20 text-olive-600 text-center">
   RESERVACIONES
 </h2>
   </div>
@@ -29,19 +29,19 @@
       <!-- Información de la Cabaña -->
       <div class="flex flex-col px-4 z-20" data-aos="fade-right" data-aos-delay="300">
         <div class="mb-6">
-          <span class="font-montserrat font-bold text-[#56B36E] text-3xl">${{cabin.precio}}</span>
-          <span class="font-montserrat text-olive-500 text-sm ml-1">por Noche</span>
+          <span class="g-text-bold text-[#56B36E] text-3xl">${{cabin.precio}}</span>
+          <span class="g-text text-olive-500 text-sm ml-1">por Noche</span>
         </div>
 
-        <h3 class="font-montserrat font-extrabold text-4xl text-olive-800 uppercase mb-1" data-aos="fade-right" data-aos-delay="100">{{cabin.title}}</h3>
-        <p class="font-montserrat font-extrabold text-olive-600 text-lg mb-5 italic" data-aos="fade-right" data-aos-delay="100">{{cabin.subtitle}}</p>
+        <h3 class="g-text-bold text-4xl text-olive-800 uppercase mb-1" data-aos="fade-right" data-aos-delay="100">{{cabin.title}}</h3>
+        <p class="g-text-bold text-olive-600 text-lg mb-5 italic" data-aos="fade-right" data-aos-delay="100">{{cabin.subtitle}}</p>
 
         <!-- Lista de Amenidades -->
         <ul class="gap-y-4 mb-8" data-aos="fade-right" data-aos-delay="100">
           @for (item of cabin.text; track item) {
           <li class="flex items-center gap-5 py-2">
             <div class="bg-[#56B36E] p-1 rounded-full text-white"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div>
-            <span class="font-montserrat font-bold text-olive-500">{{item}}</span>
+            <span class="g-text text-olive-500">{{item}}</span>
           </li>}
 
         </ul>
@@ -49,14 +49,14 @@
         <!-- Tags / Extras -->
         <div class="border-t border-olive-300 pt-5 mb-5" data-aos="fade-right" data-aos-delay="100">
           @for (amenities of cabin.amenities; track amenities) {
-          <h4 class="font-montserrat font-bold text-olive-400 uppercase tracking-widest leading-relaxed">
+          <h4 class="g-text-bold text-olive-400 uppercase tracking-widest leading-relaxed">
             {{amenities}}
           </h4>
         }
         </div>
 
         <!-- Botón de Acción -->
-        <button (click)="scrollToForm()"  class="bg-[#D18B73] hover:bg-[#ffa483] cursor-pointer text-white font-montserrat font-extrabold py-4 rounded-full transition-all uppercase tracking-widest text-xs shadow-lg active:scale-95 hover:scale-105">
+        <button (click)="scrollToForm()"  class="bg-[#D18B73] hover:bg-[#ffa483] cursor-pointer text-white g-text-extrabold py-4 rounded-full transition-all uppercase tracking-widest text-xs shadow-lg active:scale-95 hover:scale-105">
           Hacer la Reservación
         </button>
       </div>
@@ -77,43 +77,43 @@
   <!-- Tarjeta del Formulario -->
   <div  class="relative z-10 bg-white rounded-xl shadow-2xl p-8 md:p-12 w-full max-w-md text-center">
 
-    <h2 class="font-montserrat text-3xl font-bold text-olive-800 mb-2">Haz tu Reservación</h2>
-    <p class="font-montserrat text-sm text-olive-500 mb-8">Completa la información para hacer tu reservación</p>
+    <h2 class="g-text-extrabold text-3xl text-olive-800 mb-2">Haz tu Reservación</h2>
+    <p class="g-text text-sm text-olive-500 mb-8">Completa la información para hacer tu reservación</p>
 
     <form class="space-y-4">
       <!-- Input Nombre -->
       <div>
         <input type="text" placeholder="Nombre Completo"
-          class="font-montserrat w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
+          class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
       </div>
 
       <!-- Input Correo -->
       <div>
         <input type="email" placeholder="Correo"
-          class="font-montserrat w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
+          class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
       </div>
 
       <!-- Input Teléfono -->
       <div>
         <input type="number" placeholder="Teléfono"
-          class="font-montserrat w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
+          class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
       </div>
 
       <!-- Input Llegada -->
       <div>
         <input type="text" placeholder="Llegada" onfocus="(this.type='date')"
-          class="font-montserrat w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
+          class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
       </div>
 
       <!-- Input Salida -->
       <div>
         <input type="text" placeholder="Salida" onfocus="(this.type='date')"
-          class="font-montserrat w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
+          class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
       </div>
 
       <!-- Select Tipo de Cabaña -->
       <div class="relative w-full">
-        <select class="font-montserrat w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-500 focus:ring-2 focus:ring-orange-400 outline-none transition-all appearance-none cursor-pointer">
+        <select class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-500 focus:ring-2 focus:ring-orange-400 outline-none transition-all appearance-none cursor-pointer">
           <option value="" disabled selected>Tipo de Cabaña</option>
           <option value="Orquídea" class="uppercase">Orquídea</option>
           <option value="Girasol"  class="uppercase">Girasol</option>
@@ -131,9 +131,9 @@
       </div>
 
       <button type="submit"
-        class="group relative w-full mt-6 bg-[#D18B73] hover:bg-[#ffa483] text-white font-bold py-3 px-6 rounded-full cursor-pointer uppercase tracking-wider text-sm overflow-hidden transition-all shadow-lg active:scale-95 hover:scale-105">
+        class="group relative w-full mt-6 bg-[#D18B73] hover:bg-[#ffa483] text-white py-3 px-6 rounded-full cursor-pointer uppercase tracking-wider text-sm overflow-hidden transition-all shadow-lg active:scale-95 hover:scale-105">
 
-        <span class="relative z-10">Hacer la reservación</span>
+        <span class="relative z-10 g-text-extrabold">Hacer la reservación</span>
 
         <div class="absolute inset-0 w-full h-full bg-linear-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] z-0"></div>
 
