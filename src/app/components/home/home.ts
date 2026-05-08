@@ -1,6 +1,7 @@
-import { ApplicationConfig, ChangeDetectionStrategy, Component } from '@angular/core';
+import { ApplicationConfig, ChangeDetectionStrategy, Component, inject, PLATFORM_ID } from '@angular/core';
 import { RouterLink, RouterLinkActive, provideRouter, withInMemoryScrolling } from "@angular/router";
 import { routes } from '../../app.routes';
+import { isPlatformBrowser } from '@angular/common';
 
 export const appConfig: ApplicationConfig = {
   providers: [

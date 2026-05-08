@@ -80,10 +80,9 @@ export class Gallery implements OnInit, OnDestroy {
     const totalOriginal = this.testimonials().length;
 
     this.currentIndex.update(idx => {
-    const next = idx + 1;
-    // Si llegamos al final del primer bloque, saltamos al inicio sin animación (opcional)
-    // Por ahora, solo permitimos que siga avanzando en el array extendido
-    return next % (totalOriginal * 2);
+// Si llega al final del bloque extendido, resetea suavemente
+    if (idx >= (totalOriginal * 2)) return totalOriginal;
+    return idx + 1;
   });
   }
 
@@ -97,4 +96,16 @@ export class Gallery implements OnInit, OnDestroy {
     direction === 'next' ? this.nextSlide() : this.prevSlide();
     this.startAutoplay();
   }
+
+
+  activeGalleryIndex = signal<number | null>(null);
+
+  toggleOverlay(idx: number) {
+    // Si ya está activo, quizás quieras abrir el modal.
+    // Si no, solo mostramos el texto "VER"
+    this.activeGalleryIndex.set(this.activeGalleryIndex() === idx ? null : idx);
+  }
+
+
+
  }

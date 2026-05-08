@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, PLATFORM_ID, signal } from '@angular/core';
+import * as AOS from 'aos';
+
 
 @Component({
   selector: 'app-reservations',
@@ -7,7 +10,20 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
   styleUrl: './reservations.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Reservations {
+export class Reservations implements AfterViewInit{
+private platformId = inject(PLATFORM_ID);
+
+ngAfterViewInit() {
+    if (isPlatformBrowser(this.platformId)) {
+      AOS.init({
+        duration: 1000, // Duración de la animación en ms
+        once: false,     // ¿Animar solo una vez al bajar?
+        mirror: true,   // ¿Animar de nuevo al subir?
+        offset: 120,
+      });
+    }
+  }
+
 
   BackImg = signal<string[]>([
     'assets/img/RESERVACIONES/section1.png',
@@ -57,5 +73,7 @@ scrollToForm() {
     });
   }
 }
+
+
 
  }

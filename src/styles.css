@@ -1,11 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
 
-@theme {
-
-  --font-montserrat: "Gontserrat-Regular", sans-serif;
-}
-
 
 
 @font-face {
@@ -96,3 +91,5 @@
   /* 0.6s es un tiempo ideal para que se sienta fluido pero rápido */
   animation: fadeCenter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
+
+@import "aos/dist/aos.css";
