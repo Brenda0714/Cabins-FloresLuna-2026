@@ -1,11 +1,15 @@
 :host {
   display: block;
+  position: relative;
+  z-index: 99999;
 }
 
 .sidebar-wrapper {
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 9999 !important;
   display: flex;
   justify-content: flex-end;
 
@@ -15,15 +19,19 @@
   transition: visibility 0.4s;
 
   &.is-visible {
-    visibility: visible;
-    pointer-events: auto;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    display: flex !important;
+    transition: none;
 
     .sidebar-backdrop {
-      opacity: 1;
+      opacity: 1 !important;
     }
 
     .sidebar-panel {
-      transform: translateX(0);
+    transform: translateX(0) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
     }
   }
 }
@@ -33,12 +41,15 @@
   inset: 0;
   background-color: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(4px);
-  opacity: 0;
   transition: opacity 0.4s ease;
+  z-index: 10;
 }
 
 .sidebar-panel {
-  position: relative;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 50;
   width: 18rem;
   height: 100%;
   background: white;

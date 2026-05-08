@@ -17,11 +17,14 @@ export class Sidebar {
   constructor(private cdr: ChangeDetectorRef) {}
 
   onClose() {
+setTimeout(() => {
     this.close.emit();
+    this.cdr.markForCheck();
+  }, 10);
   }
 
   // Esto fuerza a Angular a reaccionar si el Input cambia desde afuera
   ngOnChanges() {
-    this.cdr.markForCheck();
+  this.cdr.markForCheck();
   }
 }
