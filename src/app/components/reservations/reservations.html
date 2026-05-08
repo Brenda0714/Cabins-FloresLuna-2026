@@ -56,7 +56,7 @@
         </div>
 
         <!-- Botón de Acción -->
-        <button (click)="scrollToForm()"  class="bg-[#D18B73] hover:bg-[#ffa483] cursor-pointer text-white g-text-extrabold py-4 rounded-full transition-all uppercase tracking-widest text-xs shadow-lg active:scale-95 hover:scale-105">
+        <button (click)="scrollToForm()"  class="bg-[#ff8B64] hover:bg-[#ffa483] cursor-pointer text-white g-text-extrabold py-4 rounded-full transition-all uppercase tracking-widest text-xs shadow-lg active:scale-95 hover:scale-105">
           Hacer la Reservación
         </button>
       </div>
@@ -83,19 +83,19 @@
     <form class="space-y-4">
       <!-- Input Nombre -->
       <div>
-        <input type="text" placeholder="Nombre Completo"
+        <input #nombreInput type="text" placeholder="Nombre Completo"
           class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
       </div>
 
       <!-- Input Correo -->
       <div>
-        <input type="email" placeholder="Correo"
+        <input #emailInput type="email" placeholder="Correo"
           class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
       </div>
 
       <!-- Input Teléfono -->
       <div>
-        <input type="number" placeholder="Teléfono"
+        <input #telInput type="number" placeholder="Teléfono"
           class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
       </div>
 
@@ -113,13 +113,11 @@
 
       <!-- Select Tipo de Cabaña -->
       <div class="relative w-full">
-        <select class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-500 focus:ring-2 focus:ring-orange-400 outline-none transition-all appearance-none cursor-pointer">
+        <select #tipoCabana class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-500 focus:ring-2 focus:ring-orange-400 outline-none transition-all appearance-none cursor-pointer">
           <option value="" disabled selected>Tipo de Cabaña</option>
-          <option value="Orquídea" class="uppercase">Orquídea</option>
-          <option value="Girasol"  class="uppercase">Girasol</option>
-          <option value="Tulipán"  class="uppercase">Tulipán</option>
-          <option value="Cabaña Grande"  class="uppercase">Cabaña Grande</option>
-          <option value="Cabaña Grande"  class="uppercase">Cabaña Grande</option>
+        @for (cabin of Cabins(); track cabin.id) {
+          <option [value]="cabin.precio.replace(',', '')">{{ cabin.title }} - ${{ cabin.precio }}</option>
+        }
         </select>
 
         <!-- Icono de Flecha -->
@@ -130,14 +128,29 @@
         </div>
       </div>
 
-      <button type="submit"
-        class="group relative w-full mt-6 bg-[#D18B73] hover:bg-[#ffa483] text-white py-3 px-6 rounded-full cursor-pointer uppercase tracking-wider text-sm overflow-hidden transition-all shadow-lg active:scale-95 hover:scale-105">
+  <button type="button"
+    (click)="iniciarPago()"
+    [disabled]="loading()"
+    [class.opacity-70]="loading()"
+    class="group relative w-full mt-6 bg-[#ff8b64] hover:bg-[#ffa483] text-white py-3 px-6 rounded-full cursor-pointer uppercase tracking-wider text-sm overflow-hidden transition-all shadow-lg active:scale-95">
 
-        <span class="relative z-10 g-text-extrabold">Hacer la reservación</span>
+    <span class="relative z-10 g-text-extrabold">
+      @if (loading()) {
+        <span class="flex items-center justify-center gap-2">
+          <!-- Puedes poner un icono de spinner aquí si usas FontAwesome o similar -->
+          Un segundo, preparando el pago...
+        </span>
+      } @else {
+        Hacer la reservación
+      }
+    </span>
 
-        <div class="absolute inset-0 w-full h-full bg-linear-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] z-0"></div>
+    <!-- Efecto de brillo (shimmer) solo si no está cargando -->
+    @if (!loading()) {
+      <div class="absolute inset-0 w-full h-full bg-linear-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] z-0"></div>
+    }
+  </button>
 
-      </button>
     </form>
 
   </div>
