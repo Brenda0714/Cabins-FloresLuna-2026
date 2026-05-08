@@ -25,42 +25,24 @@ html, body {
 }
 
 
-.g-title{
+.g-text-extrabold{
     font-family: "Gontserrat-ExtraBold";
 }
 
-.g-subtitle {
+.g-text-bold {
     font-family: "Gontserrat-Bold";
-}
-
-.g-subtext {
-
-    font-family: "Gontserrat-Regular";
 }
 
 .g-text {
     font-family: "Gontserrat-Regular";
 }
 
-.g-text-sm {
+.g-text-light{
     font-family: "Gontserrat-Light";
 }
 
-.g-text-xsm {
-    font-family: "Gontserrat-Light";
-}
 
-.light {
-    font-family: "Gontserrat-Light";
-}
 
-.bold {
-    font-family: "Gontserrat-Bold";
-}
-
-.ultraBold {
-    font-family: "Gontserrat-UltraBold";
-}
 
 
 
