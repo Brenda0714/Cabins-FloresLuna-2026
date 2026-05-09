@@ -80,7 +80,7 @@
     <h2 class="g-text-extrabold text-3xl text-olive-800 mb-2">Haz tu Reservación</h2>
     <p class="g-text text-sm text-olive-500 mb-8">Completa la información para hacer tu reservación</p>
 
-    <form class="space-y-4">
+    <form #reservaForm class="space-y-4">
       <!-- Input Nombre -->
       <div>
         <input #nombreInput type="text" placeholder="Nombre Completo"
@@ -101,13 +101,13 @@
 
       <!-- Input Llegada -->
       <div>
-        <input type="text" placeholder="Llegada" onfocus="(this.type='date')"
+        <input #llegadaInput type="text" placeholder="Llegada" onfocus="(this.type='date')"
           class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
       </div>
 
       <!-- Input Salida -->
       <div>
-        <input type="text" placeholder="Salida" onfocus="(this.type='date')"
+        <input #salidaInput type="text" placeholder="Salida" onfocus="(this.type='date')"
           class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
       </div>
 
@@ -116,7 +116,7 @@
         <select #tipoCabana class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-500 focus:ring-2 focus:ring-orange-400 outline-none transition-all appearance-none cursor-pointer">
           <option value="" disabled selected>Tipo de Cabaña</option>
         @for (cabin of Cabins(); track cabin.id) {
-          <option [value]="cabin.precio.replace(',', '')">{{ cabin.title }} - ${{ cabin.precio }}</option>
+          <option [value]="cabin.title">{{ cabin.title }} - ${{ cabin.precio }}</option>
         }
         </select>
 
@@ -128,30 +128,32 @@
         </div>
       </div>
 
+<!-- Pasamos las referencias a la función iniciarPago -->
   <button type="button"
-    (click)="iniciarPago()"
+    (click)="iniciarPago(nombreInput.value, emailInput.value, telInput.value, llegadaInput.value, salidaInput.value, tipoCabana.value)"
     [disabled]="loading()"
-    [class.opacity-70]="loading()"
-    class="group relative w-full mt-6 bg-[#ff8b64] hover:bg-[#ffa483] text-white py-3 px-6 rounded-full cursor-pointer uppercase tracking-wider text-sm overflow-hidden transition-all shadow-lg active:scale-95">
-
-    <span class="relative z-10 g-text-extrabold">
-      @if (loading()) {
-        <span class="flex items-center justify-center gap-2">
-          <!-- Puedes poner un icono de spinner aquí si usas FontAwesome o similar -->
-          Un segundo, preparando el pago...
-        </span>
-      } @else {
-        Hacer la reservación
-      }
-    </span>
-
-    <!-- Efecto de brillo (shimmer) solo si no está cargando -->
-    @if (!loading()) {
-      <div class="absolute inset-0 w-full h-full bg-linear-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] z-0"></div>
-    }
+    class="bg-[#ff8B64] hover:bg-[#ffa483] cursor-pointer text-white w-full g-text-extrabold py-4 rounded-full transition-all uppercase tracking-widest text-xs shadow-lg active:scale-95 hover:scale-105">
+    Hacer la Reservación
   </button>
 
     </form>
+
+@if (reservaData(); as data) {
+  <div class="mt-6 p-6 bg-olive-100 rounded-2xl border border-olive-300 animate-fade-in">
+    <h3 class="g-text-extrabold text-olive-800 uppercase text-sm tracking-widest mb-3">Resumen de tu Estancia</h3>
+    <div class="space-y-2 g-text text-olive-700 text-sm">
+      <p>Cabaña: <span class="font-bold">{{ data.cabin }}</span></p>
+      <p>Estancia: <span>{{ data.noches }} noches</span></p>
+      <div class="border-t border-olive-300 pt-2 flex justify-between items-center">
+        <span class="g-text-extrabold text-lg">Total a pagar:</span>
+        <span class="text-xl text-orange-500 font-bold">${{ data.montoTotal | number }}</span>
+      </div>
+    </div>
+    <button class="bg-[#ff8B64] hover:bg-[#ffa483] mt-10 cursor-pointer text-white w-full g-text-extrabold py-4 rounded-full transition-all uppercase tracking-widest text-xs shadow-lg active:scale-95 hover:scale-105">
+    Pagar con PayPal
+    </button>
+  </div>
+}
 
   </div>
 </section>
