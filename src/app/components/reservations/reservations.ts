@@ -1,6 +1,7 @@
 import { DecimalPipe, isPlatformBrowser } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, PLATFORM_ID, signal } from '@angular/core';
 import * as AOS from 'aos';
+import { Cancellations } from "../cancellations/cancellations";
 
 interface Reserva {
   cliente: string;
@@ -17,7 +18,7 @@ interface Reserva {
 
 @Component({
   selector: 'app-reservations',
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, Cancellations],
   templateUrl: './reservations.html',
   styleUrl: './reservations.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,13 +29,14 @@ export class Reservations implements AfterViewInit{
 
 
 private platformId = inject(PLATFORM_ID);
+  viewportScroller: any;
 
 ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {
       AOS.init({
         duration: 1000, // Duración de la animación en ms
-        once: false,     // ¿Animar solo una vez al bajar?
-        mirror: true,   // ¿Animar de nuevo al subir?
+        once: true,     // ¿Animar solo una vez al bajar?
+        mirror: false,   // ¿Animar de nuevo al subir?
         offset: 120,
       });
     }
@@ -81,11 +83,14 @@ ngAfterViewInit() {
 
 
 scrollToForm() {
-  const element = document.getElementById('form');
-  if (element) {
-    element.scrollIntoView({
-      behavior: 'smooth', // Hace que el movimiento sea fluido
-      block: 'start'      // Alinea el inicio de la sección al tope de la pantalla
+const element = document.getElementById('formulario');
+if (element) {
+    // Calcula la posición exacta en píxeles del formulario en el documento
+    const yOffset = element.getBoundingClientRect().top + window.scrollY;
+
+    window.scrollTo({
+      top: yOffset,
+      behavior: 'smooth' // Desplazamiento fluido y limpio
     });
   }
 }
@@ -96,17 +101,22 @@ scrollToForm() {
 
 loading = signal(false);
 reservaData = signal<any>(null);
+formTouched = signal(false);
 
 iniciarPago(nombre: string, email: string, tel: string, llegada: string, salida: string, cabin: string) {
 
-
+// 1. Activamos el estado de "intentó enviar" para que se muestren los outlines visuales
+  this.formTouched.set(true);
 
 
     // 1. Validar que no haya campos vacíos
     if (!nombre || !email || !tel || !llegada || !salida || !cabin) {
-      alert('Por favor, completa todos los campos.');
+
       return;
     }
+
+// Si todo está bien, limpiamos el estado de error por si acaso
+  this.formTouched.set(false);
 
 
   const infoCabana = this.Cabins().find(c => c.title === cabin);

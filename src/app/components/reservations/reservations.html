@@ -55,8 +55,7 @@
         }
         </div>
 
-        <!-- Botón de Acción -->
-        <button (click)="scrollToForm()"  class="bg-[#ff8B64] hover:bg-[#ffa483] cursor-pointer text-white g-text-extrabold py-4 rounded-full transition-all uppercase tracking-widest text-xs shadow-lg active:scale-95 hover:scale-105">
+        <button (click)="scrollToForm()" class="block text-center bg-[#ff8B64] hover:bg-[#ffa483] cursor-pointer text-white g-text-extrabold py-4 rounded-full transition-all uppercase tracking-widest text-xs shadow-lg active:scale-95 hover:scale-105">
           Hacer la Reservación
         </button>
       </div>
@@ -68,14 +67,15 @@
 
 }
 
-<section id="form" class="relative w-full py-20 px-6 md:px-20 flex items-center justify-center">
+<section id="formulario" class="relative w-full py-20 px-6 md:px-20 flex items-center justify-center">
   <!-- Contenedor de la Imagen: Usamos 'block' y 'w-full' para que ocupe todo el ancho y su altura sea natural -->
   <div class="absolute inset-0 z-0">
     <img src="assets/img/RESERVACIONES/section4.png" alt="Fondo" class="w-full h-full bg-transparent block">
   </div>
 
   <!-- Tarjeta del Formulario -->
-  <div  class="relative z-10 bg-white rounded-xl shadow-2xl p-8 md:p-12 w-full max-w-md text-center">
+  <div  class=
+  "relative z-10 bg-white rounded-xl shadow-2xl p-8 md:p-12 w-full max-w-md text-center">
 
     <h2 class="g-text-extrabold text-3xl text-olive-800 mb-2">Haz tu Reservación</h2>
     <p class="g-text text-sm text-olive-500 mb-8">Completa la información para hacer tu reservación</p>
@@ -83,37 +83,57 @@
     <form #reservaForm class="space-y-4">
       <!-- Input Nombre -->
       <div>
-        <input #nombreInput type="text" placeholder="Nombre Completo"
-          class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
-      </div>
+        <input #nombreInput type="text" placeholder="Nombre Completo" (input)="0"
+          class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all"
+          [class.ring-2]="formTouched()"
+          [class.ring-red-500]="formTouched() && !nombreInput.value"
+          [class.ring-green-500]="formTouched() && nombreInput.value">
+        </div>
 
       <!-- Input Correo -->
       <div>
-        <input #emailInput type="email" placeholder="Correo"
-          class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
-      </div>
+        <input #emailInput type="email" placeholder="Correo" (input)="0"
+          class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all"
+          [class.ring-2]="formTouched()"
+          [class.ring-red-500]="formTouched() && !emailInput.value"
+          [class.ring-green-500]="formTouched() && emailInput.value">
+        </div>
 
       <!-- Input Teléfono -->
       <div>
-        <input #telInput type="number" placeholder="Teléfono"
-          class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
+        <input #telInput type="tel" placeholder="Teléfono"
+        (input)="telInput.value = telInput.value.replace(/[^0-9]/g, '')"
+        maxlength="10"
+          class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all"
+          [class.ring-2]="formTouched()"
+          [class.ring-red-500]="formTouched() && !telInput.value"
+          [class.ring-green-500]="formTouched() && telInput.value">
       </div>
 
       <!-- Input Llegada -->
       <div>
-        <input #llegadaInput type="text" placeholder="Llegada" onfocus="(this.type='date')"
-          class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
-      </div>
+        <input #llegadaInput type="text" placeholder="Llegada" onfocus="(this.type='date')" (input)="0"
+          class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all"
+          [class.ring-2]="formTouched()"
+          [class.ring-red-500]="formTouched() && !llegadaInput.value"
+          [class.ring-green-500]="formTouched() && llegadaInput.value">
+        </div>
 
       <!-- Input Salida -->
       <div>
-        <input #salidaInput type="text" placeholder="Salida" onfocus="(this.type='date')"
-          class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all">
+        <input #salidaInput type="text" placeholder="Salida" onfocus="(this.type='date')" (input)="0"
+          class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all"
+          [class.ring-2]="formTouched()"
+          [class.ring-red-500]="formTouched() && !salidaInput.value"
+          [class.ring-green-500]="formTouched() && salidaInput.value">
       </div>
 
       <!-- Select Tipo de Cabaña -->
       <div class="relative w-full">
-        <select #tipoCabana class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-500 focus:ring-2 focus:ring-orange-400 outline-none transition-all appearance-none cursor-pointer">
+        <select #tipoCabana (input)="0" class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-500 focus:ring-2 focus:ring-orange-400 outline-none transition-all appearance-none cursor-pointer"
+          [class.ring-2]="formTouched()"
+          [class.ring-red-500]="formTouched() && !tipoCabana.value"
+          [class.ring-green-500]="formTouched() && tipoCabana.value">
           <option value="" disabled selected>Tipo de Cabaña</option>
         @for (cabin of Cabins(); track cabin.id) {
           <option [value]="cabin.title">{{ cabin.title }} - ${{ cabin.precio }}</option>
@@ -140,7 +160,8 @@
 
 @if (reservaData(); as data) {
   <div class="mt-6 p-6 bg-olive-100 rounded-2xl border border-olive-300 animate-fade-in">
-    <h3 class="g-text-extrabold text-olive-800 uppercase text-sm tracking-widest mb-3">Resumen de tu Estancia</h3>
+    <h3 class="g-text-extrabold text-olive-800 uppercase text-m tracking-widest mb-3">Resumen de tu Estancia</h3>
+    <p class="g-text text-olive-500 text-sm mb-3">¡Todo listo! Te enviaremos la confirmación y los accesos de tu cabaña a:<br><strong>{{data.correo}}</strong></p>
     <div class="space-y-2 g-text text-olive-700 text-sm">
       <p>Cabaña: <span class="font-bold">{{ data.cabin }}</span></p>
       <p>Estancia: <span>{{ data.noches }} noches</span></p>

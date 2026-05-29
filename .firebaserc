@@ -1,5 +1,9 @@
 {
   "projects": {
-    "default": "cabins-flores-luna"
-  }
+    "default": "cabins-flores-luna",
+    "frontend": "cabins-flores-luna",
+    "frontend2": "cabins-flores-luna"
+  },
+  "targets": {},
+  "etags": {}
 }
