@@ -1,5 +1,5 @@
 import { DecimalPipe, isPlatformBrowser } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, PLATFORM_ID, signal } from '@angular/core';
+import { AfterViewInit,ChangeDetectorRef, ChangeDetectionStrategy, Component, ElementRef, inject, PLATFORM_ID, signal, ViewChild } from '@angular/core';
 import * as AOS from 'aos';
 import { Cancellations } from "../cancellations/cancellations";
 
@@ -18,7 +18,7 @@ interface Reserva {
 
 @Component({
   selector: 'app-reservations',
-  imports: [DecimalPipe, Cancellations],
+  imports: [DecimalPipe],
   templateUrl: './reservations.html',
   styleUrl: './reservations.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,21 +26,66 @@ interface Reserva {
 
 export class Reservations implements AfterViewInit{
 
-
-
 private platformId = inject(PLATFORM_ID);
-  viewportScroller: any;
+private cdr = inject(ChangeDetectorRef);
+private paypalRendered = false;
 
-ngAfterViewInit() {
-    if (isPlatformBrowser(this.platformId)) {
-      AOS.init({
-        duration: 1000, // Duración de la animación en ms
-        once: true,     // ¿Animar solo una vez al bajar?
-        mirror: false,   // ¿Animar de nuevo al subir?
-        offset: 120,
-      });
+@ViewChild('paymentRef', { static: false }) set paymentRef(element: ElementRef | undefined){
+
+if (isPlatformBrowser(this.platformId) && element && element.nativeElement) {
+  if (this.paypalRendered) return;
+      const paypalObj = (window as any).paypal;
+      if (paypalObj) {
+        // Limpiamos residuos por si hace múltiples clics
+        element.nativeElement.innerHTML = '';
+
+        // Renderizamos directamente porque aquí ya es 100% seguro que el DIV existe
+        paypalObj.Buttons({
+          createOrder: (data: any, actions: any) => {
+            return actions.order.create({
+              purchase_units: [{
+                amount: {
+                  value: this.reservaData()?.montoTotal?.toString() || '0.00'
+                }
+              }]
+            });
+          },
+          onApprove: (data: any, actions: any) => {
+            return actions.order.capture().then((details: any) => {
+              alert('¡Pago completado con éxito por ' + details.payer.name.given_name + '!');
+              console.log('Detalles del pago:', details);
+            });
+          },
+          onError: (err: any) => {
+            console.error('Error en la pasarela de PayPal:', err);
+          }
+        }).render(element.nativeElement)
+        .then(() => {
+          console.log('¡Botones de PayPal dibujados con éxito en el resumen!');
+        })
+        .catch((err: any) => {
+          console.error('Error al renderizar los botones:', err);
+        });
+      }
     }
   }
+
+viewportScroller: any;
+
+
+ngAfterViewInit(): void {
+  if (isPlatformBrowser(this.platformId)) {
+
+    // animaciones AOS
+    AOS.init({
+      duration: 1000,
+      once: true,
+      mirror: false,
+      offset: 120,
+    });
+
+  }
+}
 
 
   BackImg = signal<string[]>([
@@ -78,32 +123,11 @@ ngAfterViewInit() {
     },
   ]);
 
-
-
-
-
-scrollToForm() {
-const element = document.getElementById('formulario');
-if (element) {
-    // Calcula la posición exacta en píxeles del formulario en el documento
-    const yOffset = element.getBoundingClientRect().top + window.scrollY;
-
-    window.scrollTo({
-      top: yOffset,
-      behavior: 'smooth' // Desplazamiento fluido y limpio
-    });
-  }
-}
-
-
-
-
-
 loading = signal(false);
 reservaData = signal<any>(null);
 formTouched = signal(false);
 
-iniciarPago(nombre: string, email: string, tel: string, llegada: string, salida: string, cabin: string) {
+  iniciarPago(nombre: string, email: string, tel: string, llegada: string, salida: string, cabin: string) {
 
 // 1. Activamos el estado de "intentó enviar" para que se muestren los outlines visuales
   this.formTouched.set(true);
@@ -152,6 +176,8 @@ iniciarPago(nombre: string, email: string, tel: string, llegada: string, salida:
 
     // 3. Mostramos en consola para validar
     console.log('Datos de la reservación listos para procesar:', this.reservaData());
+    this.cdr.detectChanges();
+
 
     // 4. Simulamos el proceso de pago
     this.loading.set(true);
@@ -162,5 +188,30 @@ iniciarPago(nombre: string, email: string, tel: string, llegada: string, salida:
       // Aquí podrías redirigir a Stripe, PayPal o tu backend
     }, 2000);
   }
+
+// >>> AGREGA ESTA NUEVA FUNCIÓN <<<
+  cerrarModal() {
+    this.reservaData.set(null); // Esto cierra el @if del modal automáticamente
+    this.paypalRendered = false; // Reseteamos la bandera de PayPal
+  }
+
+  EnviarCorreo(nombre: string, email: string, tel: string, llegada: string, salida: string, cabin: string) {
+
+  }
+
+
+
+scrollToForm() {
+const element = document.getElementById('formulario');
+if (element) {
+    // Calcula la posición exacta en píxeles del formulario en el documento
+    const yOffset = element.getBoundingClientRect().top + window.scrollY;
+
+    window.scrollTo({
+      top: yOffset,
+      behavior: 'smooth' // Desplazamiento fluido y limpio
+    });
+  }
+}
 
  }

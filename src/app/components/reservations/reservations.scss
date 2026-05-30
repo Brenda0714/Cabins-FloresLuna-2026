@@ -25,3 +25,13 @@
   animation: balanceo-90 8s ease-in-out infinite;
   transform-origin: top left;
 }
+
+
+/* Asegura que el contenedor tenga espacio visible en la pantalla */
+#paymentRef {
+  display: block !important;
+  min-height: 150px; /* PayPal suele necesitar al menos 150px de alto */
+  width: 100%;
+  max-width: 500px; /* O el ancho que desees para el botón */
+  margin: 20px auto; /* Centra el botón si es necesario */
+}
