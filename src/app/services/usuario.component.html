@@ -1,0 +1,24 @@
+<div style="padding: 20px; font-family: sans-serif;">
+  <h2>Lista de Usuarios (HostGator)</h2>
+
+  <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+    <thead style="background-color: #f2f2f2;">
+      <tr>
+        <th style="padding: 10px;">ID</th>
+        <th style="padding: 10px;">Nombre Completo</th>
+        <th style="padding: 10px;">Correo</th>
+        <th style="padding: 10px;">Teléfono</th>
+        <th style="padding: 10px;">Rol</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let usuario of listaUsuarios">
+        <td style="padding: 10px;">{{ usuario.id }}</td>
+        <td style="padding: 10px;"><strong>{{ usuario.nombre_completo }}</strong></td>
+        <td style="padding: 10px;">{{ usuario.correo }}</td>
+        <td style="padding: 10px;">{{ usuario.telefono }}</td>
+        <td style="padding: 10px;">{{ usuario.rol }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

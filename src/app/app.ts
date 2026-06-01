@@ -3,11 +3,12 @@ import { RouterOutlet } from '@angular/router';
 import { Navbar } from "./template/navbar/navbar";
 import { Footer } from "./template/footer/footer";
 import { isPlatformBrowser } from '@angular/common';
-import * as AOS from 'aos';
+import { UsuariosComponent } from './services/usuario.component';;
+import { init } from 'aos';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Navbar, Footer],
+  imports: [RouterOutlet, Navbar, Footer, UsuariosComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -18,7 +19,7 @@ export class App {
 
   ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {
-      AOS.init({
+      init({
         duration: 1000, // Duración de la animación en ms
         once: false,     // ¿Animar solo una vez al bajar?
         mirror: true,   // ¿Animar de nuevo al subir?
