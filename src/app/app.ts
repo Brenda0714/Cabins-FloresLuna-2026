@@ -16,7 +16,7 @@ export class App {
 
   private platformId = inject(PLATFORM_ID);
 
-ngAfterViewInit() {
+  ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {
       AOS.init({
         duration: 1000, // Duración de la animación en ms
