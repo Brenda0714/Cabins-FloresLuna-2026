@@ -1,32 +1,44 @@
 @if (showAlert) {
-<div class="fixed inset-0 pointer-events-none z-9999">
+  <div class="fixed inset-0 bg-black/50 backdrop-blur-xs z-9999 flex items-center justify-center p-4 animate-fade animate-duration-200">
 
-  <div
-    class="absolute top-5 right-5 pointer-events-auto flex justify-end items-start p-5 text-sm rounded-xl shadow-2xl max-w-md border animate-fade-left animate-duration-300"
-    [class.bg-emerald-50]="alertType === 'success'" [class.text-emerald-800]="alertType === 'success'"
-    [class.border-emerald-200]="alertType === 'success'" [class.bg-red-50]="alertType === 'error'"
-    [class.text-red-800]="alertType === 'error'" [class.border-red-200]="alertType === 'error'">
+    <div class="bg-white rounded-2xl shadow-2xl border-2 max-w-sm w-full p-6 text-center transform transition-all pointer-events-auto animate-scale-up"
+      [class.border-emerald-500]="alertType === 'success'"
+      [class.border-red-500]="alertType === 'error'">
 
-    @if (alertType === 'success') {
-    <svg class="shrink-0 inline w-5 h-5 me-3 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-      <path fill-rule="evenodd"
-        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-        clip-rule="evenodd" />
-    </svg>
-    } @else {
-    <svg class="shrink-0 inline w-5 h-5 me-3 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-      <path fill-rule="evenodd"
-        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-        clip-rule="evenodd" />
-    </svg>
-    }
+      <div class="mx-auto flex items-center justify-center h-14 w-14 rounded-full mb-4"
+        [class.bg-emerald-100]="alertType === 'success'"
+        [class.bg-red-100]="alertType === 'error'">
 
-    <div class="g-text">
-      <span class="font-bold">{{ alertType === 'success' ? 'Éxito:' : 'Aviso:' }}</span> {{ alertMessage }}
+        @if (alertType === 'success') {
+          <svg class="h-8 w-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        } @else {
+          <svg class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        }
+      </div>
+
+      <h3 class="g-text text-lg font-serif font-bold text-olive-900 mb-2">
+        {{ alertType === 'success' ? '¡Operación Exitosa!' : '¡Algo salió mal!' }}
+      </h3>
+
+      <p class="g-text text-sm text-olive-600 font-light mb-6">
+        {{ alertMessage }}
+      </p>
+
+      <button (click)="showAlert = false" type="button"
+        class="g-text w-full py-2.5 px-4 rounded-xl text-sm font-medium transition-all shadow-md active:scale-95"
+        [class.bg-none]="alertType === 'success'"
+        [class.text-emerald-600]="alertType === 'success'"
+        [class.bg-none]="alertType === 'error'"
+        [class.text-red-600]="alertType === 'error'">
+        Espere un momento...
+      </button>
+
     </div>
-
   </div>
-</div>
 }
 
 <div class="min-h-screen w-full flex items-center justify-center bg-cover bg-center relative"
@@ -45,7 +57,7 @@
     <div class="text-center mb-8">
       <img src="/assets/img/LOGO.png" alt="Flores de la Luna" class="h-40 mx-auto object-contain mb-3">
       <h2 class="g-text text-2xl font-serif font-semibold text-olive-900">Iniciar Sesión</h2>
-      <p class="g-text text-sm text-olive-500 font-light mt-1">Qué gusto tenerte de vuelta en el paraíso</p>
+      <p class="g-text text-sm text-olive-500 font-light mt-1">Qué gusto tenerte de vuelta</p>
     </div>
 
     <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="space-y-5">

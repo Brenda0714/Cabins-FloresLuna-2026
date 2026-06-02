@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -24,7 +24,8 @@ export class Login {
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
   ) {
     // Definimos las reglas de validación para el Login
     this.loginForm = this.fb.group({
@@ -39,39 +40,47 @@ export class Login {
     this.alertType = type;
     this.showAlert = true;
 
+    this.cdr.detectChanges();
     // Se esconde automáticamente después de 4 segundos
     setTimeout(() => {
       this.showAlert = false;
-    }, 4000);
+      this.cdr.detectChanges();
+    }, 5000);
   }
 
 
   onLogin(): void {
-    if (this.loginForm.valid) {
-      // console.log('Validando credenciales en HostGator...', this.loginForm.value);
 
-      this.http.post(this.apiUrl, this.loginForm.value).subscribe({
-        next: (response: any) => {
-          if (response.success) {
-            this.authService.login(response.user);
-            // 🌟 Alerta bonita de éxito antes de redirigir
-            this.triggerAlert(`¡Bienvenido de nuevo, ${response.user.nombre_completo.split(' ')[0]}!`, 'success');
-            setTimeout(() => {
-              this.router.navigate(['/home']);
-            }, 1200);
-          }
 
-        },
-        error: (err: any) => {
-          console.error('Error en login:', err);
-          // 🌟 Alerta bonita de error credenciales incorrectas
-          const errMsg = err.error?.message || 'El correo electrónico o la contraseña son incorrectos.';
-          this.triggerAlert(errMsg, 'error');
+  if (this.loginForm.valid) {
+
+    this.http.post(this.apiUrl, this.loginForm.value).subscribe({
+      next: (response: any) => {
+
+        if (response.success) {
+
+          this.authService.login(response.user);
+
+          this.triggerAlert(`¡Bienvenido de nuevo, ${response.user.nombre_completo.split(' ')[0]}!`, 'success');
+
+          setTimeout(() => {
+            this.router.navigate(['/home']);
+          }, 5000);
+        } else {
+
+          this.triggerAlert('Error al iniciar sesión.', 'error');
         }
-      });
-    } else {
-      // 🌟 Alerta bonita de formulario incompleto
-      this.triggerAlert('Por favor, ingresa tus datos correctamente.', 'error');
-    }
+      },
+      error: (err: any) => {
+
+        const errMsg = err.error?.message || 'El correo electrónico o la contraseña son incorrectos.';
+        this.triggerAlert(errMsg, 'error');
+      }
+    });
+  } else {
+
+    this.triggerAlert('Por favor, ingresa tus datos correctamente.', 'error');
   }
+}
+
 }
