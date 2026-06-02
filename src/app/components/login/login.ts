@@ -13,7 +13,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class Login {
   loginForm: FormGroup;
-  apiUrl = 'http://localhost:3000/api/login'; // Ruta para validar en HostGator
+  apiUrl = 'http://localhost:3000/api/usuarios'; // Ruta para validar en HostGator
 
   constructor(
     private fb: FormBuilder,
@@ -34,7 +34,7 @@ export class Login {
 
       this.http.post(this.apiUrl, this.loginForm.value).subscribe({
         next: (response: any) => {
-          if(response.success){
+          if (response.success) {
             this.authService.login(response.user);
             alert('¡Bienvenido de nuevo!');
             // Aquí más adelante guardaremos el estado de sesión activo

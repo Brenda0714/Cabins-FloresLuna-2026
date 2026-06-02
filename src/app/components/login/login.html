@@ -1,11 +1,13 @@
 <div class="min-h-screen w-full flex items-center justify-center bg-cover bg-center relative"
-     style="background-image: url('assets/img/hero-cabin.png');">
+  style="background-image: url('assets/img/hero-cabin.png');">
 
   <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
 
-  <div class="bg-white/95 relative z-10 w-full max-w-md p-8 md:p-10 rounded-2xl shadow-2xl mx-4 transition-all animate-fade-center">
+  <div
+    class="bg-white/95 relative z-10 w-full max-w-md p-8 md:p-10 rounded-2xl shadow-2xl mx-4 transition-all animate-fade-center">
 
-    <a [routerLink]="['/home']" class="g-text inline-flex items-center gap-2 text-xs text-olive-500 hover:text-[#D18B73] mb-6 transition-colors group">
+    <a [routerLink]="['/home']"
+      class="g-text inline-flex items-center gap-2 text-xs text-olive-500 hover:text-[#D18B73] mb-6 transition-colors group">
       ← Volver al inicio
     </a>
 
@@ -18,27 +20,24 @@
     <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="space-y-5">
 
       <div class="g-text">
-        <label class="g-text block text-xs font-medium text-olive-700 uppercase tracking-wider mb-2">Correo Electrónico</label>
-        <input type="email"
-               formControlName="correo"
-               placeholder="ejemplo@correo.com"
-               class="g-text w-full px-4 py-3 rounded-xl border border-olive-200 text-sm focus:outline-none focus:border-[#D18B73] focus:ring-1 focus:ring-[#D18B73] transition-all bg-olive-300">
+        <label class="g-text block text-xs font-medium text-olive-700 uppercase tracking-wider mb-2">Correo
+          Electrónico</label>
+        <input type="email" formControlName="correo" placeholder="ejemplo@correo.com"
+          class="g-text w-full px-4 py-3 rounded-xl border border-olive-200 text-sm focus:outline-none focus:border-[#D18B73] focus:ring-1 focus:ring-[#D18B73] transition-all bg-olive-300">
       </div>
 
       <div>
         <div class="flex justify-between items-center mb-2">
           <label class="g-text block text-xs font-medium text-olive-700 uppercase tracking-wider">Contraseña</label>
-          <a class="g-text text-xs text-olive-400 hover:text-[#D18B73] transition-colors cursor-pointer">¿La olvidaste?</a>
+          <a class="g-text text-xs text-olive-400 hover:text-[#D18B73] transition-colors cursor-pointer">¿La
+            olvidaste?</a>
         </div>
-        <input type="password"
-               formControlName="contrasena"
-               placeholder="••••••••"
-               class="g-text w-full px-4 py-3 rounded-xl border border-olive-200 text-sm focus:outline-none focus:border-[#ff8B64] focus:ring-1 focus:ring-[#D18B73] transition-all bg-olive-300">
+        <input type="password" formControlName="contrasena" placeholder="••••••••"
+          class="g-text w-full px-4 py-3 rounded-xl border border-olive-200 text-sm focus:outline-none focus:border-[#ff8B64] focus:ring-1 focus:ring-[#D18B73] transition-all bg-olive-300">
       </div>
 
-      <button type="submit"
-              [disabled]="loginForm.invalid"
-              class="g-text w-full bg-[#ff8B64] hover:bg-[#bd7a63] disabled:bg-olive-400 disabled:cursor-not-allowed text-white font-medium py-3 rounded-xl transition-all shadow-md active:scale-[0.98] mt-4 text-sm cursor-pointer">
+      <button type="submit" [disabled]="loginForm.invalid"
+        class="g-text w-full bg-[#ff8B64] hover:bg-[#bd7a63] disabled:bg-olive-400 disabled:cursor-not-allowed text-white font-medium py-3 rounded-xl transition-all shadow-md active:scale-[0.98] mt-4 text-sm cursor-pointer">
         Entrar a mi Cuenta
       </button>
     </form>
@@ -46,7 +45,8 @@
     <div class="text-center mt-8 pt-6 border-t border-olive-100">
       <p class="text-sm text-olive-500 font-light">
         ¿Aún no tienes cuenta?
-        <a [routerLink]="['/register']" class="font-medium text-[#ff8B64] hover:underline transition-all">Regístrate aquí</a>
+        <a [routerLink]="['/register']" class="font-medium text-[#ff8B64] hover:underline transition-all">Regístrate
+          aquí</a>
       </p>
     </div>
 

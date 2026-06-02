@@ -12,58 +12,62 @@ const bcrypt = require('bcrypt');
 
 // 1. Cambiamos 'createConnection' por 'createPool' para que maneje reconexiones automáticas
 const db = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
 // 2. Probamos el Pool haciendo una consulta rápida de verificación
 db.query('SELECT 1', (err, rows) => {
-    if (err) {
-        console.error('❌ Error inicial conectando a HostGator:', err.message);
-    } else {
-        console.log('🚀 Pool de conexiones activado con éxito en HostGator');
-    }
+  if (err) {
+    console.error('❌ Error inicial conectando a HostGator:', err.message);
+  } else {
+    console.log('🚀 Pool de conexiones activado con éxito en HostGator');
+  }
 });
 
 // RUTA: Obtener todos los usuarios para mostrarlos en Angular
 app.get('/api/usuarios', (req, res) => {
-    const query = 'SELECT id, nombre_completo, correo, telefono, rol, fecha_registro FROM usuarios';
+  const query = 'SELECT id, nombre_completo, correo, telefono, rol, fecha_registro FROM usuarios';
 
-    // El pool automáticamente abre, usa y cierra la conexión por ti en cada clic
-    db.query(query, (err, results) => {
-        if (err) {
-            console.error('Error al consultar usuarios:', err);
-            return res.status(500).json({ error: 'Error al consultar usuarios' });
-        }
-        res.json(results);
-    });
+  // El pool automáticamente abre, usa y cierra la conexión por ti en cada clic
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error al consultar usuarios:', err);
+      return res.status(500).json({ error: 'Error al consultar usuarios' });
+    }
+    res.json(results);
+  });
 });
 
 // Encender el servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`📡 Servidor de las cabañas corriendo en http://localhost:${PORT}`);
+  console.log(`📡 Servidor de las cabañas corriendo en http://localhost:${PORT}`);
 });
 
 
 
-// REEMPLAZA TU RUTA DE LOGIN POR ESTA VERSIÓN DIRECTA
-app.post('/api/login', (req, res) => {
-  const { correo, contrasena } = req.body;
+app.post('/api/usuarios', (req, res) => {
+  const correo = req.body.correo ? req.body.correo.trim() : '';
+  const contrasena = req.body.contrasena ? req.body.contrasena.trim() : '';
 
-  // Consulta directa comparando correo y contraseña en texto plano
-  const query = 'SELECT id, nombre_completo, correo, rol FROM usuarios WHERE correo = ? AND contrasena = ?';
+  console.log("➡️ Intento de login encriptado en SQL para:", correo);
+
+  // 🔐 Aplicamos SHA2(?, 256) directamente en la consulta de MySQL
+  const query = 'SELECT id, nombre_completo, correo, rol FROM usuarios WHERE correo = ? AND contraseña = SHA2(?, 256)';
 
   db.query(query, [correo, contrasena], (err, results) => {
     if (err) {
-      console.error('Error en la consulta de login:', err);
+      console.error('❌ Error en la consulta de login:', err);
       return res.status(500).json({ error: 'Error interno del servidor' });
     }
+
+    console.log("🔍 Resultados encontrados en HostGator:", results.length);
 
     if (results.length > 0) {
       res.json({
