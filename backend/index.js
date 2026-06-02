@@ -30,6 +30,11 @@ db.query('SELECT 1', (err, rows) => {
   }
 });
 
+
+// ==========================================
+// RUTA 1: Obtener todos los usuarios (Angular)
+// ==========================================
+
 // RUTA: Obtener todos los usuarios para mostrarlos en Angular
 app.get('/api/usuarios', (req, res) => {
   const query = 'SELECT id, nombre_completo, correo, telefono, rol, fecha_registro FROM usuarios';
@@ -44,14 +49,11 @@ app.get('/api/usuarios', (req, res) => {
   });
 });
 
-// Encender el servidor
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`📡 Servidor de las cabañas corriendo en http://localhost:${PORT}`);
-});
 
 
-
+// ==========================================
+// RUTA 2: Login de usuarios
+// ==========================================
 app.post('/api/usuarios', (req, res) => {
   const correo = req.body.correo ? req.body.correo.trim() : '';
   const contrasena = req.body.contrasena ? req.body.contrasena.trim() : '';
@@ -82,4 +84,49 @@ app.post('/api/usuarios', (req, res) => {
       });
     }
   });
+});
+
+// ==========================================
+// ✨ NUEVA RUTA 3: Registrar nuevo usuario con Bcrypt
+// ==========================================
+app.post('/api/usuarios/register', (req, res) => {
+  const { nombre_completo, correo, telefono, contrasena } = req.body;
+
+  // 1. Primero verificamos si el correo ya existe en tu tabla de usuarios
+  const checkEmailQuery = 'SELECT id FROM usuarios WHERE correo = ?';
+
+  db.query(checkEmailQuery, [correo], (err, results) => {
+    if (err) {
+      console.error('❌ Error al verificar correo:', err);
+      return res.status(500).json({ success: false, message: 'Error interno en el servidor.' });
+    }
+
+    if (results.length > 0) {
+      return res.status(400).json({ success: false, message: 'Este correo ya se encuentra registrado.' });
+    }
+
+    const insertQuery = `
+      INSERT INTO usuarios (nombre_completo, correo, telefono, contraseña, rol)
+      VALUES (?, ?, ?, SHA2(?, 256), 'cliente')
+    `;
+
+      db.query(insertQuery, [nombre_completo, correo, telefono, contrasena], (err, result) => {
+if (err) {
+        console.error('❌ Error al insertar en la BD con SHA2:', contrasena);
+        return res.status(500).json({ success: false, message: 'No se pudo guardar el usuario.' });
+      }
+
+        return res.status(201).json({
+          success: true,
+          message: '¡Tu cuenta ha sido creada exitosamente!'
+        });
+      });
+    });
+  });
+
+
+// Encender el servidor
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`📡 Servidor de las cabañas corriendo en http://localhost:${PORT}`);
 });
