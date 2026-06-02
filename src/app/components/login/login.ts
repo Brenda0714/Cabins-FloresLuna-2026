@@ -13,7 +13,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class Login {
   loginForm: FormGroup;
-  apiUrl = 'http://localhost:3000/api/usuarios'; // Ruta para validar en HostGator
+  apiUrl = 'http://localhost:3000/api/login'; // Ruta para validar en HostGator
 
   constructor(
     private fb: FormBuilder,

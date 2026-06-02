@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { Sidebar } from "../sidebar/sidebar";
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -14,14 +15,20 @@ export class Navbar {
 
 isMenuOpen: boolean = false;
 
-isLoggedIn: boolean = false;
 
+constructor(
+  private authService: AuthService,
+  private router: Router
+)
+  {}
 
-constructor(private router: Router) {}
+  get isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
+  }
 
 // Función simulada para cerrar sesión
   logout(): void {
-    this.isLoggedIn = false;
+    this.authService.logout();
     this.router.navigate(['/home']);
   }
 

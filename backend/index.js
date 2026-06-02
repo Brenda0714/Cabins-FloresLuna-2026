@@ -8,6 +8,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const bcrypt = require('bcrypt');
+
 // 1. Cambiamos 'createConnection' por 'createPool' para que maneje reconexiones automáticas
 const db = mysql.createPool({
     host: process.env.DB_HOST,
@@ -50,12 +52,11 @@ app.listen(PORT, () => {
 
 
 
-// Ruta para Iniciar Sesión (Validar credenciales)
+// REEMPLAZA TU RUTA DE LOGIN POR ESTA VERSIÓN DIRECTA
 app.post('/api/login', (req, res) => {
   const { correo, contrasena } = req.body;
 
-  // IMPORTANTE: Recuerda que si en tu registro guardas las contraseñas en texto plano,
-  // la consulta se hace directa. Si usas encriptación (como bcrypt), se debe comparar después.
+  // Consulta directa comparando correo y contraseña en texto plano
   const query = 'SELECT id, nombre_completo, correo, rol FROM usuarios WHERE correo = ? AND contrasena = ?';
 
   db.query(query, [correo, contrasena], (err, results) => {
@@ -65,14 +66,12 @@ app.post('/api/login', (req, res) => {
     }
 
     if (results.length > 0) {
-      // Credenciales correctas: Mandamos los datos del usuario (MENOS la contraseña por seguridad)
       res.json({
         success: true,
         message: '¡Login exitoso!',
         user: results[0]
       });
     } else {
-      // Credenciales incorrectas
       res.status(401).json({
         success: false,
         message: 'El correo electrónico o la contraseña son incorrectos.'
