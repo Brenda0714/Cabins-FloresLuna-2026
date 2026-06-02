@@ -20,6 +20,10 @@ export const routes: Routes = [
     loadComponent: () => import('./components/reservations/reservations').then(c => c.Reservations)
   },
   {
+    path: 'my-purchases',
+    loadComponent: () => import('./components/my-purchases/my-purchases').then(c => c.MyPurchases)
+  },
+  {
     path: 'how-to-get',
     loadComponent: () => import('./components/how-to-get/how-to-get').then(c => c.HowToGet)
   },
@@ -30,6 +34,14 @@ export const routes: Routes = [
   {
     path: 'regulation',
     loadComponent: () => import('./components/regulation/regulation').then(c => c.Regulation)
+  },
+  {
+    path: 'login',
+    loadComponent: () => import('./components/login/login').then(c => c.Login)
+  },
+  {
+    path: 'register',
+    loadComponent: () => import('./components/register/register').then(c => c.Register)
   },
   {
     path: '**',

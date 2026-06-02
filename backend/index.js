@@ -47,3 +47,36 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`📡 Servidor de las cabañas corriendo en http://localhost:${PORT}`);
 });
+
+
+
+// Ruta para Iniciar Sesión (Validar credenciales)
+app.post('/api/login', (req, res) => {
+  const { correo, contrasena } = req.body;
+
+  // IMPORTANTE: Recuerda que si en tu registro guardas las contraseñas en texto plano,
+  // la consulta se hace directa. Si usas encriptación (como bcrypt), se debe comparar después.
+  const query = 'SELECT id, nombre_completo, correo, rol FROM usuarios WHERE correo = ? AND contrasena = ?';
+
+  db.query(query, [correo, contrasena], (err, results) => {
+    if (err) {
+      console.error('Error en la consulta de login:', err);
+      return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+
+    if (results.length > 0) {
+      // Credenciales correctas: Mandamos los datos del usuario (MENOS la contraseña por seguridad)
+      res.json({
+        success: true,
+        message: '¡Login exitoso!',
+        user: results[0]
+      });
+    } else {
+      // Credenciales incorrectas
+      res.status(401).json({
+        success: false,
+        message: 'El correo electrónico o la contraseña son incorrectos.'
+      });
+    }
+  });
+});

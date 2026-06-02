@@ -18,6 +18,29 @@
         +52 (812) 2329 9930
       </div>
 
+
+
+
+    @if (!isLoggedIn) {
+      <div class="hidden lg:flex items-center gap-3">
+        <a [routerLink]="['/login']" class="text-sm font-medium text-gray-600 hover:text-[#ff8B64] transition-colors">
+          Iniciar Sesión
+        </a>
+        <a [routerLink]="['/register']" class="bg-[#ff8B64] text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-[#df9f88] transition-colors shadow-sm">
+          Registrarse
+        </a>
+      </div>
+    } @else {
+      <div class="hidden lg:flex items-center gap-3">
+        <span class="text-sm text-olive-600 font-medium">¡Hola!</span>
+        <button (click)="logout()" class="text-sm font-medium text-red-500 hover:text-red-700 transition-colors">
+          Cerrar Sesión
+        </button>
+      </div>
+    }
+
+
+
       <button (click)="isMenuOpen = true" class="lg:hidden text-olive-700 hover:scale-110 transition-transform">
         <img src="/assets/img/burger-menu.png" alt="menu-burger" class="h-8 w-8">
       </button>
@@ -29,6 +52,14 @@
       <a [routerLink]="['/home']" routerLinkActive="!text-[#D18B73]" class="nav-link">Nosotros</a>
       <a [routerLink]="['/gallery']" routerLinkActive="!text-[#D18B73]" class="nav-link">Galería</a>
       <a [routerLink]="['/reservations']" routerLinkActive="!text-[#D18B73]" class="nav-link">Reservaciones</a>
+
+
+    @if (isLoggedIn) {
+      <a [routerLink]="['/my-purchases']" routerLinkActive="!text-[#D18B73]" class="nav-link font-semibold text-olive-600 animate-fade-down">
+        🛒 Compras
+      </a>
+    }
+
       <a [routerLink]="['/how-to-get']" routerLinkActive="!text-[#D18B73]" class="nav-link">Cómo llegar</a>
       <a [routerLink]="['/cancellations']" routerLinkActive="!text-[#D18B73]" class="nav-link">Políticas y Cancelaciones</a>
       <a [routerLink]="['/regulation']" routerLinkActive="!text-[#D18B73]" class="nav-link">Reglamento</a>

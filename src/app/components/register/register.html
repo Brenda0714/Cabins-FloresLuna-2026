@@ -1,0 +1,74 @@
+<div class="min-h-screen w-full flex items-center justify-center bg-cover bg-center relative"
+     style="background-image: url('assets/img/hero-cabin.png');">
+
+  <!-- Capa oscura de superposición suave -->
+  <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+
+  <!-- Contenedor del Formulario -->
+  <div class="bg-white/95 relative z-10 w-full max-w-md p-8 md:p-10 rounded-2xl shadow-2xl mx-4 transition-all animate-fade-center">
+
+    <!-- Logo / Encabezado -->
+    <div class="text-center mb-6">
+      <img src="/assets/img/LOGO.png" alt="Flores de la Luna" class="h-28 mx-auto object-contain mb-2">
+      <h2 class="g-text text-2xl font-serif font-semibold text-olive-900">Crear Cuenta</h2>
+      <p class="g-text text-sm text-olive-500 font-light mt-1">Regístrate para gestionar tus reservaciones</p>
+    </div>
+
+    <!-- Campos de Entrada -->
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister()" class="space-y-4">
+
+      <!-- CAMPO 1: Nombre Completo -->
+      <div class="g-text">
+        <label class="g-text block text-sm font-medium text-olive-700 uppercase tracking-wider mb-1">Nombre Completo</label>
+        <input type="text"
+               formControlName="nombre_completo"
+               placeholder="Tu nombre y apellidos"
+               class="g-text w-full px-4 py-2.5 rounded-xl border border-olive-200 text-sm focus:outline-none focus:border-[#D18B73] focus:ring-2 focus:ring-[#D18B73] transition-all bg-olive-300">
+      </div>
+
+      <!-- CAMPO 2: Correo Electrónico -->
+      <div class="g-text">
+        <label class="g-text block text-sm font-medium text-olive-700 uppercase tracking-wider mb-1">Correo Electrónico</label>
+        <input type="email"
+               formControlName="correo"
+               placeholder="ejemplo@correo.com"
+               class="g-text w-full px-4 py-2.5 rounded-xl border border-olive-200 text-sm focus:outline-none focus:border-[#D18B73] focus:ring-2 focus:ring-[#D18B73] transition-all bg-olive-300">
+      </div>
+
+      <!-- CAMPO 3: Teléfono -->
+      <div class="g-text">
+        <label class="g-text block text-sm font-medium text-olive-700 uppercase tracking-wider mb-1">Teléfono Móvil</label>
+        <input type="tel"
+               formControlName="telefono"
+               maxlength="10"
+               placeholder="8122329333"
+               class="g-text w-full px-4 py-2.5 rounded-xl border border-olive-200 text-sm focus:outline-none focus:border-[#D18B73] focus:ring-2 focus:ring-[#D18B73] transition-all bg-olive-300">
+      </div>
+
+      <!-- CAMPO 4: Contraseña -->
+      <div>
+        <label class="g-text block text-sm font-medium text-olive-700 uppercase tracking-wider mb-1">Contraseña</label>
+        <input type="password"
+               formControlName="contrasena"
+               placeholder="Mínimo 6 caracteres"
+               class="g-text w-full px-4 py-2.5 rounded-2xl border border-olive-200 text-sm focus:outline-none focus:border-[#ff8B64] focus:ring-2 focus:ring-[#D18B73] transition-all bg-olive-300">
+      </div>
+
+      <!-- Botón de Acción -->
+      <button type="submit"
+              [disabled]="registerForm.invalid"
+              class="g-text w-full bg-[#ff8B64] hover:bg-[#bd7a63] disabled:bg-olive-400 disabled:cursor-not-allowed text-white font-medium py-3 rounded-xl transition-all shadow-md active:scale-[0.98] mt-4 text-sm cursor-pointer">
+        Registrar mi Cuenta
+      </button>
+    </form>
+
+    <!-- Volver al Login -->
+    <div class="text-center mt-6 pt-4 border-t border-olive-100">
+      <p class="g-text text-sm text-olive-500 font-light">
+        ¿Ya tienes una cuenta?
+        <a [routerLink]="['/login']" class="g-text text-extrabold font-medium text-[#D18B73] hover:underline transition-all">Inicia sesión aquí</a>
+      </p>
+    </div>
+
+  </div>
+</div>

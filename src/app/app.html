@@ -1,11 +1,17 @@
 
 
-<app-navbar></app-navbar>
+<!-- El Navbar solo aparece si showNavAndFooter es true -->
+@if (showNavAndFooter) {
+  <app-navbar></app-navbar>
+}
 
 <div style="overflow-x: hidden;">
     <router-outlet></router-outlet>
 </div>
 
-<app-footer></app-footer>
+<!-- El Footer también se oculta en el login y registro -->
+@if (showNavAndFooter) {
+  <app-footer></app-footer>
+}
 
 <app-usuarios></app-usuarios>
