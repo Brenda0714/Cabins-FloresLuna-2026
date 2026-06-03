@@ -1,1 +1,94 @@
-<p>my-purchases works!</p>
+<div class="min-h-screen bg-olive-50 p-4 md:p-8 g-text justify-center">
+
+  <div class="max-w-4xl mx-auto mb-10 text-center">
+    <h1 class="g-text text-4xl font-bold text-olive-600 tracking-wide uppercase">Mis Reservaciones</h1>
+    <p class="g-text text-sm text-olive-500">Revisa los detalles de tus estancias planeadas e historial de visitas en Flores de la Luna.</p>
+  </div>
+
+  <div class="g-text max-w-6xl mx-auto mb-8 flex border-b border-olive-100">
+    <button (click)="cambiarActualizacion('proximas')"
+            [class]="ActualizacionActual() === 'proximas' ? 'border-[#D18B73] text-olive-900 font-bold' : 'border-transparent text-olive-400 font-medium'"
+            class="g-text px-6 py-3 border-b-2 text-sm transition-all uppercase tracking-wider cursor-pointer">
+      Próximos Viajes
+    </button>
+    <button (click)="cambiarActualizacion('pasadas')"
+            [class]="ActualizacionActual() === 'pasadas' ? 'border-[#D18B73] text-olive-900 font-bold' : 'border-transparent text-olive-400 font-medium'"
+            class="g-text px-6 py-3 border-b-2 text-sm transition-all uppercase tracking-wider cursor-pointer">
+      Historial Pasado
+    </button>
+  </div>
+
+<div class="g-text max-w-6xl mx-auto overflow-y-auto max-h-150 pr-2 space-y-4 mb-10 border border-transparent custom-scroll">
+
+  @for (compra of comprasFiltradas(); track compra.id) {
+    <div class="bg-white rounded-2xl border border-olive-100 shadow-sm overflow-hidden flex flex-col md:flex-row hover:shadow-md transition-shadow">
+
+      <div class="bg-olive-50/50 p-6 md:w-52 flex flex-col justify-between items-center text-center border-b md:border-b-0 md:border-r border-olive-100">
+        <div class="p-4 bg-white rounded-full shadow-sm text-[#D18B73] mb-2">
+          <i class="fas fa-mountain text-2xl"></i>
+        </div>
+        <div>
+          <span class="text-[10px] text-olive-400 block uppercase font-mono">Código de Reserva</span>
+          <span class="font-mono text-xs font-bold text-olive-800">#RES-{{ compra.id }}</span>
+        </div>
+      </div>
+
+      <div class="p-6 flex-1 space-y-3">
+        <div class="flex items-start justify-between gap-2">
+          <h3 class="text-base font-bold text-olive-900 tracking-wide">{{ compra.cabin_nombre }}</h3>
+
+          <span [class]="compra.estado_pago === 'aprobado' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200'"
+                class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border">
+            {{ compra.estado_pago === 'aprobado' ? 'Reservado' : 'Pago Pendiente' }}
+          </span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 bg-olive-50 p-3 rounded-xl border border-olive-100">
+          <div>
+            <span class="text-[10px] text-olive-400 block uppercase">Llegada (Check-In)</span>
+            <span class="text-xs font-bold text-olive-700">
+              <i class="far fa-calendar-check text-olive-600 mr-1"></i>{{ compra.fecha_llegada | date:'dd MMM, yyyy' }}
+            </span>
+          </div>
+          <div>
+            <span class="text-[10px] text-olive-400 block uppercase">Salida (Check-Out)</span>
+            <span class="text-xs font-bold text-olive-700">
+              <i class="far fa-calendar-times text-olive-600 mr-1"></i>{{ compra.fecha_salida | date:'dd MMM, yyyy' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between text-xs pt-1 gap-2 text-olive-500">
+          <span>Duración: <strong class="text-olive-700">{{ compra.noches }} noches</strong></span>
+          @if (compra.folio) {
+            <span>Folio de Transacción: <strong class="font-mono text-olive-700">#{{ compra.folio }}</strong></span>
+          } @else {
+            <span class="text-amber-600 font-medium"><i class="fas fa-exclamation-circle mr-1"></i>Requiere validación de pago</span>
+          }
+        </div>
+      </div>
+
+      <div class="p-6 bg-olive-50/50 md:w-48 flex flex-col justify-center items-stretch md:items-end border-t md:border-t-0 border-olive-50">
+        <span class="text-[10px] text-olive-400 uppercase tracking-wider block text-left md:text-right">Total Pagado</span>
+        <span class="text-xl font-black text-olive-900 mb-4 text-left md:text-right">${{ compra.monto_total | number:'1.2-2' }}</span>
+
+        <button [disabled]="compra.estado_pago !== 'aprobado'"
+                [class]="compra.estado_pago === 'aprobado' ? 'bg-olive-800 hover:bg-olive-900 text-white shadow-sm' : 'bg-olive-200 text-olive-400 cursor-not-allowed'"
+                class="w-full py-2 px-3 text-center text-xs font-bold uppercase tracking-wider rounded-xl transition-all active:scale-95">
+          <i class="fas fa-receipt mr-1.5"></i> Ver Recibo
+        </button>
+      </div>
+
+    </div>
+  } @empty {
+    <div class="text-center p-12 bg-white rounded-2xl border border-dashed border-olive-200">
+      <div class="p-4 bg-olive-50 rounded-full inline-block text-olive-300 mb-3">
+        <i class="fas fa-folder-open text-3xl"></i>
+      </div>
+      <h3 class="text-sm font-bold text-olive-900 uppercase tracking-wide">No se encontraron estancias</h3>
+      <p class="text-xs text-olive-400 mt-1">Aún no cuentas con reservaciones registradas en esta sección.</p>
+    </div>
+  }
+
+</div>
+</div>
