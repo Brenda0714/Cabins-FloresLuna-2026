@@ -1,54 +1,54 @@
 @if (showAlert) {
-  <div class="fixed inset-0 bg-black/50 backdrop-blur-xs z-9999 flex items-center justify-center p-4 animate-fade animate-duration-200">
+<div
+  class="fixed inset-0 bg-black/50 backdrop-blur-xs z-9999 flex items-center justify-center p-4 animate-fade animate-duration-200">
 
-    <div class="bg-white rounded-2xl shadow-2xl border-2 max-w-sm w-full p-6 text-center transform transition-all pointer-events-auto animate-scale-up"
-      [class.border-emerald-500]="alertType === 'success'"
-      [class.border-red-500]="alertType === 'error'">
+  <div
+    class="bg-white rounded-2xl shadow-2xl border-2 max-w-sm w-full p-6 text-center transform transition-all pointer-events-auto animate-scale-up"
+    [class.border-emerald-500]="alertType === 'success'" [class.border-red-500]="alertType === 'error'">
 
-      <div class="mx-auto flex items-center justify-center h-14 w-14 rounded-full mb-4"
-        [class.bg-emerald-100]="alertType === 'success'"
-        [class.bg-red-100]="alertType === 'error'">
+    <div class="mx-auto flex items-center justify-center h-14 w-14 rounded-full mb-4"
+      [class.bg-emerald-100]="alertType === 'success'" [class.bg-red-100]="alertType === 'error'">
 
-        @if (alertType === 'success') {
-          <svg class="h-8 w-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-          </svg>
-        } @else {
-          <svg class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-          </svg>
-        }
-      </div>
-
-      <h3 class="g-text text-lg font-serif font-bold text-olive-900 mb-2">
-        {{ alertType === 'success' ? '¡Registro Exitoso!' : '¡Algo salió mal!' }}
-      </h3>
-
-      <p class="g-text text-sm text-olive-600 font-light mb-6">
-        {{ alertMessage }}
-      </p>
-
-      <button (click)="showAlert = false" type="button"
-        class="g-text w-full py-2.5 px-4 rounded-xl text-sm font-medium transition-all shadow-md active:scale-95"
-        [class.bg-none]="alertType === 'success'"
-        [class.text-emerald-600]="alertType === 'success'"
-        [class.bg-none]="alertType === 'error'"
-        [class.text-red-600]="alertType === 'error'">
-        Espere un momento...
-      </button>
-
+      @if (alertType === 'success') {
+      <svg class="h-8 w-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+      </svg>
+      } @else {
+      <svg class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+      </svg>
+      }
     </div>
+
+    <h3 class="g-text text-lg font-serif font-bold text-olive-900 mb-2">
+      {{ alertType === 'success' ? '¡Registro Exitoso!' : '¡Algo salió mal!' }}
+    </h3>
+
+    <p class="g-text text-sm text-olive-600 font-light mb-6">
+      {{ alertMessage }}
+    </p>
+
+    <button (click)="showAlert = false" type="button"
+      class="g-text w-full py-2.5 px-4 rounded-xl text-sm font-medium transition-all shadow-md active:scale-95"
+      [class.bg-none]="alertType === 'success'" [class.text-emerald-600]="alertType === 'success'"
+      [class.bg-none]="alertType === 'error'" [class.text-red-600]="alertType === 'error'">
+      Espere un momento...
+    </button>
+
   </div>
+</div>
 }
 
 <div class="min-h-screen w-full flex items-center justify-center bg-cover bg-center relative"
-     style="background-image: url('assets/img/hero-cabin.png');">
+  style="background-image: url('assets/img/hero-cabin.png');">
 
   <!-- Capa oscura de superposición suave -->
   <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
 
   <!-- Contenedor del Formulario -->
-  <div class="bg-white/95 relative z-10 w-full max-w-md p-8 md:p-10 rounded-2xl shadow-2xl mx-4 transition-all animate-fade-center mb-5 mt-5">
+  <div
+    class="bg-white/95 relative z-10 w-full max-w-md p-8 md:p-10 rounded-2xl shadow-2xl mx-4 transition-all animate-fade-center mb-5 mt-5">
 
     <!-- Logo / Encabezado -->
     <div class="text-center mb-6">
@@ -62,45 +62,39 @@
 
       <!-- CAMPO 1: Nombre Completo -->
       <div class="g-text">
-        <label class="g-text block text-sm font-medium text-olive-700 uppercase tracking-wider mb-1">Nombre Completo</label>
-        <input type="text"
-               formControlName="nombre_completo"
-               placeholder="nombre completo"
-               class="g-text w-full px-4 py-2.5 rounded-xl border border-olive-200 text-sm focus:outline-none focus:border-[#D18B73] focus:ring-2 focus:ring-[#D18B73] transition-all bg-olive-300">
+        <label class="g-text block text-sm font-medium text-olive-700 uppercase tracking-wider mb-1">Nombre
+          Completo</label>
+        <input type="text" formControlName="nombre_completo" placeholder="nombre completo" autocomplete="disabled-luna"
+          class="g-text w-full px-4 py-2.5 rounded-xl border border-olive-200 text-sm focus:outline-none focus:border-[#D18B73] focus:ring-2 focus:ring-[#D18B73] transition-all bg-olive-300">
       </div>
 
       <!-- CAMPO 2: Correo Electrónico -->
       <div class="g-text">
-        <label class="g-text block text-sm font-medium text-olive-700 uppercase tracking-wider mb-1">Correo Electrónico</label>
-        <input type="email"
-               formControlName="correo"
-               placeholder="ejemplo@correo.com"
-               class="g-text w-full px-4 py-2.5 rounded-xl border border-olive-200 text-sm focus:outline-none focus:border-[#D18B73] focus:ring-2 focus:ring-[#D18B73] transition-all bg-olive-300">
+        <label class="g-text block text-sm font-medium text-olive-700 uppercase tracking-wider mb-1">Correo
+          Electrónico</label>
+        <input type="email" formControlName="correo" autocomplete="disable-correo" placeholder="ejemplo@correo.com"
+          class="g-text w-full px-4 py-2.5 rounded-xl border border-olive-200 text-sm focus:outline-none focus:border-[#D18B73] focus:ring-2 focus:ring-[#D18B73] transition-all bg-olive-300">
       </div>
 
       <!-- CAMPO 3: Teléfono -->
       <div class="g-text">
-        <label class="g-text block text-sm font-medium text-olive-700 uppercase tracking-wider mb-1">Teléfono Móvil</label>
-        <input type="tel"
-               formControlName="telefono"
-               maxlength="10"
-               placeholder="8122329333"
-               class="g-text w-full px-4 py-2.5 rounded-xl border border-olive-200 text-sm focus:outline-none focus:border-[#D18B73] focus:ring-2 focus:ring-[#D18B73] transition-all bg-olive-300">
+        <label class="g-text block text-sm font-medium text-olive-700 uppercase tracking-wider mb-1">Teléfono
+          Móvil</label>
+        <input type="tel" formControlName="telefono" maxlength="10" placeholder="8122329333" autocomplete="off"
+          class="g-text w-full px-4 py-2.5 rounded-xl border border-olive-200 text-sm focus:outline-none focus:border-[#D18B73] focus:ring-2 focus:ring-[#D18B73] transition-all bg-olive-300">
       </div>
 
       <!-- CAMPO 4: Contraseña -->
       <div>
         <label class="g-text block text-sm font-medium text-olive-700 uppercase tracking-wider mb-1">Contraseña</label>
-        <input type="password"
-               formControlName="contrasena"
-               placeholder="Mínimo 6 caracteres"
-               class="g-text w-full px-4 py-2.5 rounded-2xl border border-olive-200 text-sm focus:outline-none focus:border-[#ff8B64] focus:ring-2 focus:ring-[#D18B73] transition-all bg-olive-300">
+        <input type="password" formControlName="contrasena" autocomplete="new-password"
+          placeholder="Mínimo 6 caracteres"
+          class="g-text w-full px-4 py-2.5 rounded-2xl border border-olive-200 text-sm focus:outline-none focus:border-[#ff8B64] focus:ring-2 focus:ring-[#D18B73] transition-all bg-olive-300">
       </div>
 
       <!-- Botón de Acción -->
-      <button type="submit"
-              [disabled]="registerForm.invalid"
-              class="g-text w-full bg-[#ff8B64] hover:bg-[#bd7a63] disabled:bg-olive-400 disabled:cursor-not-allowed text-white font-medium py-3 rounded-xl transition-all shadow-md active:scale-[0.98] mt-4 text-sm cursor-pointer">
+      <button type="submit" [disabled]="registerForm.invalid"
+        class="g-text w-full bg-[#ff8B64] hover:bg-[#bd7a63] disabled:bg-olive-400 disabled:cursor-not-allowed text-white font-medium py-3 rounded-xl transition-all shadow-md active:scale-[0.98] mt-4 text-sm cursor-pointer">
         Registrar mi Cuenta
       </button>
     </form>
@@ -109,7 +103,8 @@
     <div class="text-center mt-6 pt-4 border-t border-olive-100">
       <p class="g-text text-sm text-olive-500 font-light">
         ¿Ya tienes una cuenta?
-        <a [routerLink]="['/login']" class="g-text text-extrabold font-medium text-[#D18B73] hover:underline transition-all">Inicia sesión aquí</a>
+        <a [routerLink]="['/login']"
+          class="g-text text-extrabold font-medium text-[#D18B73] hover:underline transition-all">Inicia sesión aquí</a>
       </p>
     </div>
 

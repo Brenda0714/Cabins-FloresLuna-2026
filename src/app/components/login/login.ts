@@ -45,42 +45,42 @@ export class Login {
     setTimeout(() => {
       this.showAlert = false;
       this.cdr.detectChanges();
-    }, 5000);
+    }, 2000);
   }
 
 
   onLogin(): void {
 
 
-  if (this.loginForm.valid) {
+    if (this.loginForm.valid) {
 
-    this.http.post(this.apiUrl, this.loginForm.value).subscribe({
-      next: (response: any) => {
+      this.http.post(this.apiUrl, this.loginForm.value).subscribe({
+        next: (response: any) => {
 
-        if (response.success) {
+          if (response.success) {
 
-          this.authService.login(response.user);
+            this.authService.login(response.user);
 
-          this.triggerAlert(`¡Bienvenido de nuevo, ${response.user.nombre_completo.split(' ')[0]}!`, 'success');
+            this.triggerAlert(`¡Bienvenido de nuevo, ${response.user.nombre_completo.split(' ')[0]}!`, 'success');
 
-          setTimeout(() => {
-            this.router.navigate(['/home']);
-          }, 5000);
-        } else {
+            setTimeout(() => {
+              this.router.navigate(['/home']);
+            }, 2000);
+          } else {
 
-          this.triggerAlert('Error al iniciar sesión.', 'error');
+            this.triggerAlert('Error al iniciar sesión.', 'error');
+          }
+        },
+        error: (err: any) => {
+
+          const errMsg = err.error?.message || 'El correo electrónico o la contraseña son incorrectos.';
+          this.triggerAlert(errMsg, 'error');
         }
-      },
-      error: (err: any) => {
+      });
+    } else {
 
-        const errMsg = err.error?.message || 'El correo electrónico o la contraseña son incorrectos.';
-        this.triggerAlert(errMsg, 'error');
-      }
-    });
-  } else {
-
-    this.triggerAlert('Por favor, ingresa tus datos correctamente.', 'error');
+      this.triggerAlert('Por favor, ingresa tus datos correctamente.', 'error');
+    }
   }
-}
 
 }

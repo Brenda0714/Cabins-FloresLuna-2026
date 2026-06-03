@@ -47,7 +47,7 @@ export class Register {
     setTimeout(() => {
       this.showAlert = false;
       this.cdr.detectChanges();
-    }, 4000);
+    }, 2000);
   }
 
   onRegister(): void {

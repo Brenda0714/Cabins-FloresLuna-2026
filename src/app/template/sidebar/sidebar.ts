@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ChangeDetectorRef } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ChangeDetectorRef, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -10,55 +11,78 @@ import { RouterModule } from '@angular/router';
   styleUrl: './sidebar.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Sidebar {
+export class Sidebar implements OnInit, OnChanges {
   @Input() isOpen = false;
   @Output() close = new EventEmitter<void>();
-
-  constructor(private cdr: ChangeDetectorRef) {}
-
-  onClose() {
-setTimeout(() => {
-    this.close.emit();
-    this.cdr.markForCheck();
-  }, 10);
-  }
-
-  // Esto fuerza a Angular a reaccionar si el Input cambia desde afuera
-  ngOnChanges() {
-  this.cdr.markForCheck();
-  }
 
   isLoggedIn: boolean = false;
   nombreUsuario: string = '';
 
+  constructor(private authService: AuthService, private router: Router, private cdr: ChangeDetectorRef) { }
+
   ngOnInit() {
-  this.verificarSesion();
-}
-
-  // Revisa si hay una sesión activa guardada localmente
-verificarSesion() {
-  const userJson = localStorage.getItem('usuario'); // O como llames a tu objeto de sesión
-  if (userJson) {
-    const user = JSON.parse(userJson);
-    this.isLoggedIn = true;
-    this.nombreUsuario = user.nombre_completo || 'Huésped';
-  } else {
-    this.isLoggedIn = false;
+    this.verificarSesion();
   }
-}
 
-// Extrae la inicial del nombre para pintarla en el círculo estético móvil
-obtenerIniciales(): string {
-  return this.nombreUsuario ? this.nombreUsuario.charAt(0).toUpperCase() : 'U';
-}
+  // Detecta cuando el Navbar abre o cierra el menú desde afuera
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['isOpen'] && changes['isOpen'].currentValue === true) {
+      this.verificarSesion();
+    }
+    this.cdr.markForCheck(); // Obligatorio por el uso de OnPush
+  }
 
-// Borra los datos, cierra el menú lateral y te redirige a home
-logout() {
-  localStorage.removeItem('usuario');
-  this.isLoggedIn = false;
-  this.onClose();
-  // Aquí puedes usar tu router para mandarlo a /home si lo deseas
-}
+  // 🔄 Esta función le da soporte reactivo en tiempo real a tu @if del HTML
+  verificarEstadoActual(): boolean {
+    const userJson = sessionStorage.getItem('usuario'); // 🔐 Cambiado a sessionStorage
 
+    if (userJson) {
+      const user = JSON.parse(userJson);
+      this.isLoggedIn = true;
+      this.nombreUsuario = user.nombre_completo || 'Huésped';
+      return true;
+    } else {
+      this.isLoggedIn = false;
+      this.nombreUsuario = '';
+      return false;
+    }
+  }
+  get userRol(): string {
+    const user = this.authService.getUsuarioActual();
+    if (user) {
+      // Si en tu backend mandas 'rol' o 'role', asegúrate de escribirlo igual aquí
+      const rolOriginal = user.rol || user.role;
+      if (rolOriginal) {
+        return rolOriginal.toString().trim().toLowerCase();
+      }
+      return rolOriginal ? rolOriginal.toLowerCase() : 'cliente';
+    }
+    return 'cliente';
+  }
+  verificarSesion() {
+    this.verificarEstadoActual();
+    this.cdr.markForCheck(); // Le avisa a OnPush que redibuje el menú
+  }
 
+  obtenerIniciales(): string {
+    return this.nombreUsuario ? this.nombreUsuario.trim().charAt(0).toUpperCase() : 'U';
+  }
+
+  onClose() {
+    setTimeout(() => {
+      this.close.emit();
+      this.cdr.markForCheck();
+    }, 10);
+  }
+
+  logout() {
+    this.authService.logout();
+    this.isLoggedIn = false;
+    this.nombreUsuario = '';
+    this.onClose();
+    this.cdr.markForCheck();
+    this.router.navigate(['/home']).then(() => {
+      window.location.reload();
+    });
+  }
 }

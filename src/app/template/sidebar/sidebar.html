@@ -18,41 +18,47 @@
     <nav class="flex flex-col p-6 gap-6 g-text">
       <a routerLink="/home" routerLinkActive="link-activo" (click)="onClose()" class="side-link">Nosotros</a>
       <a routerLink="/gallery" routerLinkActive="link-activo" (click)="onClose()" class="side-link">Galería</a>
-      <a routerLink="/reservations" routerLinkActive="link-activo" (click)="onClose()" class="side-link">Reservaciones</a>
+      <a routerLink="/reservations" routerLinkActive="link-activo" (click)="onClose()"
+        class="side-link">Reservaciones</a>
       <a routerLink="/how-to-get" routerLinkActive="link-activo" (click)="onClose()" class="side-link">Cómo llegar</a>
-      <a routerLink="/cancellations" routerLinkActive="link-activo" (click)="onClose()" class="side-link">Políticas y Cancelaciones</a>
+      <a routerLink="/cancellations" routerLinkActive="link-activo" (click)="onClose()" class="side-link">Políticas y
+        Cancelaciones</a>
       <a routerLink="/regulation" routerLinkActive="link-activo" (click)="onClose()" class="side-link">Reglamento</a>
     </nav>
 
     <div class="px-6 py-4 border-t border-b border-olive-100 bg-olive-50/50 g-text">
       @if (isLoggedIn) {
-        <div class="flex flex-col gap-3">
-          <div class="flex items-center gap-3">
-            <div class="h-9 w-9 rounded-full bg-[#D18B73]/20 flex items-center justify-center text-[#D18B73] font-bold">
-              {{ obtenerIniciales() }}
-            </div>
-            <div class="flex flex-col">
-              <span class="text-xs text-olive-500 uppercase tracking-wider font-medium">Bienvenido</span>
-              <span class="text-sm font-medium text-olive-900 truncate max-w-200px">{{ nombreUsuario }}</span>
-            </div>
+      <div class="flex flex-col gap-3">
+        <div class="flex items-center gap-3">
+          <div class="h-9 w-9 rounded-full bg-[#D18B73]/20 flex items-center justify-center text-[#D18B73] font-bold">
+            {{ obtenerIniciales() }}
           </div>
+          <div class="flex flex-col">
+            <span class="text-xs text-olive-500 uppercase tracking-wider font-medium">Hola</span>
+            <span class="text-sm font-medium text-olive-900 truncate max-w-200px">{{ nombreUsuario }}</span>
+            @if (userRol === 'admin') {
+            <span
+              class="g-text bg-amber-100 text-amber-800 text-[10px] uppercase font-bold px-2 py-0.5 rounded">Admin</span>
+            }
+          </div>
+        </div>
 
-          <button (click)="logout()"
-                  class="w-full mt-2 border border-red-200 hover:bg-red-50 text-red-600 font-medium py-2.5 px-4 rounded-xl transition-all text-xs text-center tracking-wider uppercase active:scale-[0.98] cursor-pointer">
-            Cerrar Sesión
-          </button>
-        </div>
+        <button (click)="logout()"
+          class="w-full mt-2 border border-red-200 hover:bg-red-50 text-red-600 font-medium py-2.5 px-4 rounded-xl transition-all text-xs text-center tracking-wider uppercase active:scale-[0.98] cursor-pointer">
+          Cerrar Sesión
+        </button>
+      </div>
       } @else {
-        <div class="flex flex-col gap-3">
-          <a routerLink="/login" (click)="onClose()"
-             class="w-full bg-[#ff8B64] hover:bg-[#bd7a63] text-white font-medium py-2.5 px-4 rounded-xl transition-all shadow-sm text-xs text-center tracking-wider uppercase active:scale-[0.98]">
-            Iniciar Sesión
-          </a>
-          <a routerLink="/register" (click)="onClose()"
-             class="w-full border border-olive-300 hover:bg-white text-olive-700 font-medium py-2.5 px-4 rounded-xl transition-all text-xs text-center tracking-wider uppercase active:scale-[0.98]">
-            Crear Cuenta
-          </a>
-        </div>
+      <div class="flex flex-col gap-3">
+        <a routerLink="/login" (click)="onClose()"
+          class="w-full bg-[#ff8B64] hover:bg-[#bd7a63] text-white font-medium py-2.5 px-4 rounded-xl transition-all shadow-sm text-xs text-center tracking-wider uppercase active:scale-[0.98]">
+          Iniciar Sesión
+        </a>
+        <a routerLink="/register" (click)="onClose()"
+          class="w-full border border-olive-300 hover:bg-white text-olive-700 font-medium py-2.5 px-4 rounded-xl transition-all text-xs text-center tracking-wider uppercase active:scale-[0.98]">
+          Crear Cuenta
+        </a>
+      </div>
       }
     </div>
 

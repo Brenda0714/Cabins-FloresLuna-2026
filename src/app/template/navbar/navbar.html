@@ -14,14 +14,37 @@
     </a>
 
     <div class="flex justify-end items-center gap-4 animate-fade-up">
-      <div class="hidden sm:block g-text text-right text-sm font-medium text-[#D18B73]">
+      <div class="hidden sm:block g-text text-right text-sm font-medium text-[#ff8B64]">
         +52 (812) 2329 9930
       </div>
 
 
 
 
-      @if (!isLoggedIn) {
+      @if (isLoggedIn) {
+      <div class="hidden lg:flex flex-col gap-3">
+        <div class="flex items-center gap-3">
+          <div class="h-9 w-9 rounded-full bg-[#D18B73]/20 flex items-center justify-center text-[#D18B73] font-bold">
+            {{ obtenerIniciales() }}
+          </div>
+          <div class="flex flex-col">
+            <span class="g-text text-xs text-olive-500 uppercase tracking-wider font-medium">Hola</span>
+            <span class="g-text text-sm font-medium text-olive-900 truncate max-w-200px">{{ userFirstName }}</span>
+            @if (userRol === 'admin') {
+            <span
+              class="g-text bg-amber-100 text-amber-800 text-[10px] uppercase font-bold px-2 py-0.5 rounded">Admin</span>
+            }
+          </div>
+        </div>
+
+        <button (click)="logout()"
+          class="g-text w-full mt-2 border border-red-200 hover:bg-red-50 text-red-600 font-medium py-2.5 px-4 rounded-xl transition-all text-xs text-center tracking-wider uppercase active:scale-[0.98] cursor-pointer">
+          Cerrar Sesión
+        </button>
+      </div>
+
+      } @else {
+
       <div class="hidden lg:flex items-center gap-3">
         <a [routerLink]="['/login']" class="text-sm font-medium text-olive-600 hover:text-[#ff8B64] transition-colors">
           Iniciar Sesión
@@ -31,17 +54,7 @@
           Registrarse
         </a>
       </div>
-      } @else {
-      <div class="hidden lg:flex items-center gap-3">
 
-        <span class="g-text text-sm text-olive-600 font-medium">¡Hola, {{ userFirstName }}!</span>
-
-
-        <button (click)="logout()"
-          class="g-text text-sm font-medium text-[#ff8B64] hover:text-red-700 transition-colors cursor-pointer">
-          Cerrar Sesión
-        </button>
-      </div>
       }
 
 
@@ -54,20 +67,20 @@
 
   <div class="hidden lg:block border-t border-olive-50">
     <div class="g-text max-w-7xl mx-auto px-3 py-3 flex justify-center gap-10 text-center">
-      <a [routerLink]="['/home']" routerLinkActive="!text-[#D18B73]" class="nav-link">Nosotros</a>
-      <a [routerLink]="['/gallery']" routerLinkActive="!text-[#D18B73]" class="nav-link">Galería</a>
-      <a [routerLink]="['/reservations']" routerLinkActive="!text-[#D18B73]" class="nav-link">Reservaciones</a>
+      <a [routerLink]="['/home']" routerLinkActive="!text-[#ff8B64]" class="nav-link">Nosotros</a>
+      <a [routerLink]="['/gallery']" routerLinkActive="!text-[#ff8B64]" class="nav-link">Galería</a>
+      <a [routerLink]="['/reservations']" routerLinkActive="!text-[#ff8B64]" class="nav-link">Reservaciones</a>
 
 
       @if (isLoggedIn) {
       @if (userRol === 'admin' || userRol === 'administrador') {
-      <a [routerLink]="['/my-sales']" routerLinkActive="!text-[#D18B73]"
+      <a [routerLink]="['/my-sales']" routerLinkActive="!text-[#ff8B64]"
         class="nav-link font-semibold text-olive-600 animate-fade-down">
         Mis Ventas
       </a>
       }
       @else {
-      <a [routerLink]="['/my-purchases']" routerLinkActive="!text-[#D18B73]"
+      <a [routerLink]="['/my-purchases']" routerLinkActive="!text-[#ff8B64]"
         class="nav-link font-semibold text-olive-600 animate-fade-down">
         Mis Compras
       </a>
@@ -75,10 +88,10 @@
 
       }
 
-      <a [routerLink]="['/how-to-get']" routerLinkActive="!text-[#D18B73]" class="nav-link">Cómo llegar</a>
-      <a [routerLink]="['/cancellations']" routerLinkActive="!text-[#D18B73]" class="nav-link">Políticas y
+      <a [routerLink]="['/how-to-get']" routerLinkActive="!text-[#ff8B64]" class="nav-link">Cómo llegar</a>
+      <a [routerLink]="['/cancellations']" routerLinkActive="!text-[#ff8B64]" class="nav-link">Políticas y
         Cancelaciones</a>
-      <a [routerLink]="['/regulation']" routerLinkActive="!text-[#D18B73]" class="nav-link">Reglamento</a>
+      <a [routerLink]="['/regulation']" routerLinkActive="!text-[#ff8B64]" class="nav-link">Reglamento</a>
     </div>
   </div>
 
