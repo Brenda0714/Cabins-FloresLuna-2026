@@ -479,6 +479,50 @@ app.post('/api/reservas', (req, res) => {
 });
 
 
+// ==========================================
+// 🌲 RUTA 6: Mostrar Reservaciones USUARIO
+// ==========================================
+
+app.get('/api/mis-compras/:usuarioId', (req, res) => {
+    const { usuarioId } = req.params;
+
+    // Query SQL para unir la reserva con sus detalles de pago
+  const query = `
+    SELECT
+      r.id,
+      r.cabin_nombre,
+      DATE_FORMAT(r.fecha_llegada, '%Y-%m-%d') AS fecha_llegada,
+      DATE_FORMAT(r.fecha_salida, '%Y-%m-%d') AS fecha_salida,
+      r.noches,
+      r.monto_total,
+      r.estado,
+      p.referencia_pago AS folio,
+      p.metodo_pago,
+      p.estado_pago
+    FROM reservas r
+    LEFT JOIN pagos p ON r.id = p.reserva_id
+    WHERE r.usuario_id = ?
+    ORDER BY r.fecha_llegada DESC
+  `;
+
+  db.query(query, [usuarioId], (err, results) => {
+    if (err) {
+      console.error('❌ Error al consultar compras en MySQL:', err);
+      return res.status(500).json({ error: 'Error interno en el servidor.' });
+    }
+    res.json(results);
+  });
+})
+
+
+// ==========================================
+// 🌲 RUTA 7: Mostrar Pagos ADMIN
+// ==========================================
+app.get('/api/mis-compras/:usuarioId', (req, res) =>{
+
+
+
+})
 
 
 // ==============================================================================================================================
