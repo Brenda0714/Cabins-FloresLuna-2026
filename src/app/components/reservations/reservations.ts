@@ -32,6 +32,12 @@ private platformId = inject(PLATFORM_ID);
 private cdr = inject(ChangeDetectorRef);
 private http = inject(HttpClient);
 private paypalRendered = false;
+showAlert: boolean = false;
+showAlert2: boolean = false;
+alertMessage = '';
+alertMessage2 = '';
+alertTitle = '';
+alertType: 'success' | 'error' | 'warning' = 'warning';
 
   BackImg = signal<string[]>([
     'assets/img/RESERVACIONES/section1.png',
@@ -67,6 +73,70 @@ private paypalRendered = false;
 
     },
   ]);
+
+enviarReservaReal() {
+  // 1. Obtenemos los datos actuales que ya calculó y guardó tu formulario en el Signal
+  const datosReserva = this.reservaData();
+
+  // Guardilla de seguridad: Si no hay datos en el Signal, le avisamos al usuario
+  if (!datosReserva) {
+    alert('Por favor, completa correctamente todos los campos del formulario primero.');
+    return;
+  }
+
+  // 2. Activamos el estado de carga mientras se procesa la petición en el servidor
+  this.loading.set(true);
+  console.log('Enviando datos reales al servidor...', datosReserva);
+
+  // 3. Mapeo: Transformamos las propiedades de tu interfaz 'Reserva' al formato que espera tu index.js
+  const payload = {
+    nombre: datosReserva.cliente,
+    email: datosReserva.correo,
+    telefono: datosReserva.telefono,
+    cabin_nombre: datosReserva.cabin,
+    fecha_llegada: datosReserva.fechaLlegada,
+    fecha_salida: datosReserva.fechaSalida,
+    noches: datosReserva.noches,
+    monto_total: datosReserva.montoTotal
+  };
+
+  console.log(payload);
+
+  // 4. Hacemos la petición POST real a tu Backend
+  this.http.post('http://localhost:3000/api/reservas', payload)
+    .subscribe({
+      next: (response: any) => {
+        this.loading.set(false);
+        console.log('🚀 ¡Servidor respondió con éxito!', response);
+
+// ✨ CONFIGURACIÓN DE MODAL DE ÉXITO
+      this.alertTitle = '¡Reservación Exitosa! 🎉';
+      this.alertMessage2 = `Tu estancia de ${datosReserva.noches} noches para la cabaña "${datosReserva.cabin}" ha sido guardada con éxito. El total fue de $${datosReserva.montoTotal} MXN y los correos de confirmación ya fueron enviados.`;
+      this.alertType = 'success'; // Cambia el ícono a verde
+      this.showAlert2 = true;
+
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.loading.set(false);
+        console.error('❌ Error recibido del backend:', error);
+        this.alertType = 'error';
+
+        // 🔐 Si el correo electrónico no está registrado en la tabla 'usuarios'
+        if (error.status === 401 && error.error?.requireAuth) {
+          this.alertTitle = 'Inicia Sesión 🔑';
+          this.alertMessage2 = error.error.message;
+        } else {
+          // Si es un error de código 500 o base de datos caída
+          this.alertTitle = 'Error en el Servidor ❌';
+          this.alertMessage2 = 'Hubo un error al procesar tu reserva en el servidor. Por favor, revisa la terminal negra de Node.js.';
+        }
+
+        this.cdr.detectChanges();
+      }
+    });
+}
+
 
 // ==============================================================================================================================
 // 📋 PAYPAL PAYMENT
@@ -141,19 +211,51 @@ formTouched = signal(false);
 
 iniciarPago(nombre: string, email: string, tel: string, llegada: string, salida: string, cabin: string) {
 
+
 // 1. Activamos el estado de "intentó enviar" para que se muestren los outlines visuales
   this.formTouched.set(true);
 
+const usuarioSesionString = sessionStorage.getItem('usuario');
 
-    // 1. Validar que no haya campos vacíos
-    if (!nombre || !email || !tel || !llegada || !salida || !cabin) {
+if (!usuarioSesionString) {
+    this.alertMessage = 'No has iniciado sesión. Por favor, ingresa a tu cuenta primero.';
+    this.showAlert = true;
+    this.cdr.detectChanges();
 
-      return;
-    }
+    setTimeout(() => {
+      this.showAlert = false;
+      this.cdr.detectChanges();
+    }, 3000); // 3 segundos es mejor para alcanzar a leer el texto largo
+    return;
+  }
+
+  if (!nombre || !email || !tel || !llegada || !salida || !cabin) {
+    this.alertMessage = 'Por favor, completa todos los campos del formulario.';
+    this.showAlert = true;
+    this.cdr.detectChanges();
+
+    setTimeout(() => {
+      this.showAlert = false;
+      this.cdr.detectChanges();
+    }, 3000);
+    return;
+  }
 
 // Si todo está bien, limpiamos el estado de error por si acaso
   this.formTouched.set(false);
 
+  const usuarioSesion = JSON.parse(usuarioSesionString);
+  if (email !== usuarioSesion.correo) {
+    this.alertMessage = 'El correo ingresado no coincide con tu cuenta activa.';
+    this.showAlert = true;
+    this.cdr.detectChanges();
+
+    setTimeout(() => {
+      this.showAlert = false;
+      this.cdr.detectChanges();
+    }, 3000);
+    return;
+  }
 
     const infoCabana = this.Cabins().find(c => c.title === cabin);
     const fechaIn = new Date(llegada);
