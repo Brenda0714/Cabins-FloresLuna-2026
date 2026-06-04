@@ -285,6 +285,11 @@ app.post('/api/reservas', (req, res) => {
         } else {
           console.log(`💰 ¡Pago insertado con éxito! Folio: ${folioSimulado} | Estado: ${estadoPagoDB} | Reserva ID: ${idDeLaReservaCreada}`);
         }
+        const montoLimpio = String(monto_total).replace(/[^0-9.]/g, '');
+        const montoFormateado = Number(montoLimpio).toLocaleString('es-MX', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
 
         // Variable corregida para evitar el ReferenceError de mensajeIntroduccion
         const mensajeIntroduccionHTML = pagoExitoso
@@ -292,7 +297,7 @@ app.post('/api/reservas', (req, res) => {
           : `Hola <strong>${nombre}</strong>, se generó un problema al procesar tu transacción de PayPal. Tu reserva se mantendrá congelada temporalmente, por favor contáctanos de inmediato.`;
 
         const htmlCliente = `
-          <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fcfaf7; padding: 30px 15px; color: #4a3e3d;">
+          <div style="background-color: #fcfaf7; padding: 30px 15px; color: #4a3e3d;">
             <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 25px rgba(139, 69, 19, 0.05); border: 1px solid #f3e9dc;">
 
               <div style="background-color: #ff8B64; padding: 35px 30px; text-align: center;">
@@ -351,7 +356,7 @@ app.post('/api/reservas', (req, res) => {
                   <table style="width: 100%; font-size: 13px; color: #6b5b55; line-height: 1.9;">
                     <tr>
                       <td><strong>ID de Transacción:</strong></td>
-                      <td style="text-align: right; font-family: monospace; font-size: 14px; color: #2d2522;">${referenciaPayPalSimulada}</td>
+                      <td style="text-align: right; font-size: 14px; color: #2d2522;">${referenciaPayPalSimulada}</td>
                     </tr>
                     <tr>
                       <td><strong>Fecha de Pago:</strong></td>
@@ -368,24 +373,33 @@ app.post('/api/reservas', (req, res) => {
                     <tr><td colspan="2" style="padding-top: 15px; border-bottom: 1px dashed #ebdccb;"></td></tr>
                     <tr>
                       <td style="padding-top: 15px; color: #5c2c16; font-size: 15px; font-weight: bold;">Monto Total:</td>
-                      <td style="padding-top: 15px; text-align: right; color: #ff8B64; font-size: 20px; font-weight: 800;">$${monto_total} MXN</td>
+                      <td style="padding-top: 15px; text-align: right; color: #ff8B64; font-size: 20px; font-weight: 800;">$${montoFormateado} MXN</td>
                     </tr>
                   </table>
                 </div>
-              </div>
-
-              <div style="background-color: #fdfbf9; padding: 25px; text-align: center; border-top: 1px solid #f5eadd; font-size: 12px; color: #8e7a74;">
+                <div style="background-color: #fdfbf9; padding: 25px; text-align: center; border-top: 1px solid #f5eadd; font-size: 12px; color: #8e7a74;">
                 <p style="margin: 0 0 6px 0; font-size: 13px;">Si tienes alguna duda sobre tu reservación, ponte en contacto con nosotros.</p>
                 <p style="margin: 0 0 6px 0; font-size: 13px; font-weight: bold">Tel. +52 (812) 2329 9930</p>
-                <p style="margin: 0; font-weight: bold; color: #ff8B64; font-size: 13px;">¡Te esperamos pronto en Flores de la Luna!</p>
+                <p style="margin: 15px 0 6px 0; font-size: 14px; font-weight: bold; color: #ff8B64;">
+                  ¡Te esperamos pronto en Flores de la Luna, ${nombre}!
+                </p>
               </div>
+
+              <div style="width: 100%; text-align: center; padding-top: 20px; background-color: #fcfaf7; margin-bottom: 5px;">
+                <p style="color: #8e7a74; font-size: 11px; text-transform: uppercase; tracking: 2px; margin: 0;">
+                  © 2026 Flores de la Luna — Cabañas & Jardín
+                </p>
+              </div>
+              </div>
+
+
 
             </div>
           </div>
         `;
 
         const htmlAdmin = `
-          <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fcfaf7; padding: 30px 15px; color: #4a3e3d;">
+          <div style="background-color: #fcfaf7; padding: 30px 15px; color: #4a3e3d;">
             <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #f3e9dc;">
               <div style="background-color: ${pagoExitoso ? '#5c2c16' : '#991b1b'}; padding: 30px; text-align: center;">
                 <span style="background-color: #ba4a23; color: #ffffff; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">Notificación de Sistema</span>
@@ -417,8 +431,8 @@ app.post('/api/reservas', (req, res) => {
                     <tr><td style="color: #6b5b55;">Fecha de Check-Out:</td><td style="text-align: right; color: #2d2522; font-weight: 600;">${fecha_salida}</td></tr>
                     <tr><td style="color: #6b5b55; padding-bottom: 10px; border-bottom: 1px dashed #ebdccb;">Total de Noches:</td><td style="text-align: right; color: #2d2522; font-weight: 600; padding-bottom: 10px; border-bottom: 1px dashed #ebdccb;">${noches} noches</td></tr>
                     <tr><td style="padding-top: 10px; color: #6b5b55;">Estatus Financiero:</td><td style="padding-top: 10px; text-align: right;"><span style="background-color: ${badgeColor}; color: ${badgeTextoColor}; padding: 3px 12px; border-radius: 30px; font-size: 12px; font-weight: bold; text-transform: uppercase;">${badgeTexto}</span></td></tr>
-                    <tr><td style="color: #8e7a74; font-size: 12px;">ID de Transacción:</td><td style="text-align: right; font-family: monospace; font-size: 12px; color: #4a3e3d;">${referenciaPayPalSimulada}</td></tr>
-                    <tr><td style="padding-top: 12px; font-weight: bold; color: #5c2c16; font-size: 15px;">Monto de la Operación:</td><td style="padding-top: 12px; text-align: right; color: ${pagoExitoso ? '#2e7d32' : '#c62828'}; font-weight: 800; font-size: 18px;">$${monto_total} MXN</td></tr>
+                    <tr><td style="color: #8e7a74; font-size: 12px;">ID de Transacción:</td><td style="text-align: right; font-size: 12px; color: #4a3e3d;">${referenciaPayPalSimulada}</td></tr>
+                    <tr><td style="padding-top: 12px; font-weight: bold; color: #5c2c16; font-size: 15px;">Monto de la Operación:</td><td style="padding-top: 12px; text-align: right; color: ${pagoExitoso ? '#2e7d32' : '#c62828'}; font-weight: 800; font-size: 18px;">$${montoFormateado} MXN</td></tr>
                   </table>
                 </div>
               </div>

@@ -3,6 +3,7 @@ import { AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy, Component, E
 import * as AOS from 'aos';
 import { Cancellations } from "../cancellations/cancellations";
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 interface Reserva {
   cliente: string;
@@ -79,6 +80,18 @@ export class Reservations implements AfterViewInit {
     },
   ]);
 
+  constructor(private router: Router) {}
+  // 🏠 Creamos la función para cerrar la alerta e ir al Home
+  cerrarAlertaYIrAlHome(): void {
+    this.showAlert2 = false;
+
+    // Solo si la reservación y el pago fueron exitosos, lo mandamos al home
+    if (this.alertType === 'success') {
+      this.router.navigate(['/']);
+      this.cdr.detectChanges();
+    }
+  }
+
   enviarReservaReal() {
     // 1. Obtenemos los datos actuales que ya calculó y guardó tu formulario en el Signal
     const datosReserva = this.reservaData();
@@ -105,7 +118,7 @@ export class Reservations implements AfterViewInit {
       monto_total: datosReserva.montoTotal
     };
 
-    console.log(payload);
+
 
     // 4. Hacemos la petición POST real a tu Backend
     this.http.post('http://localhost:3000/api/reservas', payload)
@@ -116,28 +129,31 @@ export class Reservations implements AfterViewInit {
 
           // ✨ CONFIGURACIÓN DE MODAL DE ÉXITO
           this.alertTitle = '¡Reservación Exitosa! 🎉';
-          this.alertMessage2 = `Tu estancia para la cabaña "${datosReserva.cabin}" ha sido reservada, checa tu bandeja de correo. El total fue de $${datosReserva.montoTotal} MXN. Tambien puedes revisar tus reservaciones en el apartado de "Mis Compras"`;
+          this.alertMessage2 = `Tu estancia para la cabaña "${datosReserva.cabin}" ha sido reservada, checa tu bandeja de correo. Tambien puedes revisar tus reservaciones en el apartado de "Mis Compras"`;
           this.alertType = 'success'; // Cambia el ícono a verde
           this.showAlert2 = true;
 
           this.cdr.detectChanges();
+          this.cdr.markForCheck();
         },
         error: (error) => {
           this.loading.set(false);
           console.error('❌ Error recibido del backend:', error);
           this.alertType = 'error';
+          this.showAlert2 = true;
 
           // 🔐 Si el correo electrónico no está registrado en la tabla 'usuarios'
           if (error.status === 401 && error.error?.requireAuth) {
-            this.alertTitle = 'Inicia Sesión 🔑';
+            this.alertTitle = 'Inicia Sesión';
             this.alertMessage2 = error.error.message;
           } else {
             // Si es un error de código 500 o base de datos caída
             this.alertTitle = 'Error en el Servidor ❌';
-            this.alertMessage2 = 'Hubo un error al procesar tu reserva en el servidor. Por favor, revisa la terminal negra de Node.js.';
+            this.alertMessage2 = 'Hubo un error al procesar tu reserva en el servidor.';
           }
 
           this.cdr.detectChanges();
+          this.cdr.markForCheck();
         }
       });
   }

@@ -198,10 +198,14 @@
                 <span class="text-olive-600">Estancia:</span>
                 <span class="font-semibold text-olive-900">{{ data.noches }} noches</span>
               </div>
+              <div class="g-text flex justify-between items-center">
+                <span class="text-olive-600">Precio por noche:</span>
+                <span class="font-semibold text-olive-900">${{ data.precioUnitario | number }} MX</span>
+              </div>
 
               <div class="g-text border-t border-olive-200 pt-3 flex justify-between items-center">
                 <span class="font-extrabold text-base text-olive-900">Total a pagar:</span>
-                <span class="text-2xl text-[#ff8B64] font-black">${{ data.montoTotal | number }}</span>
+                <span class="text-2xl text-[#ff8B64] font-black">${{ data.montoTotal | number }} MX</span>
               </div>
             </div>
 
@@ -317,7 +321,7 @@
 
     <div class="relative w-full max-w-md p-6 bg-white border border-orange-200 shadow-2xl rounded-2xl animate-scale-up">
 
-      <button (click)="showAlert = false" type="button"
+      <button (click)="showAlert2 = false" type="button"
         class="absolute top-4 right-4 text-gray-400 hover:text-orange-600 hover:bg-orange-50 p-1.5 rounded-lg transition-colors h-8 w-8 inline-flex items-center justify-center">
         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -370,11 +374,11 @@
       </div>
 
       <div class="mt-6 flex justify-center">
-        <button (click)="showAlert = false" type="button" [class.bg-green-600]="alertType === 'success'"
+        <button (click)="cerrarAlertaYIrAlHome()" type="button" [class.bg-green-600]="alertType === 'success'"
           [class.hover:bg-green-700]="alertType === 'success'" [class.bg-red-600]="alertType === 'error'"
           [class.hover:bg-red-700]="alertType === 'error'" [class.bg-yellow-600]="alertType === 'warning'"
           [class.hover:bg-yellow-700]="alertType === 'warning'"
-          class="cursor-point w-full sm:w-auto px-6 py-2.5 text-white font-medium rounded-xl shadow-md transition-all tracking-wide">
+          class="cursor-pointer w-full sm:w-auto px-6 py-2.5 text-white font-medium rounded-xl shadow-md transition-all tracking-wide">
           Entendido
         </button>
       </div>
