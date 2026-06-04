@@ -1,276 +1,294 @@
 <main class="w-full overflow-x-hidden overflow-y-hidden  relative">
 
   <div class="relative w-full flex flex-col items-center  bg-[#f2f2f0] py-10 px-6 md:px-20">
-<h2 class="g-text-extrabold text-4xl sm:text-4xl md:text-5xl tracking-widest uppercase mb-20 mt-20 text-olive-600 text-center">
-  RESERVACIONES
-</h2>
+    <h2
+      class="g-text-extrabold text-4xl sm:text-4xl md:text-5xl tracking-widest uppercase mb-20 mt-20 text-olive-600 text-center">
+      RESERVACIONES
+    </h2>
   </div>
 
 
-@for (cabin of Cabins(); track cabin.id) {
+  @for (cabin of Cabins(); track cabin.id) {
 
-<section class="relative w-full py-20 px-6 md:px-20 flex items-center justify-center">
+  <section class="relative w-full py-20 px-6 md:px-20 flex items-center justify-center">
 
-  <!-- Fondo de la sección -->
-  <div class="absolute inset-0 z-0">
-    <img [src]="cabin.fondo" alt="Fondo" class="w-full h-full object-cover">
-  </div>
-
-  <!-- Contenedor del Card -->
-  <div class="relative z-10 max-w-6xl w-full mx-auto bg-transparent">
-
-    <!-- Card: IMPORTANTE 'overflow-visible' -->
-    <div class="relative grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-10  items-center rounded-[50px] p-6 md:p-10 z-10 overflow-visible">
-
-      <!-- Imagen de Cabaña -->
-      <div class=" w-full  lg:aspect-square  z-20" data-aos="fade-right" data-aos-delay="500">
-        <img [src]="cabin.img" [alt]="cabin.title" class="shadow-2xl rounded-[30px] w-full h-full object-cover transition-transform duration-500 hover:scale-100">
-      </div>
-
-      <!-- Información de la Cabaña -->
-      <div class="flex flex-col px-4 z-20" data-aos="fade-right" data-aos-delay="300">
-        <div class="mb-6">
-          <span class="g-text-bold text-[#56B36E] text-3xl">${{cabin.precio}}</span>
-          <span class="g-text text-olive-500 text-sm ml-1">por Noche</span>
-        </div>
-
-        <h3 class="g-text-bold text-4xl text-olive-800 uppercase mb-1" data-aos="fade-right" data-aos-delay="100">{{cabin.title}}</h3>
-        <p class="g-text-bold text-olive-600 text-lg mb-5 italic" data-aos="fade-right" data-aos-delay="100">{{cabin.subtitle}}</p>
-
-        <!-- Lista de Amenidades -->
-        <ul class="gap-y-4 mb-8" data-aos="fade-right" data-aos-delay="100">
-          @for (item of cabin.text; track item) {
-          <li class="flex items-center gap-5 py-2">
-            <div class="bg-[#56B36E] p-1 rounded-full text-white"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div>
-            <span class="g-text text-olive-500">{{item}}</span>
-          </li>}
-
-        </ul>
-
-        <!-- Tags / Extras -->
-        <div class="border-t border-olive-300 pt-5 mb-5" data-aos="fade-right" data-aos-delay="100">
-          @for (amenities of cabin.amenities; track amenities) {
-          <h4 class="g-text-bold text-olive-400 uppercase tracking-widest leading-relaxed">
-            {{amenities}}
-          </h4>
-        }
-        </div>
-
-        <button (click)="scrollToForm()" class="block text-center bg-[#ff8B64] hover:bg-[#ffa483] cursor-pointer text-white g-text-extrabold py-4 rounded-full transition-all uppercase tracking-widest text-xs shadow-lg active:scale-95 hover:scale-105">
-          Hacer la Reservación
-        </button>
-      </div>
+    <!-- Fondo de la sección -->
+    <div class="absolute inset-0 z-0">
+      <img [src]="cabin.fondo" alt="Fondo" class="w-full h-full object-cover">
     </div>
-  </div>
 
+    <!-- Contenedor del Card -->
+    <div class="relative z-10 max-w-6xl w-full mx-auto bg-transparent">
 
-</section>
+      <!-- Card: IMPORTANTE 'overflow-visible' -->
+      <div
+        class="relative grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-10  items-center rounded-[50px] p-6 md:p-10 z-10 overflow-visible">
 
-}
-
-<section id="formulario" class="relative w-full py-20 px-6 md:px-20 flex items-center justify-center">
-  <!-- Contenedor de la Imagen: Usamos 'block' y 'w-full' para que ocupe todo el ancho y su altura sea natural -->
-  <div class="absolute inset-0 z-0">
-    <img src="assets/img/RESERVACIONES/section4.png" alt="Fondo" class="w-full h-full bg-transparent block">
-  </div>
-
-  <!-- Tarjeta del Formulario -->
-  <div  class=
-  "relative z-10 bg-white rounded-xl shadow-2xl p-8 md:p-12 w-full max-w-md text-center">
-
-    <h2 class="g-text-extrabold text-3xl text-olive-800 mb-2">Haz tu Reservación</h2>
-    <p class="g-text text-sm text-olive-500 mb-8">Completa la información para hacer tu reservación</p>
-
-    <form #reservaForm class="space-y-4">
-      <!-- Input Nombre -->
-      <div>
-        <input #nombreInput type="text" placeholder="Nombre Completo" (input)="0" autocomplete="none"
-          class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all"
-          [class.ring-2]="formTouched()"
-          [class.ring-red-500]="formTouched() && !nombreInput.value"
-          [class.ring-green-500]="formTouched() && nombreInput.value">
+        <!-- Imagen de Cabaña -->
+        <div class=" w-full  lg:aspect-square  z-20" data-aos="fade-right" data-aos-delay="500">
+          <img [src]="cabin.img" [alt]="cabin.title"
+            class="shadow-2xl rounded-[30px] w-full h-full object-cover transition-transform duration-500 hover:scale-100">
         </div>
 
-      <!-- Input Correo -->
-      <div>
-        <input #emailInput type="email" placeholder="Correo" (input)="0" autocomplete="none"
-          class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all"
-          [class.ring-2]="formTouched()"
-          [class.ring-red-500]="formTouched() && !emailInput.value"
-          [class.ring-green-500]="formTouched() && emailInput.value">
-        </div>
-
-      <!-- Input Teléfono -->
-      <div>
-        <input #telInput type="tel" placeholder="Teléfono" autocomplete="none"
-        (input)="telInput.value = telInput.value.replace(/[^0-9]/g, '')"
-        maxlength="10"
-          class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all"
-          [class.ring-2]="formTouched()"
-          [class.ring-red-500]="formTouched() && !telInput.value"
-          [class.ring-green-500]="formTouched() && telInput.value">
-      </div>
-
-      <!-- Input Llegada -->
-      <div>
-        <input #llegadaInput type="text" placeholder="Llegada" onfocus="(this.type='date')" (input)="0" autocomplete="none"
-          class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all"
-          [class.ring-2]="formTouched()"
-          [class.ring-red-500]="formTouched() && !llegadaInput.value"
-          [class.ring-green-500]="formTouched() && llegadaInput.value">
-        </div>
-
-      <!-- Input Salida -->
-      <div>
-        <input #salidaInput type="text" placeholder="Salida" onfocus="(this.type='date')" (input)="0" autocomplete="none"
-          class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all"
-          [class.ring-2]="formTouched()"
-          [class.ring-red-500]="formTouched() && !salidaInput.value"
-          [class.ring-green-500]="formTouched() && salidaInput.value">
-      </div>
-
-      <!-- Select Tipo de Cabaña -->
-      <div class="relative w-full">
-        <select #tipoCabana (input)="0" class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-500 focus:ring-2 focus:ring-orange-400 outline-none transition-all appearance-none cursor-pointer"
-          [class.ring-2]="formTouched()"
-          [class.ring-red-500]="formTouched() && !tipoCabana.value"
-          [class.ring-green-500]="formTouched() && tipoCabana.value">
-          <option value="" disabled selected>Tipo de Cabaña</option>
-        @for (cabin of Cabins(); track cabin.id) {
-          <option [value]="cabin.title">{{ cabin.title }} - ${{ cabin.precio }}</option>
-        }
-        </select>
-
-        <!-- Icono de Flecha -->
-        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-5 text-olive-500">
-          <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-          </svg>
-        </div>
-      </div>
-
-<!-- Pasamos las referencias a la función iniciarPago -->
-  <button type="button"
-    (click)="iniciarPago(nombreInput.value, emailInput.value, telInput.value, llegadaInput.value, salidaInput.value, tipoCabana.value)"
-    class="bg-[#ff8B64] hover:bg-[#ffa483] cursor-pointer text-white w-full g-text-extrabold py-4 rounded-full transition-all uppercase tracking-widest text-xs shadow-lg active:scale-95 hover:scale-105">
-    Realizar el Pago
-  </button>
-
-    </form>
-
-@if (reservaData(); as data) {
-  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md transition-opacity duration-300 ease-out">
-
-    <div class="relative w-full max-w-md bg-stone-50 rounded-2xl border border-olive-200 shadow-2xl overflow-hidden transform transition-all duration-300 ease-out scale-100 opacity-100 max-h-[90vh] flex flex-col motion-safe:animate-[fadeIn_0.2s_ease-out]">
-
-      <div class="flex items-center justify-between p-5 border-b border-olive-200 bg-white/60">
-        <h3 class="g-text-bold text-olive-900 uppercase text-xl sm:text-lg tracking-widest">
-          Resumen de tu Estancia
-        </h3>
-        <button (click)="cerrarModal()" class="w-8 h-8 flex items-center justify-center rounded-full text-olive-400 hover:text-olive-700 hover:bg-stone-200/60 transition-colors duration-200 text-lg" aria-label="Cerrar modal">
-          ✕
-        </button>
-      </div>
-
-      <div class="p-6 overflow-y-auto space-y-5 flex-1 scrollbar-thin">
-
-        <p class="g-text text-olive-600 text-sm leading-relaxed">
-          ¡Todo listo! Te enviaremos la confirmación de tu pago y toda la informacion sobre tu estancia:<br>
-          <strong class="text-olive-800 break-all font-semibold">{{data.correo}}</strong>
-        </p>
-
-        <div class="bg-white border border-olive-200/80 rounded-xl p-4 space-y-3 text-sm text-olive-800 shadow-sm">
-          <div class="g-text flex justify-between items-center">
-            <span class="g-text text-olive-600">Cabaña:</span>
-            <span class="font-bold text-olive-900">{{ data.cabin }}</span>
-          </div>
-          <div class="g-text flex justify-between items-center">
-            <span class="text-olive-600">Estancia:</span>
-            <span class="font-semibold text-olive-900">{{ data.noches }} noches</span>
+        <!-- Información de la Cabaña -->
+        <div class="flex flex-col px-4 z-20" data-aos="fade-right" data-aos-delay="300">
+          <div class="mb-6">
+            <span class="g-text-bold text-[#56B36E] text-3xl">${{cabin.precio}}</span>
+            <span class="g-text text-olive-500 text-sm ml-1">por Noche</span>
           </div>
 
-          <div class="g-text border-t border-olive-200 pt-3 flex justify-between items-center">
-            <span class="font-extrabold text-base text-olive-900">Total a pagar:</span>
-            <span class="text-2xl text-[#ff8B64] font-black">${{ data.montoTotal | number }}</span>
-          </div>
-        </div>
+          <h3 class="g-text-bold text-4xl text-olive-800 uppercase mb-1" data-aos="fade-right" data-aos-delay="100">
+            {{cabin.title}}</h3>
+          <p class="g-text-bold text-olive-600 text-lg mb-5 italic" data-aos="fade-right" data-aos-delay="100">
+            {{cabin.subtitle}}</p>
 
-        <div class="pt-2">
-          <h4 class="g-text text-[#ff8B64] w-full font-extrabold pb-3 uppercase tracking-widest text-base text-center border-b border-dashed border-olive-200 mb-5">
-            Proceder a pagar
-          </h4>
-          <button type="button"
-            (click)="enviarReservaReal()"
-            class="bg-[#ff8B64] hover:bg-[#ffa483] cursor-pointer text-white w-full g-text-extrabold py-4 rounded-full transition-all uppercase tracking-widest text-xs shadow-lg active:scale-95 hover:scale-105">
-            Enviar Correo
+          <!-- Lista de Amenidades -->
+          <ul class="gap-y-4 mb-8" data-aos="fade-right" data-aos-delay="100">
+            @for (item of cabin.text; track item) {
+            <li class="flex items-center gap-5 py-2">
+              <div class="bg-[#56B36E] p-1 rounded-full text-white"><svg class="w-4 h-4" fill="none"
+                  stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                </svg></div>
+              <span class="g-text text-olive-500">{{item}}</span>
+            </li>}
+
+          </ul>
+
+          <!-- Tags / Extras -->
+          <div class="border-t border-olive-300 pt-5 mb-5" data-aos="fade-right" data-aos-delay="100">
+            @for (amenities of cabin.amenities; track amenities) {
+            <h4 class="g-text-bold text-olive-400 uppercase tracking-widest leading-relaxed">
+              {{amenities}}
+            </h4>
+            }
+          </div>
+
+          <button (click)="scrollToForm()"
+            class="block text-center bg-[#ff8B64] hover:bg-[#ffa483] cursor-pointer text-white g-text-extrabold py-4 rounded-full transition-all uppercase tracking-widest text-xs shadow-lg active:scale-95 hover:scale-105">
+            Hacer la Reservación
           </button>
-        <br>
+        </div>
+      </div>
+    </div>
 
-          <div #paymentRef class="w-full min-h-37.5 bg-transparent rounded-lg transition-all duration-200"></div>
+
+  </section>
+
+  }
+
+  <section id="formulario" class="relative w-full py-20 px-6 md:px-20 flex items-center justify-center">
+    <!-- Contenedor de la Imagen: Usamos 'block' y 'w-full' para que ocupe todo el ancho y su altura sea natural -->
+    <div class="absolute inset-0 z-0">
+      <img src="assets/img/RESERVACIONES/section4.png" alt="Fondo" class="w-full h-full bg-transparent block">
+    </div>
+
+    <!-- Tarjeta del Formulario -->
+    <div class="relative z-10 bg-white rounded-xl shadow-2xl p-8 md:p-12 w-full max-w-md text-center">
+
+      <h2 class="g-text-extrabold text-3xl text-olive-800 mb-2">Haz tu Reservación</h2>
+      <p class="g-text text-sm text-olive-500 mb-8">Completa la información para hacer tu reservación</p>
+
+      <form #reservaForm class="space-y-4">
+        <!-- Input Nombre -->
+        <div>
+          <input #nombreInput type="text" placeholder="Nombre Completo" (input)="0" autocomplete="none"
+            class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all"
+            [class.ring-2]="formTouched()" [class.ring-red-500]="formTouched() && !nombreInput.value"
+            [class.ring-green-500]="formTouched() && nombreInput.value">
         </div>
 
+        <!-- Input Correo -->
+        <div>
+          <input #emailInput type="email" placeholder="Correo" (input)="0" autocomplete="none"
+            class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all"
+            [class.ring-2]="formTouched()" [class.ring-red-500]="formTouched() && !emailInput.value"
+            [class.ring-green-500]="formTouched() && emailInput.value">
+        </div>
+
+        <!-- Input Teléfono -->
+        <div>
+          <input #telInput type="tel" placeholder="Teléfono" autocomplete="none"
+            (input)="telInput.value = telInput.value.replace(/[^0-9]/g, '')" maxlength="10"
+            class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all"
+            [class.ring-2]="formTouched()" [class.ring-red-500]="formTouched() && !telInput.value"
+            [class.ring-green-500]="formTouched() && telInput.value">
+        </div>
+
+        <!-- Input Llegada -->
+        <div>
+          <input #llegadaInput type="text" placeholder="Llegada" onfocus="(this.type='date')" (input)="0"
+            autocomplete="none"
+            class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all"
+            [class.ring-2]="formTouched()" [class.ring-red-500]="formTouched() && !llegadaInput.value"
+            [class.ring-green-500]="formTouched() && llegadaInput.value">
+        </div>
+
+        <!-- Input Salida -->
+        <div>
+          <input #salidaInput type="text" placeholder="Salida" onfocus="(this.type='date')" (input)="0"
+            autocomplete="none"
+            class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all"
+            [class.ring-2]="formTouched()" [class.ring-red-500]="formTouched() && !salidaInput.value"
+            [class.ring-green-500]="formTouched() && salidaInput.value">
+        </div>
+
+        <!-- Select Tipo de Cabaña -->
+        <div class="relative w-full">
+          <select #tipoCabana (input)="0"
+            class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-500 focus:ring-2 focus:ring-orange-400 outline-none transition-all appearance-none cursor-pointer"
+            [class.ring-2]="formTouched()" [class.ring-red-500]="formTouched() && !tipoCabana.value"
+            [class.ring-green-500]="formTouched() && tipoCabana.value">
+            <option value="" disabled selected>Tipo de Cabaña</option>
+            @for (cabin of Cabins(); track cabin.id) {
+            <option [value]="cabin.title">{{ cabin.title }} - ${{ cabin.precio }}</option>
+            }
+          </select>
+
+          <!-- Icono de Flecha -->
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-5 text-olive-500">
+            <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Pasamos las referencias a la función iniciarPago -->
+        <button type="button"
+          (click)="iniciarPago(nombreInput.value, emailInput.value, telInput.value, llegadaInput.value, salidaInput.value, tipoCabana.value)"
+          class="bg-[#ff8B64] hover:bg-[#ffa483] cursor-pointer text-white w-full g-text-extrabold py-4 rounded-full transition-all uppercase tracking-widest text-xs shadow-lg active:scale-95 hover:scale-105">
+          Realizar el Pago
+        </button>
+
+      </form>
+
+      @if (reservaData(); as data) {
+      <div
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md transition-opacity duration-300 ease-out">
+
+        <div
+          class="relative w-full max-w-md bg-stone-50 rounded-2xl border border-olive-200 shadow-2xl overflow-hidden transform transition-all duration-300 ease-out scale-100 opacity-100 max-h-[90vh] flex flex-col motion-safe:animate-[fadeIn_0.2s_ease-out]">
+
+          <div class="flex items-center justify-between p-5 border-b border-olive-200 bg-white/60">
+            <h3 class="g-text-bold text-olive-900 uppercase text-xl sm:text-lg tracking-widest">
+              Resumen de tu Estancia
+            </h3>
+            <button (click)="cerrarModal()"
+              class="w-8 h-8 flex items-center justify-center rounded-full text-olive-400 hover:text-olive-700 hover:bg-stone-200/60 transition-colors duration-200 text-lg"
+              aria-label="Cerrar modal">
+              ✕
+            </button>
+          </div>
+
+          <div class="p-6 overflow-y-auto space-y-5 flex-1 scrollbar-thin">
+
+            <p class="g-text text-olive-600 text-sm leading-relaxed">
+              ¡Todo listo! Te enviaremos la confirmación de tu pago y toda la informacion sobre tu estancia:<br>
+              <strong class="text-olive-800 break-all font-semibold">{{data.correo}}</strong>
+            </p>
+
+            <div class="bg-white border border-olive-200/80 rounded-xl p-4 space-y-3 text-sm text-olive-800 shadow-sm">
+              <div class="g-text flex justify-between items-center">
+                <span class="g-text text-olive-600">Cabaña:</span>
+                <span class="font-bold text-olive-900">{{ data.cabin }}</span>
+              </div>
+              <div class="g-text flex justify-between items-center">
+                <span class="text-olive-600">Estancia:</span>
+                <span class="font-semibold text-olive-900">{{ data.noches }} noches</span>
+              </div>
+
+              <div class="g-text border-t border-olive-200 pt-3 flex justify-between items-center">
+                <span class="font-extrabold text-base text-olive-900">Total a pagar:</span>
+                <span class="text-2xl text-[#ff8B64] font-black">${{ data.montoTotal | number }}</span>
+              </div>
+            </div>
+
+            <div class="pt-2">
+              <h4
+                class="g-text text-[#ff8B64] w-full font-extrabold pb-3 uppercase tracking-widest text-base text-center border-b border-dashed border-olive-200 mb-5">
+                Proceder a pagar
+              </h4>
+              <button type="button" (click)="enviarReservaReal()"
+                class="bg-[#ff8B64] hover:bg-[#ffa483] cursor-pointer text-white w-full g-text-extrabold py-4 rounded-full transition-all uppercase tracking-widest text-xs shadow-lg active:scale-95 hover:scale-105">
+                Enviar Correo
+              </button>
+              <br>
+
+              <div #paymentRef class="w-full min-h-37.5 bg-transparent rounded-lg transition-all duration-200"></div>
+            </div>
+
+          </div>
+
+        </div>
       </div>
+      }
 
     </div>
+  </section>
+
+
+  <!-- ÁRBOL DECORATIVO A LA IZQUIERDA -->
+  <!-- Cambiamos '-right-...' por '-left-...' -->
+  <div
+    class="absolute -right-130 md:-right-130 top-2 md:top-50 h-full w-250 md:w-300 z-0 pointer-events-none overflow-visible opacity-60 md:opacity-90">
+    <!-- 'object-left-top' para anclar las ramas a la esquina superior izquierda -->
+    <img src="assets/img/RESERVACIONES/Recurso-9.png"
+      class="w-full h-full object-contain object-top-right opacity-90 transition-transform duration-700 animate-viento">
   </div>
-}
 
+
+  <!-- ÁRBOL DECORATIVO A LA DERECHA -->
+  <!-- Cambiamos '-right-...' por '-left-...' -->
+  <div
+    class="absolute -left-900 md:-left-600 -top-450 md:-top-200 h-full w-250 md:w-300 z-0 pointer-events-none overflow-visible rotate-90 opacity-60 md:opacity-90">
+    <!-- 'object-left-top' para anclar las ramas a la esquina superior izquierda -->
+    <img src="assets/img/RESERVACIONES/Recurso-9.png"
+      class="w-full h-full object-contain object-top-left opacity-90 transition-transform duration-700 animate-viento-90">
   </div>
-</section>
+
+  <!-- ÁRBOL DECORATIVO A LA IZQUIERDA -->
+  <!-- Cambiamos '-right-...' por '-left-...' -->
+  <div
+    class="absolute -right-130 md:-right-130 top-600 md:top-500 h-full w-250 md:w-300 z-0 pointer-events-none overflow-visible opacity-60 md:opacity-90">
+    <!-- 'object-left-top' para anclar las ramas a la esquina superior izquierda -->
+    <img src="assets/img/RESERVACIONES/Recurso-9.png"
+      class="w-full h-full object-contain object-top-right opacity-90 transition-transform duration-700 animate-viento">
+  </div>
 
 
-      <!-- ÁRBOL DECORATIVO A LA IZQUIERDA -->
-      <!-- Cambiamos '-right-...' por '-left-...' -->
-      <div class="absolute -right-130 md:-right-130 top-2 md:top-50 h-full w-250 md:w-300 z-0 pointer-events-none overflow-visible opacity-60 md:opacity-90">
-        <!-- 'object-left-top' para anclar las ramas a la esquina superior izquierda -->
-        <img src="assets/img/RESERVACIONES/Recurso-9.png"
-             class="w-full h-full object-contain object-top-right opacity-90 transition-transform duration-700 animate-viento">
-      </div>
+  <!-- ÁRBOL DECORATIVO A LA DERECHA -->
+  <!-- Cambiamos '-right-...' por '-left-...' -->
+  <div
+    class="absolute -left-900 md:-left-600 top-130 md:top-250 h-full w-250 md:w-300 z-0 pointer-events-none overflow-visible rotate-90 opacity-60 md:opacity-90">
+    <!-- 'object-left-top' para anclar las ramas a la esquina superior izquierda -->
+    <img src="assets/img/RESERVACIONES/Recurso-9.png"
+      class="w-full h-full object-contain object-top-left opacity-90 transition-transform duration-700 animate-viento-90">
+  </div>
+
+  <!-- ÁRBOL DECORATIVO A LA IZQUIERDA -->
+  <!-- Cambiamos '-right-...' por '-left-...' -->
+  <div
+    class="absolute -right-130 md:-right-130 top-1160 md:top-950 h-full w-250 md:w-300 z-0 pointer-events-none overflow-visible opacity-60 md:opacity-90">
+    <!-- 'object-left-top' para anclar las ramas a la esquina superior izquierda -->
+    <img src="assets/img/RESERVACIONES/Recurso-9.png"
+      class="w-full h-full object-contain object-top-right opacity-90 transition-transform duration-700 animate-viento">
+  </div>
 
 
-            <!-- ÁRBOL DECORATIVO A LA DERECHA -->
-      <!-- Cambiamos '-right-...' por '-left-...' -->
-      <div class="absolute -left-900 md:-left-600 -top-450 md:-top-200 h-full w-250 md:w-300 z-0 pointer-events-none overflow-visible rotate-90 opacity-60 md:opacity-90">
-        <!-- 'object-left-top' para anclar las ramas a la esquina superior izquierda -->
-        <img src="assets/img/RESERVACIONES/Recurso-9.png"
-             class="w-full h-full object-contain object-top-left opacity-90 transition-transform duration-700 animate-viento-90">
-      </div>
-
-            <!-- ÁRBOL DECORATIVO A LA IZQUIERDA -->
-      <!-- Cambiamos '-right-...' por '-left-...' -->
-      <div class="absolute -right-130 md:-right-130 top-600 md:top-500 h-full w-250 md:w-300 z-0 pointer-events-none overflow-visible opacity-60 md:opacity-90">
-        <!-- 'object-left-top' para anclar las ramas a la esquina superior izquierda -->
-        <img src="assets/img/RESERVACIONES/Recurso-9.png"
-             class="w-full h-full object-contain object-top-right opacity-90 transition-transform duration-700 animate-viento">
-      </div>
-
-
-            <!-- ÁRBOL DECORATIVO A LA DERECHA -->
-      <!-- Cambiamos '-right-...' por '-left-...' -->
-      <div class="absolute -left-900 md:-left-600 top-130 md:top-250 h-full w-250 md:w-300 z-0 pointer-events-none overflow-visible rotate-90 opacity-60 md:opacity-90">
-        <!-- 'object-left-top' para anclar las ramas a la esquina superior izquierda -->
-        <img src="assets/img/RESERVACIONES/Recurso-9.png"
-             class="w-full h-full object-contain object-top-left opacity-90 transition-transform duration-700 animate-viento-90">
-      </div>
-
-            <!-- ÁRBOL DECORATIVO A LA IZQUIERDA -->
-      <!-- Cambiamos '-right-...' por '-left-...' -->
-      <div class="absolute -right-130 md:-right-130 top-1160 md:top-950 h-full w-250 md:w-300 z-0 pointer-events-none overflow-visible opacity-60 md:opacity-90">
-        <!-- 'object-left-top' para anclar las ramas a la esquina superior izquierda -->
-        <img src="assets/img/RESERVACIONES/Recurso-9.png"
-             class="w-full h-full object-contain object-top-right opacity-90 transition-transform duration-700 animate-viento">
-      </div>
-
-
-@if (showAlert) {
+  @if (showAlert) {
   <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
 
     <div class="relative w-full max-w-md p-6 bg-white border border-orange-200 shadow-2xl rounded-2xl animate-scale-up">
 
       <div class="text-center mt-2">
-        <div class="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-orange-50 border border-orange-100 mb-4 animate-bounce">
-          <svg class="w-8 h-8 text-orange-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+        <div
+          class="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-orange-50 border border-orange-100 mb-4 animate-bounce">
+          <svg class="w-8 h-8 text-orange-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+            viewBox="0 0 20 20">
+            <path
+              d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
           </svg>
         </div>
 
@@ -284,50 +302,62 @@
       </div>
 
       <div class="mt-6 flex justify-center">
-        <button (click)="showAlert = false" type="button" class=" cursor-pointer w-full sm:w-auto px-6 py-2.5 text-white bg-orange-600 hover:bg-orange-400 font-medium rounded-xl shadow-md hover:shadow-lg transition-all tracking-wide">
+        <button (click)="showAlert = false" type="button"
+          class=" cursor-pointer w-full sm:w-auto px-6 py-2.5 text-white bg-orange-600 hover:bg-orange-400 font-medium rounded-xl shadow-md hover:shadow-lg transition-all tracking-wide">
           Entendido
         </button>
       </div>
 
     </div>
   </div>
-}
+  }
 
-@if (showAlert2) {
+  @if (showAlert2) {
   <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
 
     <div class="relative w-full max-w-md p-6 bg-white border border-orange-200 shadow-2xl rounded-2xl animate-scale-up">
 
-      <button (click)="showAlert = false" type="button" class="absolute top-4 right-4 text-gray-400 hover:text-orange-600 hover:bg-orange-50 p-1.5 rounded-lg transition-colors h-8 w-8 inline-flex items-center justify-center">
+      <button (click)="showAlert = false" type="button"
+        class="absolute top-4 right-4 text-gray-400 hover:text-orange-600 hover:bg-orange-50 p-1.5 rounded-lg transition-colors h-8 w-8 inline-flex items-center justify-center">
         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
         </svg>
       </button>
 
       <div class="text-center mt-2">
 
         @if (alertType === 'success') {
-          <div class="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-green-50 border border-green-100 mb-4 text-green-600 animate-bounce">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-          </div>
+        <div
+          class="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-green-50 border border-green-100 mb-4 text-green-600 animate-bounce">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z">
+            </path>
+          </svg>
+        </div>
         }
 
         @if (alertType === 'error') {
-          <div class="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-red-50 border border-red-100 mb-4 text-red-600 animate-pulse">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-            </svg>
-          </div>
+        <div
+          class="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-red-50 border border-red-100 mb-4 text-red-600 animate-pulse">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+            </path>
+          </svg>
+        </div>
         }
 
         @if (alertType === 'warning') {
-          <div class="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-yellow-50 border border-yellow-100 mb-4 text-yellow-600 animate-bounce">
-            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-            </svg>
-          </div>
+        <div
+          class="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-yellow-50 border border-yellow-100 mb-4 text-yellow-600 animate-bounce">
+          <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+          </svg>
+        </div>
         }
 
         <h3 class="text-xl font-bold text-gray-900 tracking-wide mb-2">
@@ -335,17 +365,14 @@
         </h3>
 
         <p class="text-gray-600 text-base leading-relaxed tracking-wide px-2">
-          {{ alertMessage }}
+          {{ alertMessage2 }}
         </p>
       </div>
 
       <div class="mt-6 flex justify-center">
-        <button (click)="showAlert = false" type="button"
-          [class.bg-green-600]="alertType === 'success'"
-          [class.hover:bg-green-700]="alertType === 'success'"
-          [class.bg-red-600]="alertType === 'error'"
-          [class.hover:bg-red-700]="alertType === 'error'"
-          [class.bg-yellow-600]="alertType === 'warning'"
+        <button (click)="showAlert = false" type="button" [class.bg-green-600]="alertType === 'success'"
+          [class.hover:bg-green-700]="alertType === 'success'" [class.bg-red-600]="alertType === 'error'"
+          [class.hover:bg-red-700]="alertType === 'error'" [class.bg-yellow-600]="alertType === 'warning'"
           [class.hover:bg-yellow-700]="alertType === 'warning'"
           class="cursor-point w-full sm:w-auto px-6 py-2.5 text-white font-medium rounded-xl shadow-md transition-all tracking-wide">
           Entendido
@@ -354,13 +381,5 @@
 
     </div>
   </div>
-}
+  }
 </main>
-
-
-
-
-
-
-
-

@@ -1,5 +1,5 @@
 import { DecimalPipe, isPlatformBrowser } from '@angular/common';
-import { AfterViewInit,ChangeDetectorRef, ChangeDetectionStrategy, Component, ElementRef, inject, PLATFORM_ID, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy, Component, ElementRef, inject, PLATFORM_ID, signal, ViewChild } from '@angular/core';
 import * as AOS from 'aos';
 import { Cancellations } from "../cancellations/cancellations";
 import { HttpClient } from '@angular/common/http';
@@ -10,10 +10,10 @@ interface Reserva {
   telefono: string;
   fechaLlegada: string;
   fechaSalida: string;
-  cabin:  string,
-  noches:  number,
-  precioUnitario:  number,
-  montoTotal:  number
+  cabin: string,
+  noches: number,
+  precioUnitario: number,
+  montoTotal: number
 };
 
 
@@ -26,18 +26,18 @@ interface Reserva {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class Reservations implements AfterViewInit{
+export class Reservations implements AfterViewInit {
 
-private platformId = inject(PLATFORM_ID);
-private cdr = inject(ChangeDetectorRef);
-private http = inject(HttpClient);
-private paypalRendered = false;
-showAlert: boolean = false;
-showAlert2: boolean = false;
-alertMessage = '';
-alertMessage2 = '';
-alertTitle = '';
-alertType: 'success' | 'error' | 'warning' = 'warning';
+  private platformId = inject(PLATFORM_ID);
+  private cdr = inject(ChangeDetectorRef);
+  private http = inject(HttpClient);
+  private paypalRendered = false;
+  showAlert: boolean = false;
+  showAlert2: boolean = false;
+  alertMessage = '';
+  alertMessage2 = '';
+  alertTitle = '';
+  alertType: 'success' | 'error' | 'warning' = 'warning';
 
   BackImg = signal<string[]>([
     'assets/img/RESERVACIONES/section1.png',
@@ -46,106 +46,111 @@ alertType: 'success' | 'error' | 'warning' = 'warning';
   ]);
 
   Cabins = signal([
-    { id:1, img: 'assets/img/GALERIA/tu-imagen-5.jpg', title: 'Orquídea', subtitle: 'Cabaña para Parejas', precio: '3,500',
-      text : ['2 Personas','1 Recámara', '1 Baño', 'Sala', 'Cocina'],
-      amenities: ['Cama King Size','Smart TV', 'Internet', 'WIFI', 'Mirador'],
+    {
+      id: 1, img: 'assets/img/GALERIA/tu-imagen-5.jpg', title: 'Orquídea', subtitle: 'Cabaña para Parejas', precio: '3,500',
+      text: ['2 Personas', '1 Recámara', '1 Baño', 'Sala', 'Cocina'],
+      amenities: ['Cama King Size', 'Smart TV', 'Internet', 'WIFI', 'Mirador'],
       fondo: this.BackImg()[0],
     },
-    { id:2, img: 'assets/img/GALERIA/tu-imagen-4.jpg', title: 'Girasol',  subtitle: 'Cabaña Familiar',     precio: '4,000',
-      text : ['6 Personas','2 Recámaras', '1 Baño', 'Sala', 'Cocina'],
-      amenities: ['Cama King Size','4 Camas Individuales','Smart TV', 'Internet', 'WIFI', 'Mirador'],
+    {
+      id: 2, img: 'assets/img/GALERIA/tu-imagen-4.jpg', title: 'Girasol', subtitle: 'Cabaña Familiar', precio: '4,000',
+      text: ['6 Personas', '2 Recámaras', '1 Baño', 'Sala', 'Cocina'],
+      amenities: ['Cama King Size', '4 Camas Individuales', 'Smart TV', 'Internet', 'WIFI', 'Mirador'],
       fondo: this.BackImg()[1],
     },
-    { id:3, img: 'assets/img/GALERIA/tu-imagen-3.jpg', title: 'Tulipán',  subtitle: 'Cabaña Familiar',     precio: '4,000',
-      text : ['6 Personas','2 Recámaras', '1 Baño', 'Sala', 'Cocina'],
-      amenities: ['Cama King Size','4 Camas Individuales','Smart TV', 'Internet', 'WIFI', 'Mirador'],
+    {
+      id: 3, img: 'assets/img/GALERIA/tu-imagen-3.jpg', title: 'Tulipán', subtitle: 'Cabaña Familiar', precio: '4,000',
+      text: ['6 Personas', '2 Recámaras', '1 Baño', 'Sala', 'Cocina'],
+      amenities: ['Cama King Size', '4 Camas Individuales', 'Smart TV', 'Internet', 'WIFI', 'Mirador'],
       fondo: this.BackImg()[2],
     },
-    { id:4, img: 'assets/img/GALERIA/tu-imagen-7.jpg', title: 'Cabaña Grande', subtitle: 'Cabaña Grupal',  precio: '6,000',
-      text : ['10-12 Personas','2 Recámaras', '1 Baño', 'Sala', 'Cocina'],
-      amenities: ['2 Cama King Size','4 Camas Individuales','Smart TV', 'Internet', 'WIFI', 'Mirador'],
+    {
+      id: 4, img: 'assets/img/GALERIA/tu-imagen-7.jpg', title: 'Cabaña Grande', subtitle: 'Cabaña Grupal', precio: '6,000',
+      text: ['10-12 Personas', '2 Recámaras', '1 Baño', 'Sala', 'Cocina'],
+      amenities: ['2 Cama King Size', '4 Camas Individuales', 'Smart TV', 'Internet', 'WIFI', 'Mirador'],
       fondo: this.BackImg()[1],
     },
-    { id:5, img: 'assets/img/GALERIA/tu-imagen-7.jpg', title: 'Cabaña Grande', subtitle: 'Cabaña Grupal',  precio: '6,000',
-      text : ['10-12 Personas','2 Recámaras', '1 Baño', 'Sala', 'Cocina'],
-      amenities: ['2 Cama King Size','4 Camas Individuales','Smart TV', 'Internet', 'WIFI', 'Mirador'],
+    {
+      id: 5, img: 'assets/img/GALERIA/tu-imagen-7.jpg', title: 'Cabaña Grande', subtitle: 'Cabaña Grupal', precio: '6,000',
+      text: ['10-12 Personas', '2 Recámaras', '1 Baño', 'Sala', 'Cocina'],
+      amenities: ['2 Cama King Size', '4 Camas Individuales', 'Smart TV', 'Internet', 'WIFI', 'Mirador'],
       fondo: this.BackImg()[0],
 
     },
   ]);
 
-enviarReservaReal() {
-  // 1. Obtenemos los datos actuales que ya calculó y guardó tu formulario en el Signal
-  const datosReserva = this.reservaData();
+  enviarReservaReal() {
+    // 1. Obtenemos los datos actuales que ya calculó y guardó tu formulario en el Signal
+    const datosReserva = this.reservaData();
 
-  // Guardilla de seguridad: Si no hay datos en el Signal, le avisamos al usuario
-  if (!datosReserva) {
-    alert('Por favor, completa correctamente todos los campos del formulario primero.');
-    return;
+    // Guardilla de seguridad: Si no hay datos en el Signal, le avisamos al usuario
+    if (!datosReserva) {
+      alert('Por favor, completa correctamente todos los campos del formulario primero.');
+      return;
+    }
+
+    // 2. Activamos el estado de carga mientras se procesa la petición en el servidor
+    this.loading.set(true);
+    console.log('Enviando datos reales al servidor...', datosReserva);
+
+    // 3. Mapeo: Transformamos las propiedades de tu interfaz 'Reserva' al formato que espera tu index.js
+    const payload = {
+      nombre: datosReserva.cliente,
+      email: datosReserva.correo,
+      telefono: datosReserva.telefono,
+      cabin_nombre: datosReserva.cabin,
+      fecha_llegada: datosReserva.fechaLlegada,
+      fecha_salida: datosReserva.fechaSalida,
+      noches: datosReserva.noches,
+      monto_total: datosReserva.montoTotal
+    };
+
+    console.log(payload);
+
+    // 4. Hacemos la petición POST real a tu Backend
+    this.http.post('http://localhost:3000/api/reservas', payload)
+      .subscribe({
+        next: (response: any) => {
+          this.loading.set(false);
+          console.log('🚀 ¡Servidor respondió con éxito!', response);
+
+          // ✨ CONFIGURACIÓN DE MODAL DE ÉXITO
+          this.alertTitle = '¡Reservación Exitosa! 🎉';
+          this.alertMessage2 = `Tu estancia para la cabaña "${datosReserva.cabin}" ha sido reservada, checa tu bandeja de correo. El total fue de $${datosReserva.montoTotal} MXN. Tambien puedes revisar tus reservaciones en el apartado de "Mis Compras"`;
+          this.alertType = 'success'; // Cambia el ícono a verde
+          this.showAlert2 = true;
+
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          this.loading.set(false);
+          console.error('❌ Error recibido del backend:', error);
+          this.alertType = 'error';
+
+          // 🔐 Si el correo electrónico no está registrado en la tabla 'usuarios'
+          if (error.status === 401 && error.error?.requireAuth) {
+            this.alertTitle = 'Inicia Sesión 🔑';
+            this.alertMessage2 = error.error.message;
+          } else {
+            // Si es un error de código 500 o base de datos caída
+            this.alertTitle = 'Error en el Servidor ❌';
+            this.alertMessage2 = 'Hubo un error al procesar tu reserva en el servidor. Por favor, revisa la terminal negra de Node.js.';
+          }
+
+          this.cdr.detectChanges();
+        }
+      });
   }
 
-  // 2. Activamos el estado de carga mientras se procesa la petición en el servidor
-  this.loading.set(true);
-  console.log('Enviando datos reales al servidor...', datosReserva);
 
-  // 3. Mapeo: Transformamos las propiedades de tu interfaz 'Reserva' al formato que espera tu index.js
-  const payload = {
-    nombre: datosReserva.cliente,
-    email: datosReserva.correo,
-    telefono: datosReserva.telefono,
-    cabin_nombre: datosReserva.cabin,
-    fecha_llegada: datosReserva.fechaLlegada,
-    fecha_salida: datosReserva.fechaSalida,
-    noches: datosReserva.noches,
-    monto_total: datosReserva.montoTotal
-  };
+  // ==============================================================================================================================
+  // 📋 PAYPAL PAYMENT
+  // ==============================================================================================================================
 
-  console.log(payload);
+  @ViewChild('paymentRef', { static: false }) set paymentRef(element: ElementRef | undefined) {
 
-  // 4. Hacemos la petición POST real a tu Backend
-  this.http.post('http://localhost:3000/api/reservas', payload)
-    .subscribe({
-      next: (response: any) => {
-        this.loading.set(false);
-        console.log('🚀 ¡Servidor respondió con éxito!', response);
-
-// ✨ CONFIGURACIÓN DE MODAL DE ÉXITO
-      this.alertTitle = '¡Reservación Exitosa! 🎉';
-      this.alertMessage2 = `Tu estancia de ${datosReserva.noches} noches para la cabaña "${datosReserva.cabin}" ha sido guardada con éxito. El total fue de $${datosReserva.montoTotal} MXN y los correos de confirmación ya fueron enviados.`;
-      this.alertType = 'success'; // Cambia el ícono a verde
-      this.showAlert2 = true;
-
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        this.loading.set(false);
-        console.error('❌ Error recibido del backend:', error);
-        this.alertType = 'error';
-
-        // 🔐 Si el correo electrónico no está registrado en la tabla 'usuarios'
-        if (error.status === 401 && error.error?.requireAuth) {
-          this.alertTitle = 'Inicia Sesión 🔑';
-          this.alertMessage2 = error.error.message;
-        } else {
-          // Si es un error de código 500 o base de datos caída
-          this.alertTitle = 'Error en el Servidor ❌';
-          this.alertMessage2 = 'Hubo un error al procesar tu reserva en el servidor. Por favor, revisa la terminal negra de Node.js.';
-        }
-
-        this.cdr.detectChanges();
-      }
-    });
-}
-
-
-// ==============================================================================================================================
-// 📋 PAYPAL PAYMENT
-// ==============================================================================================================================
-
-@ViewChild('paymentRef', { static: false }) set paymentRef(element: ElementRef | undefined){
-
-if (isPlatformBrowser(this.platformId) && element && element.nativeElement) {
-  if (this.paypalRendered) return;
+    if (isPlatformBrowser(this.platformId) && element && element.nativeElement) {
+      if (this.paypalRendered) return;
       const paypalObj = (window as any).paypal;
       if (paypalObj) {
         // Limpiamos residuos por si hace múltiples clics
@@ -174,88 +179,88 @@ if (isPlatformBrowser(this.platformId) && element && element.nativeElement) {
             console.error('Error en la pasarela de PayPal:', err);
           }
         }).render(element.nativeElement)
-        .then(() => {
-          console.log('¡Botones de PayPal dibujados con éxito en el resumen!');
-        })
-        .catch((err: any) => {
-          console.error('Error al renderizar los botones:', err);
-        });
+          .then(() => {
+            console.log('¡Botones de PayPal dibujados con éxito en el resumen!');
+          })
+          .catch((err: any) => {
+            console.error('Error al renderizar los botones:', err);
+          });
       }
     }
   }
 
-viewportScroller: any;
+  viewportScroller: any;
 
 
-ngAfterViewInit(): void {
-  if (isPlatformBrowser(this.platformId)) {
+  ngAfterViewInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
 
-    // animaciones AOS
-    AOS.init({
-      duration: 1000,
-      once: true,
-      mirror: false,
-      offset: 120,
-    });
+      // animaciones AOS
+      AOS.init({
+        duration: 1000,
+        once: true,
+        mirror: false,
+        offset: 120,
+      });
 
+    }
   }
-}
 
-// ==============================================================================================================================
-// 📋 INICIAR PAGO
-// ==============================================================================================================================
+  // ==============================================================================================================================
+  // 📋 INICIAR PAGO
+  // ==============================================================================================================================
 
-loading = signal(false);
-reservaData = signal<any>(null);
-formTouched = signal(false);
+  loading = signal(false);
+  reservaData = signal<any>(null);
+  formTouched = signal(false);
 
-iniciarPago(nombre: string, email: string, tel: string, llegada: string, salida: string, cabin: string) {
+  iniciarPago(nombre: string, email: string, tel: string, llegada: string, salida: string, cabin: string) {
 
 
-// 1. Activamos el estado de "intentó enviar" para que se muestren los outlines visuales
-  this.formTouched.set(true);
+    // 1. Activamos el estado de "intentó enviar" para que se muestren los outlines visuales
+    this.formTouched.set(true);
 
-const usuarioSesionString = sessionStorage.getItem('usuario');
+    const usuarioSesionString = sessionStorage.getItem('usuario');
 
-if (!usuarioSesionString) {
-    this.alertMessage = 'No has iniciado sesión. Por favor, ingresa a tu cuenta primero.';
-    this.showAlert = true;
-    this.cdr.detectChanges();
-
-    setTimeout(() => {
-      this.showAlert = false;
+    if (!usuarioSesionString) {
+      this.alertMessage = 'No has iniciado sesión. Por favor, ingresa a tu cuenta primero.';
+      this.showAlert = true;
       this.cdr.detectChanges();
-    }, 3000); // 3 segundos es mejor para alcanzar a leer el texto largo
-    return;
-  }
 
-  if (!nombre || !email || !tel || !llegada || !salida || !cabin) {
-    this.alertMessage = 'Por favor, completa todos los campos del formulario.';
-    this.showAlert = true;
-    this.cdr.detectChanges();
+      setTimeout(() => {
+        this.showAlert = false;
+        this.cdr.detectChanges();
+      }, 3000); // 3 segundos es mejor para alcanzar a leer el texto largo
+      return;
+    }
 
-    setTimeout(() => {
-      this.showAlert = false;
+    if (!nombre || !email || !tel || !llegada || !salida || !cabin) {
+      this.alertMessage = 'Por favor, completa todos los campos del formulario.';
+      this.showAlert = true;
       this.cdr.detectChanges();
-    }, 3000);
-    return;
-  }
 
-// Si todo está bien, limpiamos el estado de error por si acaso
-  this.formTouched.set(false);
+      setTimeout(() => {
+        this.showAlert = false;
+        this.cdr.detectChanges();
+      }, 3000);
+      return;
+    }
 
-  const usuarioSesion = JSON.parse(usuarioSesionString);
-  if (email !== usuarioSesion.correo) {
-    this.alertMessage = 'El correo ingresado no coincide con tu cuenta activa.';
-    this.showAlert = true;
-    this.cdr.detectChanges();
+    // Si todo está bien, limpiamos el estado de error por si acaso
+    this.formTouched.set(false);
 
-    setTimeout(() => {
-      this.showAlert = false;
+    const usuarioSesion = JSON.parse(usuarioSesionString);
+    if (email !== usuarioSesion.correo) {
+      this.alertMessage = 'El correo ingresado no coincide con tu cuenta activa.';
+      this.showAlert = true;
       this.cdr.detectChanges();
-    }, 3000);
-    return;
-  }
+
+      setTimeout(() => {
+        this.showAlert = false;
+        this.cdr.detectChanges();
+      }, 3000);
+      return;
+    }
 
     const infoCabana = this.Cabins().find(c => c.title === cabin);
     const fechaIn = new Date(llegada);
@@ -264,12 +269,12 @@ if (!usuarioSesionString) {
     const diffTime = fechaOut.getTime() - fechaIn.getTime();
     const noches = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-  if (noches <= 0) {
-    alert('La fecha de salida debe ser posterior a la de llegada.');
-    return;
-  }
-  const precioPorNoche = infoCabana ? Number(infoCabana.precio.replace(',', '')) : 0;
-  const totalPagar = precioPorNoche * noches;
+    if (noches <= 0) {
+      alert('La fecha de salida debe ser posterior a la de llegada.');
+      return;
+    }
+    const precioPorNoche = infoCabana ? Number(infoCabana.precio.replace(',', '')) : 0;
+    const totalPagar = precioPorNoche * noches;
 
     // 2. Creamos el objeto con la data
     this.reservaData.set({
@@ -299,17 +304,17 @@ if (!usuarioSesionString) {
     }, 2000);
   }
 
-// >>> AGREGA ESTA NUEVA FUNCIÓN <<<
+  // >>> AGREGA ESTA NUEVA FUNCIÓN <<<
   cerrarModal() {
     this.reservaData.set(null); // Esto cierra el @if del modal automáticamente
     this.paypalRendered = false; // Reseteamos la bandera de PayPal
   }
 
-// ==============================================================================================================================
-// 📋 ENVIAR CORREOS
-// ==============================================================================================================================
+  // ==============================================================================================================================
+  // 📋 ENVIAR CORREOS
+  // ==============================================================================================================================
 
-EnviarCorreo(data: any, paypalOrderId: string = 'N/A') {
+  EnviarCorreo(data: any, paypalOrderId: string = 'N/A') {
     if (!data) return;
 
     const payload = {
@@ -344,17 +349,17 @@ EnviarCorreo(data: any, paypalOrderId: string = 'N/A') {
 
 
 
-scrollToForm() {
-const element = document.getElementById('formulario');
-if (element) {
-    // Calcula la posición exacta en píxeles del formulario en el documento
-    const yOffset = element.getBoundingClientRect().top + window.scrollY;
+  scrollToForm() {
+    const element = document.getElementById('formulario');
+    if (element) {
+      // Calcula la posición exacta en píxeles del formulario en el documento
+      const yOffset = element.getBoundingClientRect().top + window.scrollY;
 
-    window.scrollTo({
-      top: yOffset,
-      behavior: 'smooth' // Desplazamiento fluido y limpio
-    });
+      window.scrollTo({
+        top: yOffset,
+        behavior: 'smooth' // Desplazamiento fluido y limpio
+      });
+    }
   }
-}
 
- }
+}
