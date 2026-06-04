@@ -4,6 +4,7 @@ import * as AOS from 'aos';
 import { Cancellations } from "../cancellations/cancellations";
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { ReservaTransferService } from '../../services/reserva-transfer.service'; // Ajusta la ruta
 
 interface Reserva {
   cliente: string;
@@ -28,6 +29,9 @@ interface Reserva {
 })
 
 export class Reservations implements AfterViewInit {
+
+
+
 
   private platformId = inject(PLATFORM_ID);
   private cdr = inject(ChangeDetectorRef);
@@ -208,19 +212,7 @@ export class Reservations implements AfterViewInit {
   viewportScroller: any;
 
 
-  ngAfterViewInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
 
-      // animaciones AOS
-      AOS.init({
-        duration: 1000,
-        once: true,
-        mirror: false,
-        offset: 120,
-      });
-
-    }
-  }
 
   // ==============================================================================================================================
   // 📋 INICIAR PAGO
@@ -229,6 +221,7 @@ export class Reservations implements AfterViewInit {
   loading = signal(false);
   reservaData = signal<any>(null);
   formTouched = signal(false);
+  private transferService = inject(ReservaTransferService);
 
   iniciarPago(nombre: string, email: string, tel: string, llegada: string, salida: string, cabin: string) {
 
@@ -292,8 +285,8 @@ export class Reservations implements AfterViewInit {
     const precioPorNoche = infoCabana ? Number(infoCabana.precio.replace(',', '')) : 0;
     const totalPagar = precioPorNoche * noches;
 
-    // 2. Creamos el objeto con la data
-    this.reservaData.set({
+    // 2. información en el servicio compartido
+    this.transferService.datosParaPagar.set({
       cliente: nombre,
       correo: email,
       telefono: tel,
@@ -305,13 +298,11 @@ export class Reservations implements AfterViewInit {
       montoTotal: totalPagar
     });
 
+    this.router.navigate(['/go-to-pay']);
+
     // 3. Mostramos en consola para validar
     console.log('Datos de la reservación listos para procesar:', this.reservaData());
     this.cdr.detectChanges();
-
-
-    // 4. Simulamos el proceso de pago
-    this.loading.set(true);
 
     setTimeout(() => {
       this.loading.set(false);
@@ -326,6 +317,19 @@ export class Reservations implements AfterViewInit {
     this.paypalRendered = false; // Reseteamos la bandera de PayPal
   }
 
+  ngAfterViewInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+
+      // animaciones AOS
+      AOS.init({
+        duration: 1000,
+        once: true,
+        mirror: false,
+        offset: 120,
+      });
+
+    }
+  }
   // ==============================================================================================================================
   // 📋 ENVIAR CORREOS
   // ==============================================================================================================================
