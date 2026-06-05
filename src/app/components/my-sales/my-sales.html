@@ -66,8 +66,8 @@
             <th class="p-4 text-center">Noches</th>
             <th class="p-4 text-right">Monto Total</th>
             <th class="p-4 text-center">Método</th>
-            <th class="p-4 text-center">Estado Pago</th>
-            <th class="p-4 text-center">Acciones</th>
+            <!-- <th class="p-4 text-center">Estado Pago</th> -->
+            <th class="p-4 text-center">Cliente</th>
           </tr>
         </thead>
         <tbody class="text-xs text-olive-900 divide-y divide-olive-50">
@@ -94,15 +94,20 @@
                   {{ venta.metodo_pago || 'N/A' }}
                 </span>
               </td>
-              <td class="p-4 text-center">
+              <td class="p-4">
+            <div>
+            <h4 class="text-sm font-bold text-olive-900 mb-1">{{ venta.nombre_completo }}</h4>
+            </div>
+              </td>
+              <!-- <td class="p-4 text-center">
                 <span [class]="venta.estado_pago === 'confirmada' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
                                venta.estado_pago === 'pendiente' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
                                'bg-rose-50 text-rose-700 border border-rose-200'"
                       class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider inline-block border">
                   {{ venta.estado_pago || 'pendiente' }}
                 </span>
-              </td>
-              <td class="p-4 text-center">
+              </td> -->
+              <!-- <td class="p-4 text-center">
                 <div class="flex items-center justify-center">
                   <button (click)="rotarEstadoPago(venta.id, venta.estado_pago)"
                           class="p-2 hover:bg-olive-100 text-olive-600 rounded-xl transition-all border border-transparent hover:border-olive-200 active:scale-95 cursor-pointer"
@@ -110,7 +115,7 @@
                     <i class="fas fa-sync-alt text-sm"></i>
                   </button>
                 </div>
-              </td>
+              </td> -->
             </tr>
           } @empty {
             <tr>
@@ -152,12 +157,6 @@
             <div>
               <span class="text-[10px] text-gray-400 block uppercase font-medium tracking-wider">Total cobrado</span>
               <span class="text-base font-black text-olive-900">${{ venta.monto_total | number:'1.2-2' }}</span>
-            </div>
-            <div>
-              <button (click)="rotarEstadoPago(venta.id, venta.estado_pago)"
-                      class="px-3 py-2 bg-[#ff8B64] hover:bg-[#bd7a63] text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all active:scale-95 shadow-sm cursor-pointer">
-                Alternar Estado
-              </button>
             </div>
           </div>
         </div>

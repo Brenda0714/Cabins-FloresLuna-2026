@@ -630,6 +630,7 @@ app.get('/api/pagos', (req, res) => {
       r.fecha_creacion
     FROM reservas r
     LEFT JOIN usuarios u ON r.usuario_id = u.id
+    LEFT JOIN pagos p ON p.reserva_id = r.id
     ORDER BY r.fecha_creacion DESC
   `;
 
@@ -693,6 +694,47 @@ app.post('/api/reservas', (req, res) => {
     });
   });
 });
+
+
+// ==========================================
+// 🌲 RUTA 8: Verificar si la Cabaña esta Libre
+// ==========================================
+app.post('/api/reservas/verificar-disponibilidad', (req, res) => {
+  const { cabin_nombre, fecha_llegada, fecha_salida } = req.body;
+
+  // Query que busca si existe AL MENOS una reservación activa que choque con el rango solicitado
+  // Ajusta los nombres de las columnas 'estatus', 'cabaña', etc., según tu base de datos de MySQL
+  const query = `
+    SELECT COUNT(*) AS total
+    FROM reservas
+    WHERE cabin_nombre = ?
+      AND estado != 'cancelada'
+      AND ? < fecha_salida
+      AND ? > fecha_llegada
+  `;
+
+
+  // db es tu pool o conexión de MySQL
+  db.query(query, [cabin_nombre, fecha_llegada, fecha_salida], (err, results) => {
+    if (err) {
+      console.error('Error en la consulta de disponibilidad:', err);
+      return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+
+    // Si el conteo es mayor a 0, significa que las fechas chocan con otra reservación
+    const estaOcupado = results[0].total > 0;
+
+    if (estaOcupado) {
+      return res.json({ disponible: false, mensaje: 'Cabaña ocupada en esas fechas.' });
+    } else {
+      return res.json({ disponible: true, mensaje: 'Cabaña disponible.' });
+    }
+  });
+});
+
+
+
+
 
 // Encender el servidor
 const PORT = process.env.PORT || 3000;

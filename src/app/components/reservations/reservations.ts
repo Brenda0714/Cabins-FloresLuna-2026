@@ -279,13 +279,37 @@ export class Reservations implements AfterViewInit {
     const noches = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     if (noches <= 0) {
-      alert('La fecha de salida debe ser posterior a la de llegada.');
+      this.alertMessage = 'La fecha de salida debe ser posterior a la de llegada.';
+      this.showAlert = true;
+      this.cdr.detectChanges();
+
+      setTimeout(() => {
+        this.showAlert = false;
+        this.cdr.detectChanges();
+      }, 3000);
       return;
     }
+
     const precioPorNoche = infoCabana ? Number(infoCabana.precio.replace(',', '')) : 0;
     const totalPagar = precioPorNoche * noches;
 
-    // 2. información en el servicio compartido
+
+    this.loading.set(true);
+
+  this.http.post('http://localhost:3000/api/reservas/verificar-disponibilidad', {
+    cabin_nombre: cabin,
+    fecha_llegada: llegada,
+    fecha_salida: salida
+  }).subscribe({
+    next: (respuesta: any) => {
+      this.loading.set(false);
+
+      // Evalúa la condición que responde el Backend
+      if (!respuesta.disponible) {
+        this.MostrarAlerta(`Lo sentimos, la cabaña ${cabin} ya se encuentra reservada en las fechas seleccionadas.`);
+        return;
+      }
+        // 2. información en el servicio compartido
     this.transferService.datosParaPagar.set({
       cliente: nombre,
       correo: email,
@@ -303,12 +327,26 @@ export class Reservations implements AfterViewInit {
     // 3. Mostramos en consola para validar
     console.log('Datos de la reservación listos para procesar:', this.reservaData());
     this.cdr.detectChanges();
+    },
+      error: (error) => {
+      this.loading.set(false);
+      console.error('Error al verificar disponibilidad:', error);
+      this.MostrarAlerta('Hubo un problema al verificar la disponibilidad. Intenta más tarde.');
+
+    }
+    });
+  }
+
+  MostrarAlerta(mensaje: string){
+    this.alertMessage = mensaje;
+    this.showAlert = true;
+    this.cdr.detectChanges();
 
     setTimeout(() => {
-      this.loading.set(false);
-      console.log('Simulación de pago finalizada');
-      // Aquí podrías redirigir a Stripe, PayPal o tu backend
-    }, 2000);
+      this.showAlert = false;
+      this.cdr.detectChanges();
+    }, 3000);
+      return;
   }
 
   // >>> AGREGA ESTA NUEVA FUNCIÓN <<<

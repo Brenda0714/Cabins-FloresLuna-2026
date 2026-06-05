@@ -11,7 +11,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class MySales implements OnInit {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/ventas-admin'; // Servidor Express
+  private apiUrl = 'http://localhost:3000/api/pagos'; // Servidor Express
 
   // 🚦 Signals Principales de Control
   public ventas = signal<any[]>([]);
