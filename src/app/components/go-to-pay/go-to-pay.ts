@@ -96,7 +96,7 @@ export class GoToPay implements OnInit, OnDestroy {
             return actions.order.capture().then((details: any) => {
               console.log('💰 Pago de PayPal aprobado con éxito:', details);
               // Cuando el pago es exitoso, disparamos la inserción de la reserva real
-              this.enviarReservaReal('confirmada');
+              this.enviarReservaReal('confirmada', details.id);
             });
           },
 
@@ -122,7 +122,7 @@ export class GoToPay implements OnInit, OnDestroy {
     }
 
 
-enviarReservaReal(estadoPago: 'pendiente' | 'confirmada' = 'pendiente') {
+enviarReservaReal(estadoPago: 'pendiente' | 'confirmada' = 'pendiente', referenciaPago: string = 'N/A') {
 
   const datosReserva = this.data();
 
@@ -149,7 +149,8 @@ enviarReservaReal(estadoPago: 'pendiente' | 'confirmada' = 'pendiente') {
       fecha_salida: datosReserva.fechaSalida,
       noches: datosReserva.noches,
       monto_total: datosReserva.montoTotal,
-      estado_pago: estadoPago
+      estado_pago: estadoPago,
+      referencia_pago: referenciaPago
     };
 
 
