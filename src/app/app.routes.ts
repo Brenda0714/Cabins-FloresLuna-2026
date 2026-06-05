@@ -20,6 +20,10 @@ export const routes: Routes = [
     loadComponent: () => import('./components/reservations/reservations').then(c => c.Reservations)
   },
   {
+    path: 'go-to-pay',
+    loadComponent: () => import('./components/go-to-pay/go-to-pay').then(c => c.GoToPay)
+  },
+  {
     path: 'my-purchases',
     loadComponent: () => import('./components/my-purchases/my-purchases').then(c => c.MyPurchases)
   },

@@ -187,8 +187,8 @@ app.get('/api/reservas', (req, res) => {
 // ==========================================
 // 🌲 RUTA 5: Crear Reservación (POST)
 // ==========================================
-app.post('/api/reservas', (req, res) => {
-  const { nombre, email, telefono, cabin_nombre, fecha_llegada, fecha_salida, noches, monto_total } = req.body;
+app.post('/api/reservas/hacer-pago', (req, res) => {
+  const { nombre, email, telefono, cabin_nombre, fecha_llegada, fecha_salida, noches, monto_total, estado_pago, referencia_pago } = req.body;
 
   // Diccionario basado en tus Signals de Angular
   const infoCabanas = {
@@ -239,13 +239,15 @@ app.post('/api/reservas', (req, res) => {
     const usuarioId = userResults[0].id;
     const precioUnitario = parseFloat(monto_total) / parseInt(noches);
 
+    const finalEstadoReserva = estado_pago === 'confirmada' ? 'confirmada' : 'pendiente';
+
     // Dejamos el estado inicial en 'pendiente' o 'confirmada' según tu flujo
     const queryReserva = `
       INSERT INTO reservas (usuario_id, cabin_nombre, fecha_llegada, fecha_salida, noches, precio_unitario, monto_total, estado)
-      VALUES (?, ?, ?, ?, ?, ?, ?, 'confirmada')
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
-    db.query(queryReserva, [usuarioId, cabin_nombre, fecha_llegada, fecha_salida, noches, precioUnitario, monto_total], (err, reservaResult) => {
+    db.query(queryReserva, [usuarioId, cabin_nombre, fecha_llegada, fecha_salida, noches, precioUnitario, monto_total, finalEstadoReserva], (err, reservaResult) => {
       if (err) {
         console.error('❌ Error al insertar en reservas:', err);
         return res.status(500).json({ success: false, error: 'Error al registrar la reserva.' });
@@ -255,16 +257,18 @@ app.post('/api/reservas', (req, res) => {
       const folioSimulado = 'FL-' + Math.floor(Math.random() * 900000 + 100000);
 
       // Cambiado a LET para evitar el error de asignación constante
-      const pagoExitoso = Math.random() > 0.10;
-      let estadoPagoDB = 'completado';
-      let referenciaPayPalSimulada = 'PAYID-' + Math.random().toString(36).substring(2, 17).toUpperCase();
+      const pagoExitoso = (estado_pago === 'confirmada');
+      let estadoPagoDB = 'confirmada';
+      let referenciaPayPalReal = referencia_pago || 'N/A';
+
+
       let badgeColor = '#e8f5e9';
       let badgeTextoColor = '#2e7d32';
       let badgeTexto = 'Completado';
 
       if (!pagoExitoso) {
         estadoPagoDB = 'fallido';
-        referenciaPayPalSimulada = 'N/A (Transacción派Rechazada)';
+        referenciaPayPalReal = referencia_pago || 'N/A (Transacción Rechazada)';
         badgeColor = '#ffebee';
         badgeTextoColor = '#c62828';
         badgeTexto = 'Rechazado / Fallido';
@@ -279,7 +283,7 @@ app.post('/api/reservas', (req, res) => {
         VALUES (?, ?, ?, 'PayPal', ?, ?, NOW())
       `;
 
-      db.query(queryPago, [idDeLaReservaCreada, folioSimulado, monto_total, estadoPagoDB, referenciaPayPalSimulada], (pagoErr, pagoResult) => {
+      db.query(queryPago, [idDeLaReservaCreada, folioSimulado, monto_total, estadoPagoDB, referenciaPayPalReal], (pagoErr, pagoResult) => {
         if (pagoErr) {
           console.error('❌ Error al insertar en la tabla pagos:', pagoErr);
         } else {
@@ -287,16 +291,16 @@ app.post('/api/reservas', (req, res) => {
         }
         const montoLimpio = String(monto_total).replace(/[^0-9.]/g, '');
         const montoFormateado = Number(montoLimpio).toLocaleString('es-MX', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
 
         // Variable corregida para evitar el ReferenceError de mensajeIntroduccion
-        const mensajeIntroduccionHTML = pagoExitoso
+          const mensajeIntroduccionHTML = pagoExitoso
           ? `Hola <strong>${nombre}</strong>, te enviamos la confirmación de tu pago y los detalles correspondientes a tu estancia.`
           : `Hola <strong>${nombre}</strong>, se generó un problema al procesar tu transacción de PayPal. Tu reserva se mantendrá congelada temporalmente, por favor contáctanos de inmediato.`;
 
-        const htmlCliente = `
+          const htmlCliente = `
           <div style="background-color: #fcfaf7; padding: 30px 15px; color: #4a3e3d;">
             <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 25px rgba(139, 69, 19, 0.05); border: 1px solid #f3e9dc;">
 
@@ -356,7 +360,7 @@ app.post('/api/reservas', (req, res) => {
                   <table style="width: 100%; font-size: 13px; color: #6b5b55; line-height: 1.9;">
                     <tr>
                       <td><strong>ID de Transacción:</strong></td>
-                      <td style="text-align: right; font-size: 14px; color: #2d2522;">${referenciaPayPalSimulada}</td>
+                      <td style="text-align: right; font-size: 14px; color: #2d2522;">${referenciaPayPalReal}</td>
                     </tr>
                     <tr>
                       <td><strong>Fecha de Pago:</strong></td>
@@ -420,6 +424,7 @@ app.post('/api/reservas', (req, res) => {
                   <tr><td style="padding: 8px 0; color: #8e7a74; width: 35%;">Nombre completo:</td><td style="padding: 8px 0; color: #2d2522; font-weight: 600;">${nombre}</td></tr>
                   <tr><td style="padding: 8px 0; color: #8e7a74;">Correo electrónico:</td><td style="padding: 8px 0; color: #ba4a23; font-weight: 600; font-style: italic;">${email}</td></tr>
                   <tr><td style="padding: 8px 0; color: #8e7a74;">Teléfono de contacto:</td><td style="padding: 8px 0; color: #2d2522; font-weight: 600;">${telefono || 'No proporcionado'}</td></tr>
+                  <tr><td style="padding: 8px 0; color: #8e7a74;">Fecha de Pago:</td><td style="padding: 8px 0; color: #2d2522; font-weight: 600;">${fechaRecibo}</td></tr>
                 </table>
               </div>
               <div style="padding: 0 30px 30px 30px;">
@@ -431,7 +436,7 @@ app.post('/api/reservas', (req, res) => {
                     <tr><td style="color: #6b5b55;">Fecha de Check-Out:</td><td style="text-align: right; color: #2d2522; font-weight: 600;">${fecha_salida}</td></tr>
                     <tr><td style="color: #6b5b55; padding-bottom: 10px; border-bottom: 1px dashed #ebdccb;">Total de Noches:</td><td style="text-align: right; color: #2d2522; font-weight: 600; padding-bottom: 10px; border-bottom: 1px dashed #ebdccb;">${noches} noches</td></tr>
                     <tr><td style="padding-top: 10px; color: #6b5b55;">Estatus Financiero:</td><td style="padding-top: 10px; text-align: right;"><span style="background-color: ${badgeColor}; color: ${badgeTextoColor}; padding: 3px 12px; border-radius: 30px; font-size: 12px; font-weight: bold; text-transform: uppercase;">${badgeTexto}</span></td></tr>
-                    <tr><td style="color: #8e7a74; font-size: 12px;">ID de Transacción:</td><td style="text-align: right; font-size: 12px; color: #4a3e3d;">${referenciaPayPalSimulada}</td></tr>
+                    <tr><td style="color: #8e7a74; font-size: 12px;">ID de Transacción:</td><td style="text-align: right; font-size: 12px; color: #4a3e3d;">${referenciaPayPalReal}</td></tr>
                     <tr><td style="padding-top: 12px; font-weight: bold; color: #5c2c16; font-size: 15px;">Monto de la Operación:</td><td style="padding-top: 12px; text-align: right; color: ${pagoExitoso ? '#2e7d32' : '#c62828'}; font-weight: 800; font-size: 18px;">$${montoFormateado} MXN</td></tr>
                   </table>
                 </div>

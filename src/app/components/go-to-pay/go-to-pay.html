@@ -1,1 +1,110 @@
-<p>go-to-pay works!</p>,
+<div class="min-h-screen w-full flex items-center justify-center bg-cover bg-center relative" style="background-image: url('assets/img/hero-cabin.png');">
+<div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+
+
+
+
+@if (data()) {
+  <div class="bg-white/95 relative z-10 w-full max-w-md p-6 md:p-6 rounded-2xl shadow-2xl mx-4 border border-olive-200 transition-all animate-fade-center mb-5 mt-5">
+
+
+        <div
+          class="relative w-full max-w-md bg-olive-50 rounded-2xl  overflow-hidden transform transition-all duration-300 ease-out scale-100 opacity-100 max-h-[90vh] flex flex-col motion-safe:animate-[fadeIn_0.2s_ease-out]">
+
+          <div class="flex items-center justify-center p-5">
+            <h3 class="g-text-bold text-olive-700 uppercase text-3xl sm:text-3xl text-center">
+              Resumen de tu Estancia
+            </h3>
+
+          </div>
+
+          <div class="p-6 overflow-y-auto space-y-5 flex-1 scrollbar-thin">
+
+            <p class="g-text text-olive-600 text-base leading-relaxed text-center">
+              ¡Todo listo! Te enviaremos la confirmación de tu pago y toda la informacion sobre tu estancia:<br>
+              <strong class="text-olive-800 break-all font-semibold">{{data().correo}}</strong>
+            </p>
+
+            <div class="bg-white border border-olive-300 rounded-xl p-4 space-y-3 text-sm text-olive-800 shadow-sm">
+              <div class="g-text flex justify-between items-center">
+                <span class="g-text text-olive-600 text-base">Cabaña:</span>
+                <span class="g-text font-bold text-olive-900 text-base">{{ data().cabin }}</span>
+              </div>
+              <div class="g-text flex justify-between items-center">
+                <span class="g-text text-olive-600 text-base">Estancia:</span>
+                <span class="g-text font-semibold text-olive-900 text-base">{{ data().noches }} noches</span>
+              </div>
+              <div class="g-text flex justify-between items-center">
+                <span class="g-text text-olive-600 text-base">Precio por noche:</span>
+                <span class="g-text font-semibold text-olive-900 text-base">${{ data().precioUnitario | number }} MX</span>
+              </div>
+              <hr class="text-olive-300">
+              <div class="g-text border-t border-olive-200 pt-3 flex justify-between items-center">
+                <span class="g-text font-bold text-base text-olive-900">Total a pagar:</span>
+                <span class="g-text font-bold text-xl text-[#ff8B64] ">${{ data().montoTotal | number }} MX</span>
+              </div>
+            </div>
+
+            <div class="pt-10">
+              <h4
+                class="g-text text-[#ff8B64] w-full font-extrabold pb-3 uppercase tracking-widest text-base text-center border-b border-dashed border-olive-200 mb-5">
+                Proceder a pagar
+              </h4>
+
+              <div class="p-1 bg-stone-100 rounded-xl border border-stone-200/60 shadow-inner mt-4">
+                <div #paymentRef class="w-full min-h-37.5 bg-transparent rounded-lg"></div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+
+  }
+
+  @if (showAlert2) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/65 backdrop-blur-md transition-all duration-300">
+
+      <div class="bg-white w-full max-w-sm rounded-2xl p-6 shadow-2xl border border-stone-100 text-center animate-fade-center transform scale-100 transition-transform">
+
+        <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full mb-4">
+          @if (alertType === 'success') {
+            <div class="bg-emerald-50 text-emerald-500 p-4 rounded-full border border-emerald-100">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+              </svg>
+            </div>
+          } @else {
+            <div class="bg-rose-50 text-rose-500 p-4 rounded-full border border-rose-100">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </div>
+          }
+        </div>
+
+        <h3 class="text-xl font-bold text-stone-850 mb-2 tracking-wide">
+          {{ alertTitle }}
+        </h3>
+
+        <p class="text-sm text-stone-600 leading-relaxed mb-6 px-2">
+          {{ alertMessage2 }}
+        </p>
+
+        <button
+          (click)="showAlert2 = false"
+          [class]="alertType === 'success'
+            ? 'w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition-colors duration-250 cursor-pointer'
+            : 'w-full py-3 px-4 bg-stone-800 hover:bg-stone-900 text-white font-bold rounded-xl shadow-md transition-colors duration-250 cursor-pointer'">
+          {{ alertType === 'success' ? 'Entendido' : 'Intentar de nuevo' }}
+        </button>
+
+      </div>
+    </div>
+  }
+
+
+
+</div>
