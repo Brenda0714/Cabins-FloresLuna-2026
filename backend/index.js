@@ -296,11 +296,11 @@ app.post('/api/reservas/hacer-pago', (req, res) => {
         });
 
         // Variable corregida para evitar el ReferenceError de mensajeIntroduccion
-          const mensajeIntroduccionHTML = pagoExitoso
+        const mensajeIntroduccionHTML = pagoExitoso
           ? `Hola <strong>${nombre}</strong>, te enviamos la confirmación de tu pago y los detalles correspondientes a tu estancia.`
           : `Hola <strong>${nombre}</strong>, se generó un problema al procesar tu transacción de PayPal. Tu reserva se mantendrá congelada temporalmente, por favor contáctanos de inmediato.`;
 
-          const htmlCliente = `
+        const htmlCliente = `
           <div style="background-color: #fcfaf7; padding: 30px 15px; color: #4a3e3d;">
             <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 25px rgba(139, 69, 19, 0.05); border: 1px solid #f3e9dc;">
 
@@ -385,7 +385,7 @@ app.post('/api/reservas/hacer-pago', (req, res) => {
                 <p style="margin: 0 0 6px 0; font-size: 13px;">Si tienes alguna duda sobre tu reservación, ponte en contacto con nosotros.</p>
                 <p style="margin: 0 0 6px 0; font-size: 13px; font-weight: bold">Tel. +52 (812) 2329 9930</p>
                 <p style="margin: 15px 0 6px 0; font-size: 14px; font-weight: bold; color: #ff8B64;">
-                  ¡Te esperamos pronto en Flores de la Luna, ${nombre}!
+                  ¡Te esperamos pronto en Flores de la Luna!
                 </p>
               </div>
 
@@ -431,19 +431,24 @@ app.post('/api/reservas/hacer-pago', (req, res) => {
                 <h3 style="color: #ff8B64; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 10px 0; border-bottom: 1px solid #f5eadd; padding-bottom: 5px;">Detalles del Hospedaje</h3>
                 <div style="background-color: #fdfbf9; border: 1px solid #f5eadd; border-radius: 12px; padding: 20px; margin-top: 10px;">
                   <table style="width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.8;">
-                    <tr><td style="font-weight: 600; color: #5c2c16;">Cabaña Solicitada:</td><td style="text-align: right; color: #2d2522; font-weight: bold; font-size: 15px;">${cabin_nombre}</td></tr>
-                    <tr><td style="color: #6b5b55;">Fecha de Check-In:</td><td style="text-align: right; color: #2d2522; font-weight: 600;">${fecha_llegada}</td></tr>
-                    <tr><td style="color: #6b5b55;">Fecha de Check-Out:</td><td style="text-align: right; color: #2d2522; font-weight: 600;">${fecha_salida}</td></tr>
-                    <tr><td style="color: #6b5b55; padding-bottom: 10px; border-bottom: 1px dashed #ebdccb;">Total de Noches:</td><td style="text-align: right; color: #2d2522; font-weight: 600; padding-bottom: 10px; border-bottom: 1px dashed #ebdccb;">${noches} noches</td></tr>
-                    <tr><td style="padding-top: 10px; color: #6b5b55;">Estatus Financiero:</td><td style="padding-top: 10px; text-align: right;"><span style="background-color: ${badgeColor}; color: ${badgeTextoColor}; padding: 3px 12px; border-radius: 30px; font-size: 12px; font-weight: bold; text-transform: uppercase;">${badgeTexto}</span></td></tr>
-                    <tr><td style="color: #8e7a74; font-size: 12px;">ID de Transacción:</td><td style="text-align: right; font-size: 12px; color: #4a3e3d;">${referenciaPayPalReal}</td></tr>
-                    <tr><td style="padding-top: 12px; font-weight: bold; color: #5c2c16; font-size: 15px;">Monto de la Operación:</td><td style="padding-top: 12px; text-align: right; color: ${pagoExitoso ? '#2e7d32' : '#c62828'}; font-weight: 800; font-size: 18px;">$${montoFormateado} MXN</td></tr>
+                    <tr><td style="font-weight: 600; color: #5c2c16;">Cabaña Solicitada:</td>
+                    <td style="text-align: right; color: #2d2522; font-weight: bold; font-size: 15px;">${cabin_nombre}</td></tr>
+                    <tr><td style="color: #6b5b55;">Fecha de Check-In:</td>
+                    <td style="text-align: right; color: #2d2522; font-weight: 600;">${fecha_llegada}</td></tr>
+                    <tr><td style="color: #6b5b55;">Fecha de Check-Out:</td>
+                    <td style="text-align: right; color: #2d2522; font-weight: 600;">${fecha_salida}</td></tr>
+                    <tr><td style="color: #6b5b55; padding-bottom: 10px; border-bottom: 1px dashed #ebdccb;">Total de Noches:</td>
+                    <td style="text-align: right; color: #2d2522; font-weight: 600; padding-bottom: 10px; border-bottom: 1px dashed #ebdccb;">${noches} noches</td></tr>
+                    <tr><td style="padding-top: 10px; color: #6b5b55;">Estatus Financiero:</td>
+                    <td style="background-color: ${badgeColor}; color: ${badgeTextoColor}; padding: 3px 10px; border-radius: 30px; font-size: 11px; font-weight: bold; text-transform: uppercase; display: inline-block; white-space: nowrap;">${badgeTexto}</span></td></tr>
+                    <tr><td style="color: #8e7a74; font-size: 12px;">ID de Transacción:</td>
+                    <td style="text-align: right; font-size: 12px; color: #4a3e3d; padding: 6px 0; vertical-align: top; word-break: break-all; line-height: 1.4;">${referenciaPayPalReal}</td></tr>
+                    <tr><td style="padding-top: 12px; font-weight: bold; color: #5c2c16; font-size: 15px;">Monto de la Operación:</td>
+                    <td style="padding-top: 12px; text-align: right; color: ${pagoExitoso ? '#2e7d32' : '#c62828'}; font-weight: 800; font-size: 17px; vertical-align: middle; word-break: break-word;">$${montoFormateado} MXN</td></tr>
                   </table>
                 </div>
               </div>
-              <div style="padding: 0 30px 35px 30px; text-align: center;">
-                <a href="http://localhost:4200/admin/dashboard" style="display: inline-block; background-color: #ff8B64; color: #ffffff; padding: 12px 25px; border-radius: 10px; font-weight: bold; text-decoration: none; font-size: 14px; box-shadow: 0 4px 10px rgba(186, 74, 35, 0.25);">Ir al Panel de Control</a>
-              </div>
+
               <div style="background-color: #fdfbf9; padding: 20px; text-align: center; border-top: 1px solid #f5eadd; font-size: 11px; color: #8e7a74;">
                 <p style="margin: 0;">Este es un mensaje generado automáticamente por el servidor de Flores de la Luna.</p>
                 <p style="margin: 3px 0 0 0;">${pagoExitoso ? 'Por favor, actualice el estatus de preparación física y limpieza de la cabaña.' : '⚠️ Verifique con el cliente antes de apartar las fechas físicas en el calendario manual.'}</p>
@@ -489,9 +494,9 @@ app.post('/api/reservas/hacer-pago', (req, res) => {
 // ==========================================
 
 app.get('/api/mis-compras/:usuarioId', (req, res) => {
-    const { usuarioId } = req.params;
+  const { usuarioId } = req.params;
 
-    // Query SQL para unir la reserva con sus detalles de pago
+  // Query SQL para unir la reserva con sus detalles de pago
   const query = `
     SELECT
       r.id,
@@ -524,7 +529,7 @@ app.get('/api/mis-compras/:usuarioId', (req, res) => {
 // 🌲 RUTA 7: Mostrar Pagos ADMIN
 // ==========================================
 app.get('/api/ventas-admin', (req, res) => {
-const query = `
+  const query = `
     SELECT
       r.id,
       r.usuario_id,

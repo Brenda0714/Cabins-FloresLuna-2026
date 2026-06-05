@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-go-to-pay',
-  imports: [DecimalPipe,RouterModule],
+  imports: [DecimalPipe, RouterModule],
   templateUrl: './go-to-pay.html',
   styleUrl: './go-to-pay.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -65,7 +65,7 @@ export class GoToPay implements OnInit, OnDestroy {
     }
   }
 
-    @ViewChild('paymentRef', { static: false }) set paymentRef(element: ElementRef | undefined) {
+  @ViewChild('paymentRef', { static: false }) set paymentRef(element: ElementRef | undefined) {
 
     if (isPlatformBrowser(this.platformId) && element && element.nativeElement) {
       if (this.paypalRendered) return;
@@ -95,12 +95,19 @@ export class GoToPay implements OnInit, OnDestroy {
           onApprove: (data: any, actions: any) => {
             return actions.order.capture().then((details: any) => {
               console.log('💰 Pago de PayPal aprobado con éxito:', details);
+
+              const transaccionId = details.purchase_units?.[0]?.payments?.captures?.[0]?.id;
+
+              // Si por alguna razón no viene, usamos el ID de orden como respaldo
+              const folioFinal = transaccionId || details.id;
+
+              console.log('Folio Contable Seleccionado:', folioFinal);
               // Cuando el pago es exitoso, disparamos la inserción de la reserva real
-              this.enviarReservaReal('confirmada', details.id);
+              this.enviarReservaReal('confirmada', folioFinal);
             });
           },
 
-        onError: (err: any) => {
+          onError: (err: any) => {
             console.error('Error en la pasarela de PayPal:', err);
             this.alertTitle = 'Error de Pago ❌';
             this.alertMessage2 = 'La transacción con PayPal no pudo completarse.';
@@ -116,15 +123,15 @@ export class GoToPay implements OnInit, OnDestroy {
           .catch((err: any) => {
             console.error('Error al renderizar los botones:', err);
           });
-          }
-        }
-
+      }
     }
 
+  }
 
-enviarReservaReal(estadoPago: 'pendiente' | 'confirmada' = 'pendiente', referenciaPago: string = 'N/A') {
 
-  const datosReserva = this.data();
+  enviarReservaReal(estadoPago: 'pendiente' | 'confirmada' = 'pendiente', referenciaPago: string = 'N/A') {
+
+    const datosReserva = this.data();
 
 
     // Guardilla de seguridad: Si no hay datos en el Signal, le avisamos al usuario
@@ -190,4 +197,19 @@ enviarReservaReal(estadoPago: 'pendiente' | 'confirmada' = 'pendiente', referenc
         }
       });
   }
+
+  manejarClickAlerta() {
+    // 1. Cerramos la alerta sea cual sea el caso
+    this.showAlert2 = false;
+
+    // 2. Si todo salió bien, mandamos al usuario al Home de Flores de la Luna
+    if (this.alertType === 'success') {
+      this.router.navigate(['/']);
+    } else {
+      // Si fue un error o advertencia, no redirigimos para que puedan
+      // volver a dar clic en el botón de PayPal e intentar el pago
+      this.cdr.detectChanges();
+    }
+  }
+
 }

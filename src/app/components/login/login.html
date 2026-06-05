@@ -64,18 +64,18 @@
         <label class="g-text block text-xs font-medium text-olive-700 uppercase tracking-wider mb-2">Correo
           Electrónico</label>
         <input type="email" formControlName="correo" placeholder="ejemplo@correo.com" autocomplete="off"
-          class="g-text w-full px-4 py-3 rounded-xl border border-olive-200 text-sm focus:outline-none focus:border-[#D18B73] focus:ring-1 focus:ring-[#D18B73] transition-all bg-olive-300">
+          class="g-text w-full px-3 py-3 rounded-xl border border-olive-200 text-sm focus:outline-none focus:border-[#D18B73] focus:ring-1 focus:ring-[#D18B73] transition-all bg-olive-300">
       </div>
 
       <div>
         <div class="flex justify-between items-center mb-2">
-          <label class="g-text block text-xs font-medium text-olive-700 uppercase tracking-wider"
-            autocomplete="new-password">Contraseña</label>
+          <label class="g-text block text-xs font-medium text-olive-700 uppercase tracking-wider">Contraseña</label>
           <a class="g-text text-xs text-olive-400 hover:text-[#D18B73] transition-colors cursor-pointer">¿La
             olvidaste?</a>
         </div>
-        <input type="password" formControlName="contrasena" placeholder="••••••••"
-          class="g-text w-full px-4 py-3 rounded-xl border border-olive-200 text-sm focus:outline-none focus:border-[#ff8B64] focus:ring-1 focus:ring-[#D18B73] transition-all bg-olive-300">
+        <input type="password" formControlName="contrasena" placeholder="••••••••" autocomplete="new-password"
+          style="font-size: 1rem; letter-spacing: 0.3em;"
+          class="g-text w-full px-3 py-3 rounded-xl border border-olive-200 text-sm focus:outline-none focus:border-[#ff8B64] focus:ring-1 focus:ring-[#D18B73] transition-all bg-olive-300">
       </div>
 
       <button type="submit" [disabled]="loginForm.invalid"
