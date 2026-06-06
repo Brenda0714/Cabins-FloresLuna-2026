@@ -516,13 +516,14 @@ app.get('/api/mis-compras/:usuarioId', (req, res) => {
       r.noches,
       r.monto_total,
       r.estado,
-      p.referencia_pago AS folio,
+      p.referencia_pago,
       p.metodo_pago,
+      p.folio,
       p.estado_pago
     FROM reservas r
     LEFT JOIN pagos p ON r.id = p.reserva_id
     WHERE r.usuario_id = ?
-    ORDER BY r.fecha_llegada DESC
+    ORDER BY r.fecha_llegada ASC
   `;
 
   db.query(query, [usuarioId], (err, results) => {
@@ -533,6 +534,38 @@ app.get('/api/mis-compras/:usuarioId', (req, res) => {
     res.json(results);
   });
 })
+
+
+
+// ==========================================
+// 🌲 RUTA 6: CANCELAR RESERVACIONES  USUARIO
+// ==========================================
+// 🔄 ENDPOINT: Cancelar una reservación mediante actualización de estado (Borrado Lógico)
+app.put('/api/mis-compras/cancelar/:id', (req, res) => {
+  const idReserva = req.params.id;
+
+  if (!idReserva) {
+    return res.status(400).json({ success: false, message: "El ID de la reservación es requerido." });
+  }
+
+  // ⚠️ Ojo aquí: pusiste 'cancelada' con 'a' al final en tu query.
+  // Asegúrate de que en tu BD el estado sea 'cancelada' o 'cancelado' para que no falle el UPDATE.
+  const queryCancelar = "UPDATE reservas SET estado = 'cancelada' WHERE id = ?";
+
+  db.query(queryCancelar, [idReserva], (err, result) => {
+    if (err) {
+      console.error("❌ Error en la base de datos al intentar cancelar:", err);
+      return res.status(500).json({ success: false, message: "Error interno del servidor." });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ success: false, message: "No se encontró la reservación." });
+    }
+
+    console.log(`✨ Reservación #RES-${idReserva} marcada como 'cancelada'.`);
+    return res.status(200).json({ success: true, message: "Cancelada correctamente." });
+  });
+});
 
 
 // ==========================================

@@ -1,95 +1,169 @@
 <div class="min-h-screen bg-olive-50 p-4 md:p-8 g-text justify-center">
 
   <div class="max-w-4xl mx-auto mb-10 text-center">
-    <h1 class="g-text text-4xl font-bold text-olive-600 tracking-wide uppercase">Mis Reservaciones</h1>
-    <p class="g-text text-sm text-olive-500">Revisa los detalles de tus estancias planeadas e historial de visitas en Flores de la Luna.</p>
+    <h1 class="g-text text-4xl font-bold text-olive-600 tracking-wide uppercase mb-2">Mis Compras</h1>
+    <p class="g-text text-sm text-olive-500">Administra tus estancias, gestiona tu perfil de usuario</p>
   </div>
 
-  <div class="g-text max-w-6xl mx-auto mb-8 flex border-b border-olive-100">
+  <div class="g-text max-w-6xl mx-auto mb-8 flex flex-wrap border-b border-olive-100">
     <button (click)="cambiarActualizacion('proximas')"
-            [class]="ActualizacionActual() === 'proximas' ? 'border-[#D18B73] text-olive-900 font-bold' : 'border-transparent text-olive-400 font-medium'"
-            class="g-text px-6 py-3 border-b-2 text-sm transition-all uppercase tracking-wider cursor-pointer">
+      [class]="ActualizacionActual() === 'proximas' ? 'border-[#D18B73] text-olive-900 font-bold' : 'border-transparent text-olive-400 font-medium'"
+      class="g-text px-6 py-3 border-b-2 text-sm transition-all uppercase tracking-wider cursor-pointer">
       Próximos Viajes
     </button>
     <button (click)="cambiarActualizacion('pasadas')"
-            [class]="ActualizacionActual() === 'pasadas' ? 'border-[#D18B73] text-olive-900 font-bold' : 'border-transparent text-olive-400 font-medium'"
-            class="g-text px-6 py-3 border-b-2 text-sm transition-all uppercase tracking-wider cursor-pointer">
+      [class]="ActualizacionActual() === 'pasadas' ? 'border-[#D18B73] text-olive-900 font-bold' : 'border-transparent text-olive-400 font-medium'"
+      class="g-text px-6 py-3 border-b-2 text-sm transition-all uppercase tracking-wider cursor-pointer">
       Historial Pasado
+    </button>
+    <button (click)="cambiarActualizacion('perfil')"
+      [class]="ActualizacionActual() === 'perfil' ? 'border-[#D18B73] text-olive-900 font-bold' : 'border-transparent text-olive-400 font-medium'"
+      class="g-text px-6 py-3 border-b-2 text-sm transition-all uppercase tracking-wider cursor-pointer ml-auto">
+      <i class="fas fa-user-cog mr-1.5"></i> Mi Cuenta
     </button>
   </div>
 
-  <div class="g-text max-w-6xl mx-auto overflow-y-auto max-h-150 pr-2 space-y-4 mb-10 border border-transparent custom-scroll">
+  @if (ActualizacionActual() !== 'perfil') {
+  <div
+    class="g-text max-w-6xl mx-auto overflow-y-auto max-h-150 pr-2 space-y-4 mb-10 border border-transparent custom-scroll">
 
     @for (compra of comprasFiltradas(); track compra.id) {
-      <div class="bg-white rounded-2xl border border-olive-100 shadow-sm overflow-hidden flex flex-col md:flex-row hover:shadow-md transition-shadow">
+    <div
+      class="bg-white rounded-2xl border border-olive-100 shadow-sm overflow-hidden flex flex-col md:flex-row hover:shadow-md transition-shadow">
 
-        <div class="bg-olive-50/50 p-6 md:w-52 flex flex-col justify-between items-center text-center border-b md:border-b-0 md:border-r border-olive-100">
-          <div class="p-4 bg-white rounded-full shadow-sm text-[#D18B73] mb-2">
-            <i class="fas fa-mountain text-2xl"></i>
-          </div>
-          <div>
-            <span class="text-[10px] text-olive-400 block uppercase font-mono">Código de Reserva</span>
-            <span class="font-mono text-xs font-bold text-olive-800">#RES-{{ compra.id }}</span>
-          </div>
+      <div
+        class="bg-olive-50/50 p-6 md:w-52 flex flex-col justify-between items-center text-center border-b md:border-b-0 md:border-r border-olive-100">
+        <div class="p-4 bg-white rounded-full shadow-sm text-[#D18B73] mb-2">
+          <i class="fas fa-mountain text-2xl"></i>
+        </div>
+        <div>
+          <span class="text-[10px] text-olive-400 block uppercase font-mono">Código de Reserva</span>
+          <span class="font-mono text-xs font-bold text-olive-800">{{ compra.folio }}</span>
+        </div>
+      </div>
+
+      <div class="p-6 flex-1 space-y-3">
+        <div class="flex items-start justify-between gap-2">
+          <h3 class="text-base font-bold text-olive-900 tracking-wide">{{ compra.cabin_nombre }}</h3>
+          <span
+            [class]="compra.estado_pago === 'confirmada' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200'"
+            class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border">
+            {{ compra.estado_pago === 'confirmada' ? 'Reservado' : 'pendiente' }}
+          </span>
         </div>
 
-        <div class="p-6 flex-1 space-y-3">
-          <div class="flex items-start justify-between gap-2">
-            <h3 class="text-base font-bold text-olive-900 tracking-wide">{{ compra.cabin_nombre }}</h3>
-
-            <span [class]="compra.estado_pago === 'aprobado' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200'"
-                  class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border">
-              {{ compra.estado_pago === 'aprobado' ? 'Reservado' : 'Pago Pendiente' }}
+        <div class="grid grid-cols-2 gap-4 bg-olive-50 p-3 rounded-xl border border-olive-100">
+          <div>
+            <span class="text-[10px] text-olive-400 block uppercase">Llegada (Check-In)</span>
+            <span class="text-xs font-bold text-olive-700">
+              <i class="far fa-calendar-check text-olive-600 mr-1"></i>{{ compra.fecha_llegada | date:'dd MMM, yyyy' }}
             </span>
           </div>
-
-          <div class="grid grid-cols-2 gap-4 bg-olive-50 p-3 rounded-xl border border-olive-100">
-            <div>
-              <span class="text-[10px] text-olive-400 block uppercase">Llegada (Check-In)</span>
-              <span class="text-xs font-bold text-olive-700">
-                <i class="far fa-calendar-check text-olive-600 mr-1"></i>{{ compra.fecha_llegada | date:'dd MMM, yyyy' }}
-              </span>
-            </div>
-            <div>
-              <span class="text-[10px] text-olive-400 block uppercase">Salida (Check-Out)</span>
-              <span class="text-xs font-bold text-olive-700">
-                <i class="far fa-calendar-times text-olive-600 mr-1"></i>{{ compra.fecha_salida | date:'dd MMM, yyyy' }}
-              </span>
-            </div>
-          </div>
-
-          <div class="flex flex-wrap items-center justify-between text-xs pt-1 gap-2 text-olive-500">
-            <span>Duración: <strong class="text-olive-700">{{ compra.noches }} noches</strong></span>
-
-            @if (compra.folio) {
-              <span>Folio de Transacción: <strong class="font-mono text-olive-700">#{{ compra.folio }}</strong></span>
-            } @else {
-              <span class="text-amber-600 font-medium"><i class="fas fa-exclamation-circle mr-1"></i>Requiere validación de pago</span>
-            }
+          <div>
+            <span class="text-[10px] text-olive-400 block uppercase">Salida (Check-Out)</span>
+            <span class="text-xs font-bold text-olive-700">
+              <i class="far fa-calendar-times text-olive-600 mr-1"></i>{{ compra.fecha_salida | date:'dd MMM, yyyy' }}
+            </span>
           </div>
         </div>
 
-        <div class="p-6 bg-olive-50/50 md:w-48 flex flex-col justify-center items-stretch md:items-end border-t md:border-t-0 border-olive-50">
-          <span class="text-[10px] text-olive-400 uppercase tracking-wider block text-left md:text-right">Total Pagado</span>
-          <span class="text-xl font-black text-olive-900 mb-4 text-left md:text-right">${{ compra.monto_total | number:'1.2-2' }}</span>
-
-          <button [disabled]="compra.estado_pago !== 'aprobado'"
-                  [class]="compra.estado_pago === 'aprobado' ? 'bg-olive-800 hover:bg-olive-900 text-white shadow-sm cursor-pointer' : 'bg-olive-200 text-olive-400 cursor-not-allowed'"
-                  class="w-full py-2 px-3 text-center text-xs font-bold uppercase tracking-wider rounded-xl transition-all active:scale-95">
-            <i class="fas fa-receipt mr-1.5"></i> Ver Recibo
-          </button>
+        <div class="flex flex-wrap items-center justify-between text-xs pt-1 gap-2 text-olive-500">
+          <span>Duración: <strong class="text-olive-700">{{ compra.noches }} noches</strong></span>
+          @if (compra.folio) {
+          <span>Folio de Transacción: <strong class="font-mono text-olive-700">#{{ compra.referencia_pago
+              }}</strong></span>
+          } @else {
+          <span class="text-amber-600 font-medium"><i class="fas fa-exclamation-circle mr-1"></i>Requiere
+            validación</span>
+          }
         </div>
-
       </div>
+
+      <div
+        class="p-6 bg-olive-50/50 md:w-48 flex flex-col justify-center items-stretch md:items-end border-t md:border-t-0 border-olive-50">
+        <span class="text-[10px] text-olive-400 uppercase tracking-wider block text-left md:text-right">Monto
+          Total</span>
+        <span class="text-xl font-black text-olive-900 mb-4 text-left md:text-right">${{ compra.monto_total |
+          number:'1.2-2' }}</span>
+
+        @if (ActualizacionActual() === 'proximas') {
+        <button (click)="cancelarReserva(compra.id)"
+          class="w-full py-2 px-3 text-center text-xs font-bold uppercase tracking-wider rounded-xl bg-red-50 text-red-600 border border-red-200 hover:bg-red-600 hover:text-white shadow-sm cursor-pointer transition-all active:scale-95">
+          <i class="fas fa-times-circle mr-1.5"></i> Cancelar Viaje
+        </button>
+        } @else {
+        <span
+          class="text-[11px] font-bold text-olive-400 bg-olive-100 px-3 py-1.5 rounded-xl block text-center w-full uppercase tracking-wider">
+          ✨ Estancia Concluida
+        </span>
+        }
+      </div>
+
+    </div>
     } @empty {
-      <div class="text-center p-12 bg-white rounded-2xl border border-dashed border-olive-200">
-        <div class="p-4 bg-olive-50 rounded-full inline-block text-olive-300 mb-3">
-          <i class="fas fa-folder-open text-3xl"></i>
-        </div>
-        <h3 class="text-sm font-bold text-olive-900 uppercase tracking-wide">No se encontraron estancias</h3>
-        <p class="text-xs text-olive-400 mt-1">Aún no cuentas con reservaciones registradas en esta sección.</p>
+    <div class="text-center p-12 bg-white rounded-2xl border border-dashed border-olive-200">
+      <div class="p-4 bg-olive-50 rounded-full inline-block text-olive-300 mb-3">
+        <i class="fas fa-folder-open text-3xl"></i>
       </div>
+      <h3 class="text-sm font-bold text-olive-900 uppercase tracking-wide">No se encontraron estancias</h3>
+      <p class="text-xs text-olive-400 mt-1">Aún no cuentas con registros en esta sección.</p>
+    </div>
     }
 
   </div>
+  }
+
+  @if (ActualizacionActual() === 'perfil') {
+  <div
+    class="max-w-3xl mx-auto bg-white rounded-2xl border border-olive-100 shadow-sm overflow-hidden p-6 md:p-8 mb-10">
+
+    <div class="border-b border-olive-100 pb-4 mb-6">
+      <h2 class="text-lg font-bold text-olive-900 uppercase tracking-wide">Configuración de la Cuenta</h2>
+      <p class="text-xs text-olive-400 mt-0.5">Mantén tus datos de contacto actualizados para tus avisos de
+        confirmación.</p>
+    </div>
+
+    <div class="space-y-5">
+      <div>
+        <label class="block text-xs font-bold text-olive-700 uppercase mb-2">Nombre Completo</label>
+        <input #txtNombre [value]="usuarioPerfil().nombre" type="text"
+          class="w-full px-4 py-2.5 rounded-xl border border-olive-200 focus:outline-none focus:border-[#D18B73] text-sm text-olive-800 font-medium bg-olive-50/30">
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-olive-700 uppercase mb-2">Correo Electrónico (No editable)</label>
+        <input [value]="usuarioPerfil().email" type="email" disabled
+          class="w-full px-4 py-2.5 rounded-xl border border-olive-200 bg-gray-50 text-gray-400 text-sm cursor-not-allowed font-medium">
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-olive-700 uppercase mb-2">Teléfono Móvil</label>
+        <input #txtTelefono [value]="usuarioPerfil().telefono" type="tel"
+          class="w-full px-4 py-2.5 rounded-xl border border-olive-200 focus:outline-none focus:border-[#D18B73] text-sm text-olive-800 font-medium bg-olive-50/30">
+      </div>
+
+      <div class="pt-2">
+        <button (click)="guardarPerfil(txtNombre.value, txtTelefono.value)"
+          class="px-6 py-2.5 bg-olive-800 hover:bg-olive-900 text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all active:scale-95 cursor-pointer shadow-sm">
+          <i class="fas fa-save mr-1.5"></i> Guardar Cambios
+        </button>
+      </div>
+    </div>
+
+    <div
+      class="mt-10 pt-6 border-t border-red-100 bg-red-50/40 rounded-xl p-4 border flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div>
+        <h4 class="text-xs font-bold text-red-800 uppercase tracking-wide">Zona de Peligro: Eliminar Cuenta</h4>
+        <p class="text-[11px] text-red-600 mt-0.5">Al borrar tu cuenta perderás de forma irreversible todo el historial
+          de estancias y reservaciones activas.</p>
+      </div>
+      <button (click)="eliminarCuenta()"
+        class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all active:scale-95 cursor-pointer shadow-sm shrink-0">
+        <i class="fas fa-trash-alt mr-1.5"></i> Eliminar Cuenta
+      </button>
+    </div>
+
+  </div>
+  }
+
 </div>
