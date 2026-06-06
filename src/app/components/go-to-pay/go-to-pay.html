@@ -7,17 +7,22 @@
 
   @if (data()) {
   <div
-    class="bg-white/95 relative z-10 w-full max-w-md p-6 md:p-6 rounded-2xl shadow-2xl mx-4 border border-olive-200 transition-all animate-fade-center mb-5 mt-5">
+    class="bg-olive-50 relative z-10 w-full max-w-md p-6 md:p-6 rounded-2xl shadow-2xl mx-4 border border-olive-200 transition-all animate-fade-center mb-5 mt-5">
 
 
     <div
-      class="relative w-full max-w-md bg-olive-50 rounded-2xl  overflow-hidden transform transition-all duration-300 ease-out scale-100 opacity-100 max-h-[90vh] flex flex-col motion-safe:animate-[fadeIn_0.2s_ease-out]">
+      class="relative w-full max-w-md  rounded-2xl  overflow-hidden transform transition-all duration-300 ease-out scale-100 opacity-100 max-h-[90vh] flex flex-col motion-safe:animate-[fadeIn_0.2s_ease-out]">
 
       <div class="flex items-center justify-center p-5">
+        <div class="w-6"></div>
         <h3 class="g-text-bold text-olive-700 uppercase text-3xl sm:text-3xl text-center">
           Resumen de tu Estancia
         </h3>
 
+        <span routerLink="/reservations"
+          class="g-text-bold text-olive-700 uppercase text-xl sm:text-xl cursor-pointer hover:text-olive-900 transition-colors p-2">
+          X
+        </span>
       </div>
 
       <div class="p-6 overflow-y-auto space-y-5 flex-1 scrollbar-thin">
@@ -53,7 +58,7 @@
             Proceder a pagar
           </h4>
 
-          <div class="p-1 bg-stone-100 rounded-xl border border-stone-200/60 shadow-inner mt-4">
+          <div class="p-1rounded-xl  mt-4">
             <div #paymentRef class="w-full min-h-37.5 bg-transparent rounded-lg"></div>
           </div>
         </div>

@@ -194,31 +194,41 @@ app.post('/api/reservas/hacer-pago', (req, res) => {
   const infoCabanas = {
     "Orquídea": {
       descripcion: "Hermosa cabaña ideal para parejas. Un espacio íntimo y acogedor diseñado para el descanso y la reconexión en la naturaleza.",
-      caracteristicas: "👥 2 Personas | 🛏️ 1 Recámara | 🚿 1 Baño | 🍳 Sala y Cocina",
-      amenidades: "• Cama King Size • Smart TV • Internet • WIFI • Hermoso Mirador"
+      caracteristicas: "👥 2 Personas | Cama matrimonial, Cajonera, Buró y Espejo ",
+      amenidades: "• WIFI • Baño completo • Cocina • Patio • Comedor • Sala"
     },
     "Girasol": {
       descripcion: "Espaciosa cabaña familiar diseñada para crear recuerdos inolvidables con los tuyos, rodeados de paisajes boscoscos únicos.",
-      caracteristicas: "👥 6 Personas | 🛏️ 2 Recámaras | 🚿 1 Baño | 🍳 Sala y Cocina",
-      amenidades: "• Cama King Size • 4 Camas Individuales • Smart TV • Internet • WIFI • Mirador"
+      caracteristicas: "👥 6 Personas | Cama matrimonial, Cajonera, Buró, Espejo, dos literas con colchón individual , Tv y Cajonera",
+      amenidades: "• WIFI • Baño completo • Cocina • Patio • Comedor • Sala"
     },
     "Tulipán": {
       descripcion: "Estancia familiar con un diseño alpino espectacular. El balance perfecto entre confort hogareño y la magia del bosque.",
-      caracteristicas: "👥 6 Personas | 🛏️ 2 Recámaras | 🚿 1 Baño | 🍳 Sala y Cocina",
-      amenidades: "• Cama King Size • 4 Camas Individuales • Smart TV • Internet • WIFI • Mirador"
+      caracteristicas: "👥 6 Personas | Cama matrimonial, Cajonera, Buró, Espejo, dos literas con colchón individual , Tv y Cajonera",
+      amenidades: "• WIFI • Baño completo • Cocina • Patio • Comedor • Sala"
     },
-    "Cabaña Grande": {
+    "Dalia House": {
       descripcion: "Nuestra cabaña de máxima capacidad. Perfecta para reuniones familiares grandes o grupos que buscan vivir la experiencia de montaña al máximo.",
-      caracteristicas: "👥 10-12 Personas | 🛏️ 2 Recámaras | 🚿 1 Baño | 🍳 Sala y Cocina",
+      caracteristicas: "👥 12 Personas | 🛏️ 2 Recámaras | 🚿 1 Baño | 🍳 Sala y Cocina",
+      amenidades: "• 2 Camas King Size • 4 Camas Individuales • Smart TV • Internet • WIFI • Mirador"
+    },
+    "Magnolia House": {
+      descripcion: "Nuestra cabaña de máxima capacidad. Perfecta para reuniones familiares grandes o grupos que buscan vivir la experiencia de montaña al máximo.",
+      caracteristicas: "👥 12 Personas | 🛏️ 2 Recámaras | 🚿 1 Baño | 🍳 Sala y Cocina",
       amenidades: "• 2 Camas King Size • 4 Camas Individuales • Smart TV • Internet • WIFI • Mirador"
     }
   };
 
-  const datosExtraCabana = infoCabanas[cabin_nombre] || {
+  const nombreCabanaLimpio = cabin_nombre ? cabin_nombre.trim() : "";
+
+
+  const datosExtraCabana = infoCabanas[nombreCabanaLimpio] || {
     descripcion: "Disfruta de una maravillosa estancia en Flores de la Luna rodeado de naturaleza.",
     caracteristicas: "👥 Capacidad Estándar | 🌲 Vista al Bosque",
     amenidades: "• Todos los servicios esenciales incluidos"
   };
+
+
 
   const queryBuscarUsuario = 'SELECT id FROM usuarios WHERE correo = ?';
 
