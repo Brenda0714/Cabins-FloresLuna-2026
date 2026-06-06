@@ -732,6 +732,50 @@ app.post('/api/reservas/verificar-disponibilidad', (req, res) => {
   });
 });
 
+// ==========================================
+// 🌲 RUTA 9: FECHAS OCUPADAS CALENDARIO
+// ==========================================
+app.get('/api/reservas/fechas-ocupadas/:cabin_nombre', (req, res) => {
+    const { cabin_nombre } = req.params;
+
+    // 1. PASO AUTOMÁTICO: Antes de consultar, actualizamos las que ya vencieron hoy.
+    // NOW() toma la fecha y hora del servidor actual.
+    const updateQuery = `
+      UPDATE reservas
+      SET estado = 'completada'
+      WHERE fecha_salida <= NOW() AND estado = 'confirmada'
+    `;
+
+    db.query(updateQuery, (updateErr) => {
+      if (updateErr) {
+        // Si falla, lo tiramos en consola pero no detenemos el flujo
+        console.error('Error silencioso al auto-completar reservas pasadas:', updateErr);
+      }
+
+      // Seleccionamos las columnas tal como están en tu phpMyAdmin
+    const query = `
+      SELECT fecha_llegada, fecha_salida
+      FROM reservas
+      WHERE cabin_nombre = ? AND estado = 'confirmada'
+    `;
+
+    db.query(query, [cabin_nombre], (err, results) => {
+      if (err) {
+        console.error('Error al obtener fechas ocupadas:', err);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+      }
+
+      // Retorna un arreglo clásico: [{fecha_llegada: '2026-06-05', fecha_salida: '2026-06-07'}]
+      return res.json(results);
+    });
+
+  });
+
+});
+
+
+
+
 
 
 

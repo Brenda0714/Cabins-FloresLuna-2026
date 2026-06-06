@@ -5,32 +5,21 @@ import { Cancellations } from "../cancellations/cancellations";
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ReservaTransferService } from '../../services/reserva-transfer.service'; // Ajusta la ruta
-
-interface Reserva {
-  cliente: string;
-  correo: string;
-  telefono: string;
-  fechaLlegada: string;
-  fechaSalida: string;
-  cabin: string,
-  noches: number,
-  precioUnitario: number,
-  montoTotal: number
-};
+import { CabinCalendarComponent } from '../cabin-calendar/cabin-calendar.component';
 
 
 @Component({
   selector: 'app-reservations',
   standalone: true,
-  imports: [DecimalPipe],
+  imports: [DecimalPipe,CabinCalendarComponent],
   templateUrl: './reservations.html',
   styleUrl: './reservations.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class Reservations implements AfterViewInit {
-
-
+  fechaInicioSel = signal<Date | null>(null);
+  fechaFinSel = signal<Date | null>(null);
 
 
   private platformId = inject(PLATFORM_ID);
@@ -217,6 +206,13 @@ export class Reservations implements AfterViewInit {
   // ==============================================================================================================================
   // 📋 INICIAR PAGO
   // ==============================================================================================================================
+formatuearFechaParaInput(fecha: Date | null): string {
+    if (!fecha) return '';
+    const ano = fecha.getFullYear();
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    return `${ano}-${mes}-${dia}`;
+  }
 
   loading = signal(false);
   reservaData = signal<any>(null);

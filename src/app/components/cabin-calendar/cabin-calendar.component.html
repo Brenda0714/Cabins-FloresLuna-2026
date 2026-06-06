@@ -1,0 +1,64 @@
+<div class="max-w-md mx-auto bg-white p-6 rounded-2xl shadow-sm border border-olive-100">
+
+  <div class="flex items-center justify-between mb-6">
+    <h3 class="g-text text-lg font-bold text-olive-800 capitalize">{{ obtenerNombreMes() }}</h3>
+    <div class="flex space-x-2">
+      <button (click)="cambiarMes(-1)" [disabled]="esMesActual()"
+      class="p-3 rounded-xl border border-olive-200 text-2xl font-bold text-olive-600 transition-all
+             hover:bg-olive-300 cursor-pointer
+             disabled:opacity-90 disabled:bg-olive-100 disabled:text-olive-400 disabled:cursor-not-allowed
+             shadow-sm active:scale-95">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+      </svg>
+      </button>
+      <button (click)="cambiarMes(1)"
+      class="p-3 rounded-xl border border-olive-200 text-2xl font-bold text-olive-600 transition-all
+             hover:bg-olive-300 cursor-pointer
+             shadow-sm active:scale-95 ">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+      </svg>
+      </button>
+
+    </div>
+  </div>
+
+  <div class="flex space-x-4 mb-4 text-xs font-medium justify-center">
+    <div class="flex items-center space-x-1.5">
+      <span class="w-3 h-3 bg-green-300 border border-green-500 rounded-full inline-block"></span>
+      <span class="g-text text-olive-600">Disponible</span>
+    </div>
+    <div class="flex items-center space-x-1.5">
+      <span class="w-3 h-3 bg-red-300 border border-red-500 rounded-full inline-block"></span>
+      <span class="g-text text-olive-600">Ocupado</span>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold text-olive-400 uppercase tracking-wider mb-2">
+    <div>Do</div><div>Lu</div><div>Ma</div><div>Mi</div><div>Ju</div><div>Vi</div><div>Sá</div>
+  </div>
+
+  <div class="grid grid-cols-7 gap-1.5 text-center">
+
+    @for (dia of diasDelMes(); track $index) {
+      <div>
+
+        @if (dia.numero) {
+          <button
+          (click)="seleccionarDia(dia)"
+          [disabled]="!dia.disponible"
+          [ngClass]="obtenerClaseEstadoDia(dia)"
+          class="cursor-pointer w-full p-2 rounded-xl text-sm font-semibold transition-all outline-none">
+            {{ dia.numero }}
+          </button>
+
+        } @else {
+          <div class="p-2"></div>
+        }
+
+      </div>
+    }
+
+  </div>
+</div>

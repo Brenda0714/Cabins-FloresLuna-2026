@@ -64,6 +64,10 @@
             }
           </div>
 
+        <div class="mb-6 w-full" data-aos="fade-left" data-aos-delay="200">
+          <app-cabin-calendar [cabinNombre]="cabin.title"></app-cabin-calendar>
+        </div>
+
           <button (click)="scrollToForm()"
             class="block text-center bg-[#ff8B64] hover:bg-[#ffa483] cursor-pointer text-white g-text-extrabold py-4 rounded-full transition-all uppercase tracking-widest text-xs shadow-lg active:scale-95 hover:scale-105">
             Hacer la Reservación
@@ -119,6 +123,7 @@
         <div>
           <input #llegadaInput type="text" placeholder="Llegada" onfocus="(this.type='date')" (input)="0"
             autocomplete="none"
+            [value]="formatuearFechaParaInput(fechaInicioSel())"
             class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all"
             [class.ring-2]="formTouched()" [class.ring-red-500]="formTouched() && !llegadaInput.value"
             [class.ring-green-500]="formTouched() && llegadaInput.value">
@@ -128,6 +133,7 @@
         <div>
           <input #salidaInput type="text" placeholder="Salida" onfocus="(this.type='date')" (input)="0"
             autocomplete="none"
+            [value]="formatuearFechaParaInput(fechaFinSel())"
             class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all"
             [class.ring-2]="formTouched()" [class.ring-red-500]="formTouched() && !salidaInput.value"
             [class.ring-green-500]="formTouched() && salidaInput.value">
