@@ -359,8 +359,8 @@ app.post('/api/reservas/hacer-pago', (req, res) => {
                   </div>
                   <table style="width: 100%; font-size: 13px; color: #6b5b55; line-height: 1.9;">
                     <tr>
-                      <td><strong>ID de Transacción:</strong></td>
-                      <td style="text-align: right; font-size: 14px; color: #2d2522;">${referenciaPayPalReal}</td>
+                      <td><strong># Folio:</strong></td>
+                      <td style="text-align: right; font-size: 14px; color: #2d2522;">${folioSimulado}</td>
                     </tr>
                     <tr>
                       <td><strong>Fecha de Pago:</strong></td>
@@ -441,8 +441,8 @@ app.post('/api/reservas/hacer-pago', (req, res) => {
                     <td style="text-align: right; color: #2d2522; font-weight: 600; padding-bottom: 10px; border-bottom: 1px dashed #ebdccb;">${noches} noches</td></tr>
                     <tr><td style="padding-top: 10px; color: #6b5b55;">Estatus Financiero:</td>
                     <td style="background-color: ${badgeColor}; color: ${badgeTextoColor}; padding: 3px 10px; border-radius: 30px; font-size: 11px; font-weight: bold; text-transform: uppercase; display: inline-block; white-space: nowrap;">${badgeTexto}</span></td></tr>
-                    <tr><td style="color: #8e7a74; font-size: 12px;">ID de Transacción:</td>
-                    <td style="text-align: right; font-size: 12px; color: #4a3e3d; padding: 6px 0; vertical-align: top; word-break: break-all; line-height: 1.4;">${referenciaPayPalReal}</td></tr>
+                    <tr><td style="color: #8e7a74; font-size: 12px;"># Folio:</td>
+                    <td style="text-align: right; font-size: 12px; color: #4a3e3d; padding: 6px 0; vertical-align: top; word-break: break-all; line-height: 1.4;">${folioSimulado}</td></tr>
                     <tr><td style="padding-top: 12px; font-weight: bold; color: #5c2c16; font-size: 15px;">Monto de la Operación:</td>
                     <td style="padding-top: 12px; text-align: right; color: ${pagoExitoso ? '#2e7d32' : '#c62828'}; font-weight: 800; font-size: 17px; vertical-align: middle; word-break: break-word;">$${montoFormateado} MXN</td></tr>
                   </table>
@@ -736,23 +736,23 @@ app.post('/api/reservas/verificar-disponibilidad', (req, res) => {
 // 🌲 RUTA 9: FECHAS OCUPADAS CALENDARIO
 // ==========================================
 app.get('/api/reservas/fechas-ocupadas/:cabin_nombre', (req, res) => {
-    const { cabin_nombre } = req.params;
+  const { cabin_nombre } = req.params;
 
-    // 1. PASO AUTOMÁTICO: Antes de consultar, actualizamos las que ya vencieron hoy.
-    // NOW() toma la fecha y hora del servidor actual.
-    const updateQuery = `
+  // 1. PASO AUTOMÁTICO: Antes de consultar, actualizamos las que ya vencieron hoy.
+  // NOW() toma la fecha y hora del servidor actual.
+  const updateQuery = `
       UPDATE reservas
       SET estado = 'completada'
       WHERE fecha_salida <= NOW() AND estado = 'confirmada'
     `;
 
-    db.query(updateQuery, (updateErr) => {
-      if (updateErr) {
-        // Si falla, lo tiramos en consola pero no detenemos el flujo
-        console.error('Error silencioso al auto-completar reservas pasadas:', updateErr);
-      }
+  db.query(updateQuery, (updateErr) => {
+    if (updateErr) {
+      // Si falla, lo tiramos en consola pero no detenemos el flujo
+      console.error('Error silencioso al auto-completar reservas pasadas:', updateErr);
+    }
 
-      // Seleccionamos las columnas tal como están en tu phpMyAdmin
+    // Seleccionamos las columnas tal como están en tu phpMyAdmin
     const query = `
       SELECT fecha_llegada, fecha_salida
       FROM reservas

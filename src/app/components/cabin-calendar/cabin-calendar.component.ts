@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject, signal } from '@angular/core';
+import { Component, Input, OnInit, inject, model, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 
@@ -8,7 +8,10 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   templateUrl: './cabin-calendar.component.html'
 })
-export class CabinCalendarComponent implements OnInit{
+export class CabinCalendarComponent implements OnInit {
+  fechaInicioSel = model<Date | null>(null);
+  fechaFinSel = model<Date | null>(null);
+
   readonly FECHA_ACTUAL_SISTEMA = new Date();
   @Input() cabinNombre!: string;
   private http = inject(HttpClient);
@@ -17,8 +20,7 @@ export class CabinCalendarComponent implements OnInit{
   diasDelMes = signal<any[]>([]);
   fechasOcupadas = signal<{ inicio: Date, fin: Date }[]>([]);
 
-  fechaInicioSel = signal<Date | null>(null);
-  fechaFinSel = signal<Date | null>(null);
+
 
   ngOnInit() {
     this.cargarFechasOcupadas();
@@ -28,6 +30,15 @@ export class CabinCalendarComponent implements OnInit{
     if (!dia.numero || !dia.disponible) return; // Si es un hueco o está ocupado, no hace nada
 
     const fechaClickeada = dia.fechaObj;
+    if (!fechaClickeada) return;
+
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    if (fechaClickeada < hoy) {
+      alert('No puedes seleccionar una fecha anterior al día de hoy.');
+      return;
+    }
 
     // Caso 1: No hay nada seleccionado, o ya había ambas y reiniciamos la selección
     if (!this.fechaInicioSel() || (this.fechaInicioSel() && this.fechaFinSel())) {
@@ -65,34 +76,39 @@ export class CabinCalendarComponent implements OnInit{
 
   obtenerClaseEstadoDia(dia: any): string {
     if (!dia.numero) return '';
-    if (!dia.disponible) return 'bg-red-100 border border-red-200 text-red-600 font-normal cursor-not-allowed';
+    if (dia.esPasado) {
+      return 'bg-gray-100/70 border border-gray-200/50 text-gray-400 font-normal line-through cursor-not-allowed';
+    }
+    if (!dia.disponible) {
+      return 'bg-red-100 border border-red-200 text-red-600 font-normal cursor-not-allowed';
+    }
 
     const f = dia.fechaObj;
     const inicio = this.fechaInicioSel();
     const fin = this.fechaFinSel();
 
     // Helper para igualar las horas a cero absoluto y comparar manzanas con manzanas
-  const formatearFecha = (date: Date | null) => {
-    if (!date) return '';
-    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-  };
+    const formatearFecha = (date: Date | null) => {
+      if (!date) return '';
+      return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+    };
 
-  const strFechaActual = formatearFecha(f);
-  const strInicio = formatearFecha(inicio);
-  const strFin = formatearFecha(fin);
+    const strFechaActual = formatearFecha(f);
+    const strInicio = formatearFecha(inicio);
+    const strFin = formatearFecha(fin);
 
     // Si es exactamente el día de inicio o fin seleccionado
-  if ((inicio && strFechaActual === strInicio) || (fin && strFechaActual === strFin)) {
-    return 'bg-orange-500 border border-orange-600 text-white font-bold scale-105 shadow-sm cursor-pointer transition-all';
-  }
+    if ((inicio && strFechaActual === strInicio) || (fin && strFechaActual === strFin)) {
+      return 'bg-orange-500 border border-orange-600 text-white font-bold scale-105 shadow-sm cursor-pointer transition-all';
+    }
 
     // Si está en medio del rango seleccionado
-  if (inicio && fin && f > inicio && f < fin) {
-    return 'bg-orange-100 border-y border-orange-200 text-orange-700 cursor-pointer';
-  }
+    if (inicio && fin && f > inicio && f < fin) {
+      return 'bg-orange-100 border-y border-orange-200 text-orange-700 cursor-pointer';
+    }
 
     // Estado disponible por defecto (Verde)
-  return 'bg-green-100 border border-green-200 text-green-700 hover:bg-orange-200 hover:text-orange-800 cursor-pointer transition-all';
+    return 'bg-green-100 border border-green-200 text-green-700 hover:bg-orange-200 hover:text-orange-800 cursor-pointer transition-all';
 
   }
 
@@ -100,7 +116,7 @@ export class CabinCalendarComponent implements OnInit{
     this.http.get<any[]>(`http://localhost:3000/api/reservas/fechas-ocupadas/${this.cabinNombre}`)
       .subscribe({
         next: (reservas) => {
-          console.log('1. Datos crudos que llegaron de la BD:', reservas);
+
 
           const rangos = reservas.map(r => {
             // r.fecha_llegada viene como "2026-06-05T06:00:00.000Z" o "2026-06-05"
@@ -119,7 +135,7 @@ export class CabinCalendarComponent implements OnInit{
             };
           });
 
-          console.log('2. Rangos procesados y listos en Angular:', rangos);
+
 
           this.fechasOcupadas.set(rangos);
           this.generarCalendario();
@@ -137,9 +153,12 @@ export class CabinCalendarComponent implements OnInit{
 
     const dias = [];
 
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
     // Rellenar días en blanco del mes anterior
     for (let i = 0; i < primerDiaMes; i++) {
-      dias.push({ numero: null, disponible: true });
+      dias.push({ numero: null, disponible: true, fechaObj: null, esPasado: false });
     }
 
     // Generar los días del mes actual y validar disponibilidad
@@ -147,10 +166,13 @@ export class CabinCalendarComponent implements OnInit{
       const fechaEvaluar = new Date(año, mes, dia, 0, 0, 0);
       const estaOcupado = this.verificarSiEstaOcupado(fechaEvaluar);
 
+      const esFechaPasada = fechaEvaluar < hoy;
+
       dias.push({
         numero: dia,
-        disponible: !estaOcupado,
-        fechaObj: fechaEvaluar
+        disponible: !estaOcupado && !esFechaPasada,
+        fechaObj: fechaEvaluar,
+        esPasado: esFechaPasada
       });
     }
 
@@ -167,8 +189,8 @@ export class CabinCalendarComponent implements OnInit{
 
   cambiarMes(direccion: number) {
     if (direccion === -1 && this.esMesActual()) {
-    return;
-  }
+      return;
+    }
     this.currentDate.setMonth(this.currentDate.getMonth() + direccion);
     this.generarCalendario();
   }
@@ -178,8 +200,8 @@ export class CabinCalendarComponent implements OnInit{
   }
 
   esMesActual(): boolean {
-  return this.currentDate.getFullYear() === this.FECHA_ACTUAL_SISTEMA.getFullYear() &&
-         this.currentDate.getMonth() === this.FECHA_ACTUAL_SISTEMA.getMonth();
+    return this.currentDate.getFullYear() === this.FECHA_ACTUAL_SISTEMA.getFullYear() &&
+      this.currentDate.getMonth() === this.FECHA_ACTUAL_SISTEMA.getMonth();
   }
 
 }

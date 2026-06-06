@@ -22,53 +22,76 @@
 
       <!-- Card: IMPORTANTE 'overflow-visible' -->
       <div
-        class="relative grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-10  items-center rounded-[50px] p-6 md:p-10 z-10 overflow-visible">
+        class="relative grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-10  items-start rounded-[50px] p-6 md:p-10 z-10 overflow-visible">
 
         <!-- Imagen de Cabaña -->
-        <div class=" w-full  lg:aspect-square  z-20" data-aos="fade-right" data-aos-delay="500">
+        <div class=" w-full h-full min-h-100 lg:min-h-full z-20 flex" data-aos="fade-right" data-aos-delay="500">
           <img [src]="cabin.img" [alt]="cabin.title"
-            class="shadow-2xl rounded-[30px] w-full h-full object-cover transition-transform duration-500 hover:scale-100">
+            class="mb-5 shadow-2xl rounded-[30px] w-full h-full object-cover transition-transform duration-500 hover:scale-100">
+
+
         </div>
 
         <!-- Información de la Cabaña -->
-        <div class="flex flex-col px-4 z-20" data-aos="fade-right" data-aos-delay="300">
-          <div class="mb-6">
-            <span class="g-text-bold text-[#56B36E] text-3xl">${{cabin.precio}}</span>
-            <span class="g-text text-olive-500 text-sm ml-1">por Noche</span>
+        <div class="flex flex-col px-4 z-20" data-aos="fade-left" data-aos-delay="300">
+
+          <div class="mb-2 p-4 rounded-3xl  max-w-sm">
+            <div class="flex flex-col gap-1">
+              <div class="flex items-baseline justify-between gap-4">
+                <span class="g-text text-base text-olive-600 font-bold">Lunes a Jueves:</span>
+                <div>
+                  <span class="g-text-bold text-[#28c550] text-3xl">${{cabin.precio}}</span>
+                  <span class="g-text text-xs text-olive-500 ml-0.5">/ noche</span>
+                </div>
+              </div>
+              <div class="flex items-baseline justify-between gap-4 border-t border-olive-200/50 pt-1.5 mt-1.5">
+                <span class="g-text text-base text-olive-600 font-bold">Viernes a Domingo:</span>
+                <div>
+                  <span class="g-text-bold text-[#fc916e] text-3xl">${{cabin.precio2}}</span>
+                  <span class="g-text text-xs text-olive-500 ml-0.5">/ noche</span>
+                </div>
+              </div>
+            </div>
+            <p class="text-[12px] text-olive-400 mt-2 italic text-center">
+              *Tarifas sujetas a variación en temporada alta o días festivos
+            </p>
           </div>
 
-          <h3 class="g-text-bold text-4xl text-olive-800 uppercase mb-1" data-aos="fade-right" data-aos-delay="100">
+
+
+          <h3 class="g-text-bold text-4xl text-olive-800 uppercase mb-1" data-aos="fade-left" data-aos-delay="100">
             {{cabin.title}}</h3>
-          <p class="g-text-bold text-olive-600 text-lg mb-5 italic" data-aos="fade-right" data-aos-delay="100">
+          <p class="g-text-bold text-olive-600 text-lg mb-5 italic" data-aos="fade-left" data-aos-delay="100">
             {{cabin.subtitle}}</p>
 
           <!-- Lista de Amenidades -->
-          <ul class="gap-y-4 mb-8" data-aos="fade-right" data-aos-delay="100">
-            @for (item of cabin.text; track item) {
-            <li class="flex items-center gap-5 py-2">
-              <div class="bg-[#56B36E] p-1 rounded-full text-white"><svg class="w-4 h-4" fill="none"
-                  stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
-                </svg></div>
-              <span class="g-text text-olive-500">{{item}}</span>
-            </li>}
-
-          </ul>
+          <h2 class="g-text-bold text-olive-500 uppercase tracking-widest leading-relaxed whitespace-pre-line"
+            data-aos="fade-left" data-aos-delay="100">{{cabin.text}}</h2>
 
           <!-- Tags / Extras -->
-          <div class="border-t border-olive-300 pt-5 mb-5" data-aos="fade-right" data-aos-delay="100">
+
+          <ul class="space-y-2 border-t border-olive-300 pt-5 mb-6" data-aos="fade-left" data-aos-delay="100">
             @for (amenities of cabin.amenities; track amenities) {
-            <h4 class="g-text-bold text-olive-400 uppercase tracking-widest leading-relaxed">
-              {{amenities}}
-            </h4>
+            <li class="flex items-center gap-3">
+              <span class="w-2 h-2 bg-[#56B36E] rounded-full inline-block shrink-0"></span>
+              <p class="g-text-bold text-olive-400 uppercase tracking-widest leading-relaxed text-[10px]">
+                {{amenities}}
+              </p>
+            </li>
             }
+          </ul>
+
+
+
+
+          <div class="mb-4 w-full" data-aos="fade-left" data-aos-delay="200">
+            <h2 class="g-text text-olive-500 mb-2">Disponibilidad de Reserva</h2>
+            <app-cabin-calendar [cabinNombre]="cabin.title" [(fechaInicioSel)]="cabin.fechaInicio"
+              [(fechaFinSel)]="cabin.fechaFin">
+            </app-cabin-calendar>
           </div>
 
-        <div class="mb-6 w-full" data-aos="fade-left" data-aos-delay="200">
-          <app-cabin-calendar [cabinNombre]="cabin.title"></app-cabin-calendar>
-        </div>
-
-          <button (click)="scrollToForm()"
+          <button (click)="scrollToForm(cabin)"
             class="block text-center bg-[#ff8B64] hover:bg-[#ffa483] cursor-pointer text-white g-text-extrabold py-4 rounded-full transition-all uppercase tracking-widest text-xs shadow-lg active:scale-95 hover:scale-105">
             Hacer la Reservación
           </button>
@@ -122,8 +145,7 @@
         <!-- Input Llegada -->
         <div>
           <input #llegadaInput type="text" placeholder="Llegada" onfocus="(this.type='date')" (input)="0"
-            autocomplete="none"
-            [value]="formatuearFechaParaInput(fechaInicioSel())"
+            autocomplete="none" [value]="formatuearFechaParaInput(fechaInicioForm())"
             class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all"
             [class.ring-2]="formTouched()" [class.ring-red-500]="formTouched() && !llegadaInput.value"
             [class.ring-green-500]="formTouched() && llegadaInput.value">
@@ -132,8 +154,7 @@
         <!-- Input Salida -->
         <div>
           <input #salidaInput type="text" placeholder="Salida" onfocus="(this.type='date')" (input)="0"
-            autocomplete="none"
-            [value]="formatuearFechaParaInput(fechaFinSel())"
+            autocomplete="none" [value]="formatuearFechaParaInput(fechaFinForm())"
             class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-700 focus:ring-2 focus:ring-orange-400 outline-none transition-all"
             [class.ring-2]="formTouched()" [class.ring-red-500]="formTouched() && !salidaInput.value"
             [class.ring-green-500]="formTouched() && salidaInput.value">
@@ -141,13 +162,14 @@
 
         <!-- Select Tipo de Cabaña -->
         <div class="relative w-full">
-          <select #tipoCabana (input)="0"
+          <select #tipoCabana (input)="0" [value]="cabinSeleccionadaForm()"
+            (change)="cabinSeleccionadaForm.set(tipoCabana.value); formTouched.set(false)"
             class="g-text w-full px-6 py-3 bg-olive-200 border-none rounded-full text-olive-500 focus:ring-2 focus:ring-orange-400 outline-none transition-all appearance-none cursor-pointer"
             [class.ring-2]="formTouched()" [class.ring-red-500]="formTouched() && !tipoCabana.value"
             [class.ring-green-500]="formTouched() && tipoCabana.value">
             <option value="" disabled selected>Tipo de Cabaña</option>
             @for (cabin of Cabins(); track cabin.id) {
-            <option [value]="cabin.title">{{ cabin.title }} - ${{ cabin.precio }}</option>
+            <option [value]="cabin.title">{{ cabin.title }}</option>
             }
           </select>
 
@@ -171,7 +193,8 @@
       </form>
 
       @if (reservaData(); as data) {
-      <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md transition-opacity duration-300 ease-out">
+      <div
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md transition-opacity duration-300 ease-out">
 
         <div
           class="relative w-full max-w-md bg-stone-50 rounded-2xl border border-olive-200 shadow-2xl overflow-hidden transform transition-all duration-300 ease-out scale-100 opacity-100 max-h-[90vh] flex flex-col motion-safe:animate-[fadeIn_0.2s_ease-out]">
@@ -251,7 +274,7 @@
   <!-- ÁRBOL DECORATIVO A LA DERECHA -->
   <!-- Cambiamos '-right-...' por '-left-...' -->
   <div
-    class="absolute -left-900 md:-left-600 -top-450 md:-top-200 h-full w-250 md:w-300 z-0 pointer-events-none overflow-visible rotate-90 opacity-60 md:opacity-90">
+    class="absolute -left-800 md:-left-800 -top-400 md:-top-400 h-full w-250 md:w-300 z-0 pointer-events-none overflow-visible rotate-90 opacity-60 md:opacity-90">
     <!-- 'object-left-top' para anclar las ramas a la esquina superior izquierda -->
     <img src="assets/img/RESERVACIONES/Recurso-9.png"
       class="w-full h-full object-contain object-top-left opacity-90 transition-transform duration-700 animate-viento-90">
@@ -270,7 +293,7 @@
   <!-- ÁRBOL DECORATIVO A LA DERECHA -->
   <!-- Cambiamos '-right-...' por '-left-...' -->
   <div
-    class="absolute -left-900 md:-left-600 top-130 md:top-250 h-full w-250 md:w-300 z-0 pointer-events-none overflow-visible rotate-90 opacity-60 md:opacity-90">
+    class="absolute --left-800 md:-left-800 top-130 md:top-250 h-full w-250 md:w-300 z-0 pointer-events-none overflow-visible rotate-90 opacity-60 md:opacity-90">
     <!-- 'object-left-top' para anclar las ramas a la esquina superior izquierda -->
     <img src="assets/img/RESERVACIONES/Recurso-9.png"
       class="w-full h-full object-contain object-top-left opacity-90 transition-transform duration-700 animate-viento-90">
@@ -279,7 +302,7 @@
   <!-- ÁRBOL DECORATIVO A LA IZQUIERDA -->
   <!-- Cambiamos '-right-...' por '-left-...' -->
   <div
-    class="absolute -right-130 md:-right-130 top-1160 md:top-950 h-full w-250 md:w-300 z-0 pointer-events-none overflow-visible opacity-60 md:opacity-90">
+    class="absolute -right-130 md:-right-130 top-1160 md:top-1160 h-full w-250 md:w-300 z-0 pointer-events-none overflow-visible opacity-60 md:opacity-90">
     <!-- 'object-left-top' para anclar las ramas a la esquina superior izquierda -->
     <img src="assets/img/RESERVACIONES/Recurso-9.png"
       class="w-full h-full object-contain object-top-right opacity-90 transition-transform duration-700 animate-viento">
