@@ -40,11 +40,12 @@ export class MyPurchases implements OnInit {
     const hoy = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 
     if (pestaña === 'proximas') {
-      return lista.filter(c => c.fecha_salida >= hoy);
-    } else if (pestaña === 'pasadas') {
-      return lista.filter(c => c.fecha_salida < hoy);
+
+      return lista.filter(c => c.fecha_salida >= hoy && c.estado !== 'cancelada');
+    } else {
+
+      return lista.filter(c => c.fecha_salida < hoy || c.estado === 'cancelada');
     }
-    return [];
   });
 
   ngOnInit(): void {
@@ -86,40 +87,51 @@ export class MyPurchases implements OnInit {
     this.ActualizacionActual.set(tipo);
   }
 
+
+  public showConfirmModal = false;
+  public idReservaACancelar: number | null = null;
+  public identificadorACancelar: string = '';
+
   // 🔄 MÉTODO: Cancelar una reservación activa cambiando su estado a 'cancelado'
   cancelarReserva(idReserva: number): void {
-    // 1. Buscamos la compra actual en el signal usando su ID para extraer el folio real
     const compraActual = this.compras().find(c => c.id === idReserva);
+    this.identificadorACancelar = compraActual?.folio ? `Folio #${compraActual.folio}` : `#RES-${idReserva}`;
 
-    // Si la compra tiene un folio (como FL-670676), lo guardamos; si no, usamos el ID de reserva
-    const identificador = compraActual?.folio ? `Folio #${compraActual.folio}` : `#RES-${idReserva}`;
+    // Guardamos temporalmente el ID y abrimos el modal
+    this.idReservaACancelar = idReserva;
+    this.showConfirmModal = true;
+  }
 
-    // 2. Usamos una ventana de confirmación que SÍ detiene el código para validar la decisión del usuario
-    const usuarioConfirmo = confirm(`¿Estás seguro de que deseas cancelar la reservación con ${identificador}? Esta acción liberará las fechas de la cabaña.`);
+  confirmarCancelacionExitosa(): void {
+    if (!this.idReservaACancelar) return;
 
-    // 3. SÓLO si el usuario da clic en "Aceptar", se manda la petición al Backend
-    if (usuarioConfirmo) {
+    const id = this.idReservaACancelar;
+    const identificador = this.identificadorACancelar;
 
-      // 🌟 Cambiado a .put() para conectar con tu app.put() del backend.
-      // Se añade un objeto vacío {} como segundo parámetro porque los PUT requieren un "body"
-      this.http.put(`${this.apiUrl}/cancelar/${idReserva}`, {}).subscribe({
-        next: (res: any) => {
+    // Cerramos el modal de confirmación inmediatamente
+    this.showConfirmModal = false;
 
-          // Mostramos tu alerta personalizada de éxito
-          this.MostrarAlerta(`La reservación con ${identificador} ha sido cancelada con éxito.`);
-          setTimeout(() => {
-            this.compras.set(this.compras().filter(c => c.id !== idReserva));
-          }, 1000);
+    // Mandamos la petición al backend
+    this.http.put(`${this.apiUrl}/cancelar/${id}`, {}).subscribe({
+      next: (res: any) => {
+        // Mostramos tu alerta original naranja de éxito
+        this.MostrarAlerta(`La reservación con ${identificador} ha sido cancelada con éxito.`);
 
-          // Filtramos el signal para remover la cabaña cancelada de la pantalla de "Próximos Viajes"
-          this.compras.set(this.compras().filter(c => c.id !== idReserva));
-        },
-        error: (err) => {
-          console.error('❌ Error al cancelar la reservación en el servidor:', err);
-          this.MostrarAlerta('No se pudo procesar la cancelación en este momento. Inténtalo más tarde.');
-        }
-      });
-    }
+        // Le damos un respiro para ver la alerta antes de moverla de pestaña
+        setTimeout(() => {
+          this.compras.update(lista =>
+            lista.map(c => c.id === id ? { ...c, estado: 'cancelada' } : c)
+          );
+          // Limpiamos variables de control
+          this.idReservaACancelar = null;
+        }, 600);
+      },
+      error: (err) => {
+        console.error('❌ Error al cancelar la reservación en el servidor:', err);
+        this.MostrarAlerta('No se pudo procesar la cancelación en este momento. Inténtalo más tarde.');
+        this.idReservaACancelar = null;
+      }
+    });
   }
 
   // 💾 MÉTODO: Guardar cambios de actualización de datos
