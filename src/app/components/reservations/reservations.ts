@@ -41,7 +41,7 @@ export class Reservations implements AfterViewInit {
 
   Cabins = signal([
     {
-      id: 1, img: 'assets/img/GALERIA/tu-imagen-5.jpg', title: 'Orquídea', subtitle: 'Cabaña para Parejas (2 Personas)',
+      id: 1, img: 'assets/img/GALERIA/01_Orquidea_pareja.png', title: 'Orquídea', subtitle: 'Cabaña para Parejas (2 Personas)',
       precio: '2,900', precio2: '3,500',
       text: 'Cama matrimonial, Cajonera, Buró y Espejo',
       amenities: [
@@ -57,7 +57,7 @@ export class Reservations implements AfterViewInit {
       fechaFin: null as Date | null
     },
     {
-      id: 2, img: 'assets/img/GALERIA/tu-imagen-4.jpg', title: 'Girasol', subtitle: 'Cabaña Familiar (6 Personas)',
+      id: 2, img: 'assets/img/GALERIA/02_Girasol_familiar.png', title: 'Girasol', subtitle: 'Cabaña Familiar (6 Personas)',
       precio: '3,500', precio2: '4,200',
       text: `Habitación 1: Cama matrimonial, Tv, Burós y Espejo.
              Habitación 2: Dos literas con colchón individual, Tv y Cajonera`,
@@ -74,7 +74,7 @@ export class Reservations implements AfterViewInit {
       fechaFin: null as Date | null
     },
     {
-      id: 3, img: 'assets/img/GALERIA/tu-imagen-3.jpg', title: 'Tulipán', subtitle: 'Cabaña Familiar (6 Personas)',
+      id: 3, img: 'assets/img/GALERIA/03_Tulipan_familiar.png', title: 'Tulipán', subtitle: 'Cabaña Familiar (6 Personas)',
       precio: '3,500', precio2: '4,200',
       text: `Habitación 1: Cama matrimonial, Tv , Burós y Espejo.
              Habitación 2: Dos literas con colchón individual , Tv y Cajonera.`,

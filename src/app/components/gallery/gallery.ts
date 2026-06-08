@@ -10,14 +10,68 @@ import { CommonModule } from '@angular/common';
 })
 export class Gallery implements OnInit, OnDestroy {
 
-  images = signal<string[]>([
-    'assets/img/GALERIA/tu-imagen-1.jpg',
-    'assets/img/GALERIA/tu-imagen-2.jpg',
-    'assets/img/GALERIA/tu-imagen-3.jpg',
-    'assets/img/GALERIA/tu-imagen-4.jpg',
-    'assets/img/GALERIA/tu-imagen-5.jpg',
-    'assets/img/GALERIA/tu-imagen-6.jpg',
-  ]);
+
+  // 1. Guardamos cuál cabaña está seleccionada (Por defecto la primera)
+  public cabanaSeleccionada = signal<string>('Orquídea');
+
+  // 2. Controladores del Modal que ya tienes funcionando
+  public showModal = signal<boolean>(false);
+  public currentIndex2 = signal<number>(0);
+  currentIndex = signal<number>(0);
+
+  selectedImg = signal<string | null>(null);
+  intervalId: any;
+
+  ngOnInit() {
+    this.startAutoplay();
+  }
+
+  ngOnDestroy(): void {
+    this.stopAutoplay();
+  }
+
+  public galeriaData = signal<Record<string, string[]>>({
+    'Orquídea': [
+      'assets/img/GALERIA/orquidea-1.jpg', // Lado Izq - Vertical Larga (Index 0)
+      'assets/img/GALERIA/orquidea-2.jpg', // Lado Izq - Horizontal Corta 1 (Index 1)
+      'assets/img/GALERIA/orquidea-3.jpg', // Lado Izq - Horizontal Corta 2 (Index 2)
+      'assets/img/GALERIA/orquidea-4.jpg', // Lado Der - Horizontal Sup (Index 3)
+      'assets/img/GALERIA/orquidea-5.jpg', // Lado Der - Horizontal Media (Index 4)
+      'assets/img/GALERIA/orquidea-6.jpg'  // Lado Der - Vertical Larga Inf (Index 5)
+    ],
+    'Tulipán': [
+      'assets/img/GALERIA/tulipan-1.jpg',
+      'assets/img/GALERIA/tulipan-2.jpg',
+      'assets/img/GALERIA/tulipan-3.jpg',
+      'assets/img/GALERIA/tulipan-4.jpg',
+      'assets/img/GALERIA/tulipan-5.jpg',
+      'assets/img/GALERIA/tulipan-6.jpg'
+    ],
+    'Girasol': [
+      'assets/img/GALERIA/girasol-1.jpg',
+      'assets/img/GALERIA/girasol-2.jpg',
+      'assets/img/GALERIA/girasol-3.jpg',
+      'assets/img/GALERIA/girasol-4.jpg',
+      'assets/img/GALERIA/girasol-5.jpg',
+      'assets/img/GALERIA/girasol-6.jpg'
+    ],
+    'Dalia House': [
+      'assets/img/GALERIA/azucena-1.jpg',
+      'assets/img/GALERIA/azucena-2.jpg',
+      'assets/img/GALERIA/azucena-3.jpg',
+      'assets/img/GALERIA/azucena-4.jpg',
+      'assets/img/GALERIA/azucena-5.jpg',
+      'assets/img/GALERIA/azucena-6.jpg'
+    ],
+    'Magnolia House': [
+      'assets/img/GALERIA/begonia-1.jpg',
+      'assets/img/GALERIA/begonia-2.jpg',
+      'assets/img/GALERIA/begonia-3.jpg',
+      'assets/img/GALERIA/begonia-4.jpg',
+      'assets/img/GALERIA/begonia-5.jpg',
+      'assets/img/GALERIA/begonia-6.jpg'
+    ]
+  });
 
   testimonials = signal([
     { img: 'assets/img/GALERIA/cliente1.png', alt: 'Cliente 1', text: 'Increible lugar para disfrutar de la naturaleza.' },
@@ -27,41 +81,38 @@ export class Gallery implements OnInit, OnDestroy {
     { img: 'assets/img/GALERIA/cliente5.png', alt: 'Cliente 5', text: 'Una escapada inolvidable. El despertar con el sonido de la naturaleza y la vista de las montañas fue justo lo que necesitábamos para desconectarnos de la ciudad.' },
   ]);
 
-// Usamos signals para un mejor rendimiento en OnPush
-  currentIndex = signal<number>(0);
-  currentIndex2 = signal<number>(0);
-  selectedImg = signal<string | null>(null);
-  showModal = signal<boolean>(false);
-  intervalId: any;
-
-  ngOnInit() {
-    this.startAutoplay();
-  }
-  ngOnDestroy(): void {
-    this.stopAutoplay();
-  }
 
   extendedTestimonials = computed(() => {
-  const items = this.testimonials();
-  // Duplicamos el array para que nunca se vea el fondo blanco
-  return [...items, ...items, ...items];
+    const items = this.testimonials();
+    // Duplicamos el array para que nunca se vea el fondo blanco
+    return [...items, ...items, ...items];
   });
 
-  openModal(index: number) {
+  images() {
+    return this.galeriaData()[this.cabanaSeleccionada()] || [];
+  }
+
+  setCabana(nombre: string): void {
+    this.cabanaSeleccionada.set(nombre);
+  }
+
+  openModal(index: number): void {
     this.currentIndex2.set(index);
     this.showModal.set(true);
   }
 
-  closeModal() {
+  closeModal(): void {
     this.showModal.set(false);
   }
 
-  nextImage() {
-    this.currentIndex2.update(idx => (idx + 1) % this.images().length);
+  prevImage(): void {
+    const total = this.images().length;
+    this.currentIndex2.update(idx => (idx === 0 ? total - 1 : idx - 1));
   }
 
-  prevImage() {
-    this.currentIndex2.update(idx => (idx - 1 + this.images().length) % this.images().length);
+  nextImage(): void {
+    const total = this.images().length;
+    this.currentIndex2.update(idx => (idx === total - 1 ? 0 : idx + 1));
   }
 
   startAutoplay() {
@@ -80,10 +131,10 @@ export class Gallery implements OnInit, OnDestroy {
     const totalOriginal = this.testimonials().length;
 
     this.currentIndex.update(idx => {
-// Si llega al final del bloque extendido, resetea suavemente
-    if (idx >= (totalOriginal * 2)) return totalOriginal;
-    return idx + 1;
-  });
+      // Si llega al final del bloque extendido, resetea suavemente
+      if (idx >= (totalOriginal * 2)) return totalOriginal;
+      return idx + 1;
+    });
   }
 
   prevSlide() {
@@ -108,4 +159,4 @@ export class Gallery implements OnInit, OnDestroy {
 
 
 
- }
+}
