@@ -148,6 +148,59 @@ app.post('/api/usuarios/register', (req, res) => {
 
 
 
+// 🟢 GET: Devuelve los datos reales almacenados en la BD
+app.get('/api/mis-compras/perfil/:id', (req, res) => {
+  const idUsuario = req.params.id;
+  const query = "SELECT nombre_completo, correo, telefono FROM usuarios WHERE id = ?";
+
+  db.query(query, [idUsuario], (err, results) => {
+    if (err) {
+      console.error("❌ Error en BD al traer perfil:", err);
+      return res.status(500).json({ success: false, message: "Error interno." });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ success: false, message: "No se encontró el usuario." });
+    }
+    return res.status(200).json(results[0]);
+  });
+});
+
+
+// 🟢 PUT: Guarda los datos e intercepta y encripta la contraseña si viene en el cuerpo
+app.put('/api/mis-compras/perfil/:id', (req, res) => {
+  const idUsuario = req.params.id;
+  const { nombre, telefono, contrasenia } = req.body;
+
+  if (!nombre || !telefono) {
+    return res.status(400).json({ success: false, message: "Campos requeridos vacíos." });
+  }
+
+  // Si el usuario NO mandó contraseña, hacemos un UPDATE sencillo
+  if (!contrasenia) {
+    const querySencilla = "UPDATE usuarios SET nombre = ?, telefono = ? WHERE id = ?";
+    db.query(querySencilla, [nombre, telefono, idUsuario], (err, result) => {
+      if (err) return res.status(500).json({ success: false, message: "Error al actualizar." });
+      return res.status(200).json({ success: true, message: "Datos actualizados." });
+    });
+  } else {
+    // Si SÍ mandó contraseña, le aplicamos hash con bcrypt antes de guardarla
+    const saltRounds = 10;
+    bcrypt.hash(contrasenia, saltRounds, (err, hash) => {
+      if (err) return res.status(500).json({ success: false, message: "Error de encriptación." });
+
+      const queryCompleta = "UPDATE usuarios SET nombre = ?, telefono = ?, contrasenia = ? WHERE id = ?";
+      db.query(queryCompleta, [nombre, telefono, hash, idUsuario], (err, result) => {
+        if (err) return res.status(500).json({ success: false, message: "Error al actualizar." });
+        return res.status(200).json({ success: true, message: "Datos y contraseña actualizados." });
+      });
+    });
+  }
+});
+
+
+
+
+
 
 
 // ==============================================================================================================================

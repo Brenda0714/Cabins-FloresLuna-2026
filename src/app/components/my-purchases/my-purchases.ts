@@ -73,14 +73,82 @@ export class MyPurchases implements OnInit {
   // 👤 Carga inicial de la información de la sesión en el formulario
   cargarDatosPerfil(): void {
     const usuarioLogueado = this.authService.getUsuarioActual();
-    if (usuarioLogueado) {
+
+    if (usuarioLogueado && usuarioLogueado.id) {
+      // 1. Primero cargamos lo que haya en la sesión local para que no se vea vacío mientras carga
       this.usuarioPerfil.set({
+        id: usuarioLogueado.id,
         nombre: usuarioLogueado.nombre || '',
         email: usuarioLogueado.correo || usuarioLogueado.email || '',
         telefono: usuarioLogueado.telefono || ''
       });
+
+      // 2. 🔥 El truco definitivo: Traemos los datos más frescos directamente de la Base de Datos
+      this.http.get<any>(`${this.apiUrl}/perfil/${usuarioLogueado.id}`).subscribe({
+        next: (data) => {
+          if (data) {
+            this.usuarioPerfil.set({
+              id: usuarioLogueado.id,
+              nombre: data.nombre_completo || '',
+              email: data.email || usuarioLogueado.correo || usuarioLogueado.email || '',
+              telefono: data.telefono || ''
+            });
+          }
+        },
+        error: (err) => {
+          console.error('❌ Error al sincronizar el perfil con la base de datos:', err);
+        }
+      });
+    } else {
+      console.warn('⚠️ No se pudo cargar el perfil porque no hay un ID de usuario activo.');
     }
   }
+
+
+  guardarPerfil(nombre: string, telefono: string, contrasenia: string, confirmarContrasenia: string): void {
+    const usuarioLogueado = this.authService.getUsuarioActual();
+    if (!usuarioLogueado || !usuarioLogueado.id) return;
+
+    if (!nombre.trim() || !telefono.trim()) {
+      this.MostrarAlerta('El nombre y el teléfono son campos obligatorios.');
+      return;
+    }
+
+    const datosActualizados: any = { nombre, telefono };
+
+    // Si el usuario intentó rellenar los campos de contraseña, los validamos
+    if (contrasenia || confirmarContrasenia) {
+      if (contrasenia !== confirmarContrasenia) {
+        this.MostrarAlerta('Las contraseñas ingresadas no coinciden.');
+        return;
+      }
+      if (contrasenia.length < 6) {
+        this.MostrarAlerta('La nueva contraseña debe tener al menos 6 caracteres.');
+        return;
+      }
+      datosActualizados.contrasenia = contrasenia;
+    }
+
+    // Petición PUT a tu servidor Express
+    this.http.put(`${this.apiUrl}/perfil/${usuarioLogueado.id}`, datosActualizados).subscribe({
+      next: (res: any) => {
+        this.MostrarAlerta('¡Excelente! Tus datos de cuenta han sido actualizados con éxito.');
+
+        // Actualizamos el Signal de forma reactiva localmente
+        this.usuarioPerfil.update(perfil => ({
+          ...perfil,
+          nombre,
+          telefono
+        }));
+      },
+      error: (err) => {
+        console.error('❌ Error al actualizar el perfil en el servidor:', err);
+        this.MostrarAlerta('No se pudieron guardar los cambios en este momento.');
+      }
+    });
+  }
+
+
 
   // 🔄 Cambiar de pestañas
   cambiarActualizacion(tipo: 'proximas' | 'pasadas' | 'perfil'): void {
@@ -134,35 +202,7 @@ export class MyPurchases implements OnInit {
     });
   }
 
-  // 💾 MÉTODO: Guardar cambios de actualización de datos
-  guardarPerfil(nuevoNombre: string, nuevoTelefono: string): void {
-    const usuarioLogueado = this.authService.getUsuarioActual();
 
-    if (!usuarioLogueado || !usuarioLogueado.id) {
-      alert('Error de sesión. Por favor vuelve a iniciar sesión.');
-      return;
-    }
-
-    const body = { nombre: nuevoNombre, telefono: nuevoTelefono };
-
-    this.http.put(`${this.userApiUrl}/actualizar/${usuarioLogueado.id}`, body).subscribe({
-      next: (res: any) => {
-        alert('¡Perfil actualizado con éxito!');
-
-        // 1. Actualizamos el signal local
-        this.usuarioPerfil.update(u => ({ ...u, nombre: nuevoNombre, telefono: nuevoTelefono }));
-
-        // 2. IMPORTANTE: Actualiza también el objeto en tu AuthService si guarda datos en localStorage
-        // usuarioLogueado.nombre = nuevoNombre;
-        // usuarioLogueado.telefono = nuevoTelefono;
-        // this.authService.actualizarSesionLocal(usuarioLogueado);
-      },
-      error: (err) => {
-        console.error('❌ Error al actualizar el perfil:', err);
-        alert('Hubo un error al guardar los cambios.');
-      }
-    });
-  }
 
   // 🚨 MÉTODO: Dar de baja la cuenta del usuario de forma definitiva
   eliminarCuenta(): void {
