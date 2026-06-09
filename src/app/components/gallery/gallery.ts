@@ -32,56 +32,62 @@ export class Gallery implements OnInit, OnDestroy {
 
   public galeriaData = signal<Record<string, string[]>>({
     'Orquídea': [
-      'assets/img/GALERIA/orquidea/orquidea-1.jpg', // Lado Izq - Vertical Larga (Index 0)
-      'assets/img/GALERIA/orquidea/orquidea-2.jpg', // Lado Izq - Horizontal Corta 1 (Index 1)
-      'assets/img/GALERIA/orquidea/orquidea-3.jpg', // Lado Izq - Horizontal Corta 2 (Index 2)
-      'assets/img/GALERIA/orquidea/orquidea-4.jpg', // Lado Der - Horizontal Sup (Index 3)
-      'assets/img/GALERIA/orquidea/orquidea-5.jpg', // Lado Der - Horizontal Media (Index 4)
-      'assets/img/GALERIA/orquidea/orquidea-6.jpg',
-      'assets/img/GALERIA/orquidea/orquidea-7.jpg',
-      'assets/img/GALERIA/orquidea/orquidea-8.jpg',
-      'assets/img/GALERIA/orquidea/orquidea-9.jpg',
-      'assets/img/GALERIA/orquidea/orquidea-10.jpg',
-      'assets/img/GALERIA/orquidea/orquidea-11.jpg',
-      'assets/img/GALERIA/orquidea/orquidea-12.jpg'
+      'assets/img/GALERIA/orquidea/orquidea-1.png', // Lado Izq - Vertical Larga (Index 0)
+      'assets/img/GALERIA/orquidea/orquidea-2.png', // Lado Izq - Horizontal Corta 1 (Index 1)
+      'assets/img/GALERIA/orquidea/orquidea-3.png', // Lado Izq - Horizontal Corta 2 (Index 2)
+      'assets/img/GALERIA/orquidea/orquidea-4.png', // Lado Der - Horizontal Sup (Index 3)
+      'assets/img/GALERIA/orquidea/orquidea-5.png', // Lado Der - Horizontal Media (Index 4)
+      'assets/img/GALERIA/orquidea/orquidea-6.png',
+      'assets/img/GALERIA/orquidea/orquidea-7.png',
+      'assets/img/GALERIA/orquidea/orquidea-8.png',
+      'assets/img/GALERIA/orquidea/orquidea-9.png',
+      'assets/img/GALERIA/orquidea/orquidea-10.png',
+      'assets/img/GALERIA/orquidea/orquidea-11.png',
+      'assets/img/GALERIA/orquidea/orquidea-12.png'
     ],
     'Tulipán': [
       'assets/img/GALERIA/tulipan/tulipan-1.png',
-      'assets/img/GALERIA/tulipan/tulipan-2.jpg',
-      'assets/img/GALERIA/tulipan/tulipan-3.jpg',
-      'assets/img/GALERIA/tulipan/tulipan-4.jpg',
-      'assets/img/GALERIA/tulipan/tulipan-5.jpg',
-      'assets/img/GALERIA/tulipan/tulipan-6.jpg',
-      'assets/img/GALERIA/tulipan/tulipan-7.jpg',
-      'assets/img/GALERIA/tulipan/tulipan-8.jpg',
-      'assets/img/GALERIA/tulipan/tulipan-9.jpg',
-      'assets/img/GALERIA/tulipan/tulipan-10.jpg',
-      'assets/img/GALERIA/tulipan/tulipan-11.jpg',
-      'assets/img/GALERIA/tulipan/tulipan-12.jpg'
+      'assets/img/GALERIA/tulipan/tulipan-2.png',
+      'assets/img/GALERIA/tulipan/tulipan-3.png',
+      'assets/img/GALERIA/tulipan/tulipan-4.png',
+      'assets/img/GALERIA/tulipan/tulipan-5.png',
+      'assets/img/GALERIA/tulipan/tulipan-6.png',
+      'assets/img/GALERIA/tulipan/tulipan-7.png',
+      'assets/img/GALERIA/tulipan/tulipan-8.png',
+      'assets/img/GALERIA/tulipan/tulipan-9.png',
+      'assets/img/GALERIA/tulipan/tulipan-10.png',
+      'assets/img/GALERIA/tulipan/tulipan-11.png',
+      'assets/img/GALERIA/tulipan/tulipan-12.png'
     ],
     'Girasol': [
-      'assets/img/GALERIA/girasol-1.jpg',
-      'assets/img/GALERIA/girasol-2.jpg',
-      'assets/img/GALERIA/girasol-3.jpg',
-      'assets/img/GALERIA/girasol-4.jpg',
-      'assets/img/GALERIA/girasol-5.jpg',
-      'assets/img/GALERIA/girasol-6.jpg'
+      'assets/img/GALERIA/girasol/girasol-1.png',
+      'assets/img/GALERIA/girasol/girasol-2.png',
+      'assets/img/GALERIA/girasol/girasol-3.png',
+      'assets/img/GALERIA/girasol/girasol-4.png',
+      'assets/img/GALERIA/girasol/girasol-5.png',
+      'assets/img/GALERIA/girasol/girasol-6.png',
+      'assets/img/GALERIA/girasol/girasol-7.png',
+      'assets/img/GALERIA/girasol/girasol-8.png',
+      'assets/img/GALERIA/girasol/girasol-9.png',
+      'assets/img/GALERIA/girasol/girasol-10.png',
+      'assets/img/GALERIA/girasol/girasol-11.png',
+      'assets/img/GALERIA/girasol/girasol-12.png'
     ],
     'Dalia House': [
-      'assets/img/GALERIA/azucena-1.jpg',
-      'assets/img/GALERIA/azucena-2.jpg',
-      'assets/img/GALERIA/azucena-3.jpg',
-      'assets/img/GALERIA/azucena-4.jpg',
-      'assets/img/GALERIA/azucena-5.jpg',
-      'assets/img/GALERIA/azucena-6.jpg'
+      'assets/img/GALERIA/azucena-1.png',
+      'assets/img/GALERIA/azucena-2.png',
+      'assets/img/GALERIA/azucena-3.png',
+      'assets/img/GALERIA/azucena-4.png',
+      'assets/img/GALERIA/azucena-5.png',
+      'assets/img/GALERIA/azucena-6.png'
     ],
     'Magnolia House': [
-      'assets/img/GALERIA/begonia-1.jpg',
-      'assets/img/GALERIA/begonia-2.jpg',
-      'assets/img/GALERIA/begonia-3.jpg',
-      'assets/img/GALERIA/begonia-4.jpg',
-      'assets/img/GALERIA/begonia-5.jpg',
-      'assets/img/GALERIA/begonia-6.jpg'
+      'assets/img/GALERIA/begonia-1.png',
+      'assets/img/GALERIA/begonia-2.png',
+      'assets/img/GALERIA/begonia-3.png',
+      'assets/img/GALERIA/begonia-4.png',
+      'assets/img/GALERIA/begonia-5.png',
+      'assets/img/GALERIA/begonia-6.png'
     ]
   });
 

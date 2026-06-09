@@ -5,7 +5,7 @@
   </h2>
 
   <div class="flex flex-wrap justify-center gap-2 md:gap-6 mb-16 max-w-4xl w-full border-b border-olive-200/60 pb-4">
-    @for (name of ['Orquídea', 'Tulipán', 'Girasol', 'Dalia House', 'Magnolia House']; track name) {
+    @for (name of ['Orquídea', 'Girasol', 'Tulipán', 'Dalia House', 'Magnolia House']; track name) {
     <button (click)="setCabana(name)"
       [class]="cabanaSeleccionada() === name
           ? 'text-olive-800 border-b-2 border-[#D18B73] font-bold tracking-widest uppercase text-xs md:text-sm px-4 py-2 transition-all duration-300'
