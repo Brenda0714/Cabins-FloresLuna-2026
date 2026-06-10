@@ -5,7 +5,7 @@
   </h2>
 
   <div class="flex flex-wrap justify-center gap-2 md:gap-6 mb-16 max-w-4xl w-full border-b border-olive-200/60 pb-4">
-    @for (name of ['Orquídea', 'Girasol', 'Tulipán', 'Dalia House', 'Magnolia House']; track name) {
+    @for (name of ['Orquídea', 'Girasol', 'Tulipán', 'Dalia House', 'Magnolia House', 'Exterior']; track name) {
     <button (click)="setCabana(name)"
       [class]="cabanaSeleccionada() === name
           ? 'text-olive-800 border-b-2 border-[#D18B73] font-bold tracking-widest uppercase text-xs md:text-sm px-4 py-2 transition-all duration-300'
@@ -14,7 +14,7 @@
     </button>
     }
   </div>
-
+@if (cabanaSeleccionada() != 'Dalia House' && cabanaSeleccionada() != 'Magnolia House') {
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-6xl text-center">
 
     <div class="grid gap-4">
@@ -178,6 +178,16 @@
     </div>
 
   </div>
+}
+@else {
+
+  <div class=" gap-4 w-full max-w-6xl max-h-80 md:h-100 text-center">
+  <h2 class="g-text-bold text-xl md:text-xl tracking-widest uppercase mb-0 mt-20 text-olive-500">
+    No se encuentra disponible en este momento
+  </h2>
+  </div>
+}
+
 
   <h2 class="g-text-extrabold text-4xl md:text-5xl tracking-widest uppercase mb-0 mt-20 text-olive-600">
     Clientes Satisfechos

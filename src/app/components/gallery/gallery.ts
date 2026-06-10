@@ -74,20 +74,34 @@ export class Gallery implements OnInit, OnDestroy {
       'assets/img/GALERIA/girasol/girasol-12.png'
     ],
     'Dalia House': [
-      'assets/img/GALERIA/azucena-1.png',
-      'assets/img/GALERIA/azucena-2.png',
-      'assets/img/GALERIA/azucena-3.png',
-      'assets/img/GALERIA/azucena-4.png',
-      'assets/img/GALERIA/azucena-5.png',
-      'assets/img/GALERIA/azucena-6.png'
+      'assets/img/GALERIA/DaliaHouse/daliahouse-1.png',
+      'assets/img/GALERIA/DaliaHouse/daliahouse-2.png',
+      'assets/img/GALERIA/DaliaHouse/daliahouse-3.png',
+      'assets/img/GALERIA/DaliaHouse/daliahouse-4.png',
+      'assets/img/GALERIA/DaliaHouse/daliahouse-5.png',
+      'assets/img/GALERIA/DaliaHouse/daliahouse-6.png'
     ],
     'Magnolia House': [
-      'assets/img/GALERIA/begonia-1.png',
-      'assets/img/GALERIA/begonia-2.png',
-      'assets/img/GALERIA/begonia-3.png',
-      'assets/img/GALERIA/begonia-4.png',
-      'assets/img/GALERIA/begonia-5.png',
-      'assets/img/GALERIA/begonia-6.png'
+      'assets/img/GALERIA/MagnoliaHouse/magnoliahouse-1.png',
+      'assets/img/GALERIA/MagnoliaHouse/magnoliahouse-2.png',
+      'assets/img/GALERIA/MagnoliaHouse/magnoliahouse-3.png',
+      'assets/img/GALERIA/MagnoliaHouse/magnoliahouse-4.png',
+      'assets/img/GALERIA/MagnoliaHouse/magnoliahouse-5.png',
+      'assets/img/GALERIA/MagnoliaHouse/magnoliahouse-6.png'
+    ],
+    'Exterior': [
+      'assets/img/GALERIA/exterior/exterior-1.png',
+      'assets/img/GALERIA/exterior/exterior-2.png',
+      'assets/img/GALERIA/exterior/exterior-3.png',
+      'assets/img/GALERIA/exterior/exterior-4.png',
+      'assets/img/GALERIA/exterior/exterior-5.png',
+      'assets/img/GALERIA/exterior/exterior-6.png',
+      'assets/img/GALERIA/exterior/exterior-7.png',
+      'assets/img/GALERIA/exterior/exterior-8.png',
+      'assets/img/GALERIA/exterior/exterior-9.png',
+      'assets/img/GALERIA/exterior/exterior-10.png',
+      'assets/img/GALERIA/exterior/exterior-11.png',
+      'assets/img/GALERIA/exterior/exterior-12.png'
     ]
   });
 
