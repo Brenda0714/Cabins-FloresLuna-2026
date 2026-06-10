@@ -629,17 +629,19 @@ app.get('/api/ventas-admin', (req, res) => {
     SELECT
       r.id,
       r.usuario_id,
+      u.nombre_completo,
       r.cabin_nombre,
       DATE_FORMAT(r.fecha_llegada, '%Y-%m-%d') AS fecha_llegada,
       DATE_FORMAT(r.fecha_salida, '%Y-%m-%d') AS fecha_salida,
       r.noches,
       r.monto_total,
       r.estado,
-      p.referencia_pago AS folio,
+      p.folio,
       p.metodo_pago,
       IFNULL(p.estado_pago, 'pendiente') AS estado_pago
     FROM pagos p
-    INNER JOIN reservas r ON p.reserva_id = r.id
+    LEFT JOIN reservas r ON p.reserva_id = r.id
+    LEFT JOIN usuarios u ON r.usuario_id = u.id
     ORDER BY p.id DESC
   `;
 
@@ -663,33 +665,41 @@ app.put('/api/ventas-admin/actualizar-estado', (req, res) => {
     return res.status(400).json({ error: 'Datos insuficientes.' });
   }
 
-  // 1. Verificamos si ya existe una fila para esta reserva en la tabla de pagos
-  const verificarQuery = `SELECT id FROM pagos WHERE reserva_id = ?`;
+  console.log(`📡 Recibido en Backend -> ID: ${reservaId}, Estado: ${nuevoEstado}`);
+
+  // 1. Verificamos si existe la reserva directamente en la tabla 'reservas'
+  const verificarQuery = `SELECT id FROM reservas WHERE id = ?`;
 
   db.query(verificarQuery, [reservaId], (err, rows) => {
     if (err) {
-      console.error(err);
+      console.error('❌ Error al verificar reserva:', err);
       return res.status(500).json({ error: 'Error de base de datos.' });
     }
 
+    let estadoFinal = nuevoEstado;
+
+    if (rows.length === 0) {
+      // 🎯 SI EL PAGO NO EXISTE: Forzamos a que el estado sea siempre 'pendiente'
+      estadoFinal = 'pendiente';
+      console.log(`⚠️ No existe registro en pagos para la reserva #${reservaId}. Forzando estado a: pendiente`);
+    }
+
     if (rows.length > 0) {
-      // 🔄 Ya existe el pago, actualizamos su estado y folio
-      const updateQuery = `UPDATE pagos SET estado_pago = ?, referencia_pago = ? WHERE reserva_id = ?`;
-      db.query(updateQuery, [nuevoEstado, folio, reservaId], (errUpdate) => {
-        if (errUpdate) return res.status(500).json({ error: 'Error al actualizar pago.' });
-        actualizarEstadoReserva(reservaId, nuevoEstado, res);
+      // 🔄 Actualizamos la columna 'estado' con el nuevo valor ('confirmada', 'cancelada', etc.)
+      const updateQuery = `UPDATE reservas SET estado = ? WHERE id = ?`;
+
+      db.query(updateQuery, [nuevoEstado, reservaId], (errUpdate) => {
+        if (errUpdate) {
+          console.error('❌ Error al hacer UPDATE:', errUpdate);
+          return res.status(500).json({ error: 'Error al actualizar estado en la base de datos.' });
+        }
+
+        console.log(`✅ Base de datos actualizada con éxito para ID: ${reservaId}`);
+        return res.json({ success: true, message: 'Estado actualizado correctamente.' });
       });
+
     } else {
-      // 📥 No existe el pago, creamos el registro en la tabla
-      const insertQuery = `
-        INSERT INTO pagos (reserva_id, folio_pago, metodo_pago, estado_pago, fecha_pago)
-        VALUES (?, ?, ?, ?, NOW())
-      `;
-      const metodo = nuevoEstado === 'aprobado' ? 'Efectivo/Manual' : null;
-      db.query(insertQuery, [reservaId, folio, metodo, nuevoEstado], (errInsert) => {
-        if (errInsert) return res.status(500).json({ error: 'Error al insertar pago.' });
-        actualizarEstadoReserva(reservaId, nuevoEstado, res);
-      });
+      return res.status(404).json({ error: 'La reserva especificada no existe.' });
     }
   });
 });
