@@ -1,11 +1,69 @@
 <section class="relative w-full h-screen flex items-center justify-end px-10 md:px-20 mt-5">
 
-  <div class="absolute inset-0 z-0">
+  <!-- <div class="absolute inset-0 z-0">
     <img
       src="assets/img/hero-cabin.png"
       alt="Cabañas Flores de la Luna"
       class="w-full h-full object-cover object-top animate-fade-up">
+  </div> -->
+
+
+  <div class="absolute inset-0 z-0 select-none pointer-events-none overflow-hidden animate-fade-up">
+    @for (img of HeroImg(); track $index) {
+    <img
+      [src]="img"
+      alt="Cabañas Flores de la Luna"
+      class="absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-1000 ease-in-out scroll-none"
+      [class.opacity-100]="imgActiva() === $index"
+      [class.opacity-0]="imgActiva() !== $index">
+    }
+
   </div>
+
+  <div class="absolute top-0 left-0 w-full h-35 z-10 pointer-events-none select-none bg-repeat-x bg-bottom"
+       style="background-image: url('data:image/svg+xml,... (tu SVG de arriba)');">
+  </div>
+  <div class="absolute bottom-0 left-0 w-full h-35 z-10 pointer-events-none select-none bg-repeat-x bg-top"
+       style="background-image: url('data:image/svg+xml,... (tu SVG de abajo)');">
+  </div>
+
+  <div class="absolute inset-0 z-20 flex items-center justify-between px-4 pointer-events-none">
+
+    <button (click)="anteriorImg()"
+            class="pointer-events-auto bg-black/30 hover:bg-black/50 text-white p-3 rounded-full transition-all focus:outline-none backdrop-blur-sm">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+      </svg>
+    </button>
+
+    <button (click)="siguienteImg()"
+            class="pointer-events-auto bg-black/30 hover:bg-black/50 text-white p-3 rounded-full transition-all focus:outline-none backdrop-blur-sm">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+      </svg>
+    </button>
+
+  </div>
+
+  <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex space-x-2">
+    @for (img of HeroImg(); track $index) {
+      <button
+        (click)="seleccionarImg($index)"
+        class="w-3 h-3 rounded-full transition-all duration-300"
+        [class.bg-white]="imgActiva() === $index"
+        [class.scale-125]="imgActiva() === $index"
+        [class.bg-white/50]="imgActiva() !== $index">
+      </button>
+    }
+  </div>
+
+  <div class="relative z-30 flex items-center h-full max-w-7xl mx-auto px-6">
+    </div>
+
+
+
+
+
 
   <div class="relative z-10 bg-white/95 backdrop-blur-sm p-10 rounded-xl shadow-2xl max-w-md text-center" data-aos="fade-center" data-aos-delay="100">
 
