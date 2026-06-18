@@ -93,8 +93,8 @@ export class Reservations implements AfterViewInit {
     {
       id: 4, img: 'assets/img/GALERIA/tu-imagen-7.jpg', title: 'Dalia House', subtitle: 'Cabaña Grupal (12 Personas)',
       precio: '6,000', precio2: '6,000',
-      text: ['2 Recámaras', '1 Baño', 'Sala', 'Cocina'],
-      amenities: ['2 Cama King Size', '4 Camas Individuales', 'Smart TV', 'Internet', 'WIFI', 'Mirador'],
+      text: 'PROXIMAMENTE',
+      amenities: [],
       fondo: this.BackImg()[1],
       fechaInicio: null as Date | null,
       fechaFin: null as Date | null
@@ -102,8 +102,8 @@ export class Reservations implements AfterViewInit {
     {
       id: 5, img: 'assets/img/GALERIA/tu-imagen-7.jpg', title: 'Magnolia House', subtitle: 'Cabaña Grupal (12 Personas)',
       precio: '6,000', precio2: '6,000',
-      text: ['2 Recámaras', '1 Baño', 'Sala', 'Cocina'],
-      amenities: ['2 Cama King Size', '4 Camas Individuales', 'Smart TV', 'Internet', 'WIFI', 'Mirador'],
+      text: 'PROXIMAMENTE',
+      amenities: [],
       fondo: this.BackImg()[0],
       fechaInicio: null as Date | null,
       fechaFin: null as Date | null

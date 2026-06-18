@@ -1,17 +1,20 @@
 <nav class="w-full bg-white z-50 relative">
 
-  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-2 grid grid-cols-2 lg:grid-cols-3 items-center">
+  <div class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between">
 
-    <div class="hidden lg:block g-text text-sm text-olive-500 font-light leading-relaxed animate-fade-up">
+    <div class="hidden md:block g-text text-sm text-olive-500 font-light leading-relaxed animate-fade-up color-pink">
       Jose Felipe Silva S/N<br>
       El Porvenir, N.L.<br>
       C.P. 67363
     </div>
 
-    <a [routerLink]="['/home']" class="flex justify-start lg:justify-center py-4">
+
+         <a [routerLink]="['/home']" class="flex justify-start md:justify-center py-4">
       <img src="/assets/img/LOGO.png" alt="Flores de la Luna"
-        class="h-20 lg:h-40 object-contain animate-fade-center cursor-pointer">
+        class="h-20 md:h-40 object-contain animate-fade-center cursor-pointer">
     </a>
+
+
 
     <div class="flex justify-end items-center gap-4 animate-fade-up">
       <div class="hidden sm:block g-text text-right text-sm font-medium text-[#ff8B64]">
@@ -65,7 +68,7 @@
     </div>
   </div>
 
-  <div class="hidden lg:block border-t border-olive-50">
+  <div class="hidden md:block border-t border-olive-50">
     <div class="g-text max-w-7xl mx-auto px-3 py-3 flex justify-center gap-10 text-center">
       <a [routerLink]="['/home']" routerLinkActive="!text-[#ff8B64]" class="nav-link">Nosotros</a>
       <a [routerLink]="['/gallery']" routerLinkActive="!text-[#ff8B64]" class="nav-link">Galería</a>

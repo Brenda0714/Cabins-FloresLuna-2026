@@ -2,7 +2,11 @@
   "projects": {
     "default": "cabins-flores-luna",
     "frontend": "cabins-flores-luna",
-    "frontend2": "cabins-flores-luna"
+    "frontend2": "cabins-flores-luna",
+    "backend-page": "cabins-flores-luna",
+    "backend2": "cabins-flores-luna",
+    "cabanas": "cabins-flores-luna",
+    "cabanas2": "cabins-flores-luna"
   },
   "targets": {},
   "etags": {}

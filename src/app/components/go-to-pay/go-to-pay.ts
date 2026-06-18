@@ -169,7 +169,6 @@ export class GoToPay implements OnInit, OnDestroy {
 
           console.log('🚀 ¡Servidor respondió con éxito!', response);
 
-
           this.alertTitle = estadoPago === 'confirmada' ? '¡Pago y Reservación Exitosa! 🎉' : '¡Reservación Registrada! 🎉';
           this.alertMessage2 = `Tu estancia para la cabaña "${datosReserva.cabin}" ha sido reservada, checa tu bandeja de correo. También puedes revisar tus reservaciones en el apartado de "Mis Compras".`;
           this.alertType = 'success'; // Cambia el ícono a verde
@@ -197,6 +196,7 @@ export class GoToPay implements OnInit, OnDestroy {
         }
       });
   }
+
 
   manejarClickAlerta() {
     // 1. Cerramos la alerta sea cual sea el caso
