@@ -32,7 +32,7 @@
             ],
             "security": {
               "allowedHosts": []
-            }
+            },
             "allowedCommonJsDependencies": [
               "aos"
             ]
