@@ -366,7 +366,7 @@ export class Reservations implements AfterViewInit {
 
     this.loading.set(true);
 
-    this.http.post('http://localhost:3000/api/reservas/verificar-disponibilidad', {
+    this.http.post('http://localhost/api/verificar-disponibilidad.php', {
       cabin_nombre: cabin,
       fecha_llegada: llegada,
       fecha_salida: salida

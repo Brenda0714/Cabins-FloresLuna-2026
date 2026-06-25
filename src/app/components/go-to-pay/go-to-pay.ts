@@ -28,7 +28,7 @@ export class GoToPay implements OnInit, OnDestroy {
 
   public data = signal<any>(null);
 
-  apiUrl = 'http://localhost:3000/api/reservas/hacer-pago';
+  apiUrl = 'http://localhost/api/hacer-pago';
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {

@@ -14,7 +14,7 @@ import { Router, RouterModule } from '@angular/router';
 export class Register {
   registerForm: FormGroup;
   // 🔗 Apuntamos a la nueva ruta /register que agregamos en el index.js de Node
-  apiUrl = 'http://localhost:3000/api/usuarios/register';
+  apiUrl = 'http://localhost/api/register.php';
 
   // 🔔 Variables reactivas para el Modal Moderno con @if
   showAlert: boolean = false;

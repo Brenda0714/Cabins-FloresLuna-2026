@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class UsuarioService {
   // La ruta de tu backend que ya te dio los datos en el navegador
-  private apiUrl = 'http://localhost:3000/api/usuarios';
+  private apiUrl = 'http://localhost/api/usuarios.php';
 
   constructor(private http: HttpClient) { }
 

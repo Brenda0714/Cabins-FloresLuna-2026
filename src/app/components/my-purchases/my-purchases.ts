@@ -21,10 +21,10 @@ export class MyPurchases implements OnInit {
 
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  private apiUrl = 'http://localhost:3000/api/mis-compras';
+  private apiUrl = 'http://localhost/api/mis-compras.php';
 
   // 🌟 Ruta base para el manejo del usuario (ajústala a tu backend si es diferente)
-  private userApiUrl = 'http://localhost:3000/api/usuarios';
+  private userApiUrl = 'http://localhost/api/usuarios.php';
 
   public compras = signal<any[]>([]);
 
