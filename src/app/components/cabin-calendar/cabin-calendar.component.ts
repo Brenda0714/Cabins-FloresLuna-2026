@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 export class CabinCalendarComponent implements OnInit {
   fechaInicioSel = model<Date | null>(null);
   fechaFinSel = model<Date | null>(null);
-
+  private ApiUrl = "http://localhost/api/fechas-ocupadas.php"
   readonly FECHA_ACTUAL_SISTEMA = new Date();
   @Input() cabinNombre!: string;
   private http = inject(HttpClient);
@@ -20,7 +20,9 @@ export class CabinCalendarComponent implements OnInit {
   diasDelMes = signal<any[]>([]);
   fechasOcupadas = signal<{ inicio: Date, fin: Date }[]>([]);
 
-
+  public refrescarDisponibilidad() {
+    this.cargarFechasOcupadas();
+  }
 
   ngOnInit() {
     this.cargarFechasOcupadas();
@@ -113,7 +115,8 @@ export class CabinCalendarComponent implements OnInit {
   }
 
   cargarFechasOcupadas() {
-    this.http.get<any[]>(`http://localhost:3000/api/reservas/fechas-ocupadas/${this.cabinNombre}`)
+    const url = `${this.ApiUrl}?cabin=${encodeURIComponent(this.cabinNombre)}`;
+    this.http.get<any[]>(url)
       .subscribe({
         next: (reservas) => {
 

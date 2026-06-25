@@ -22,11 +22,12 @@ export class MyPurchases implements OnInit {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
   private apiUrl = 'http://localhost/api/mis-compras.php';
-
-  // 🌟 Ruta base para el manejo del usuario (ajústala a tu backend si es diferente)
-  private userApiUrl = 'http://localhost/api/usuarios.php';
+  private perfilUrl = 'http://localhost/api/perfil.php';
+  private cancelarUrl = 'http://localhost/api/cancelar-reserva.php';
+  private eliminarUrl = 'http://localhost/api/eliminar-cuenta.php';
 
   public compras = signal<any[]>([]);
+
 
   // 👤 Expandido para soportar la pestaña de perfil
   public ActualizacionActual = signal<'proximas' | 'pasadas' | 'perfil'>('proximas');
@@ -57,7 +58,7 @@ export class MyPurchases implements OnInit {
     const usuarioLogueado = this.authService.getUsuarioActual();
 
     if (usuarioLogueado && usuarioLogueado.id) {
-      this.http.get<any[]>(`${this.apiUrl}/${usuarioLogueado.id}`).subscribe({
+      this.http.get<any[]>(`${this.apiUrl}?usuarioId=${usuarioLogueado.id}`).subscribe({
         next: (data) => {
           this.compras.set(data);
         },
@@ -84,7 +85,7 @@ export class MyPurchases implements OnInit {
       });
 
       // 2. 🔥 El truco definitivo: Traemos los datos más frescos directamente de la Base de Datos
-      this.http.get<any>(`${this.apiUrl}/perfil/${usuarioLogueado.id}`).subscribe({
+      this.http.get<any>(`${this.perfilUrl}?usuarioId=${usuarioLogueado.id}`).subscribe({
         next: (data) => {
           if (data) {
             this.usuarioPerfil.set({
@@ -114,7 +115,11 @@ export class MyPurchases implements OnInit {
       return;
     }
 
-    const datosActualizados: any = { nombre, telefono };
+    const datosActualizados: any = {
+      id: usuarioLogueado.id,
+      nombre,
+      telefono
+    };
 
     // Si el usuario intentó rellenar los campos de contraseña, los validamos
     if (contrasenia || confirmarContrasenia) {
@@ -130,22 +135,14 @@ export class MyPurchases implements OnInit {
     }
 
     // Petición PUT a tu servidor Express
-    this.http.put(`${this.apiUrl}/perfil/${usuarioLogueado.id}`, datosActualizados).subscribe({
+    this.http.post(this.perfilUrl, datosActualizados).subscribe({
       next: (res: any) => {
-        this.MostrarAlerta('¡Excelente! Tus datos de cuenta han sido actualizados con éxito.');
-
-        // Actualizamos el Signal de forma reactiva localmente
-        this.usuarioPerfil.update(perfil => ({
-          ...perfil,
-          nombre,
-          telefono
-        }));
+        this.MostrarAlerta('¡Excelente! Tus datos han sido actualizados.');
+        this.usuarioPerfil.update(p => ({ ...p, nombre, telefono }));
       },
-      error: (err) => {
-        console.error('❌ Error al actualizar el perfil en el servidor:', err);
-        this.MostrarAlerta('No se pudieron guardar los cambios en este momento.');
-      }
-    });
+      error: (err) => this.MostrarAlerta('No se pudieron guardar los cambios.')
+    })
+
   }
 
 
@@ -180,49 +177,34 @@ export class MyPurchases implements OnInit {
     this.showConfirmModal = false;
 
     // Mandamos la petición al backend
-    this.http.put(`${this.apiUrl}/cancelar/${id}`, {}).subscribe({
-      next: (res: any) => {
-        // Mostramos tu alerta original naranja de éxito
-        this.MostrarAlerta(`La reservación con ${identificador} ha sido cancelada con éxito.`);
-
-        // Le damos un respiro para ver la alerta antes de moverla de pestaña
-        setTimeout(() => {
-          this.compras.update(lista =>
-            lista.map(c => c.id === id ? { ...c, estado: 'cancelada' } : c)
-          );
-          // Limpiamos variables de control
-          this.idReservaACancelar = null;
-        }, 600);
-      },
-      error: (err) => {
-        console.error('❌ Error al cancelar la reservación en el servidor:', err);
-        this.MostrarAlerta('No se pudo procesar la cancelación en este momento. Inténtalo más tarde.');
+    // 🟢 Usamos POST enviando el ID en el cuerpo
+    this.http.post(this.cancelarUrl, { id }).subscribe({
+      next: () => {
+        this.MostrarAlerta('La reservación ha sido cancelada.');
+        this.compras.update(lista =>
+          lista.map(c => c.id === id ? { ...c, estado: 'cancelada' } : c)
+        );
         this.idReservaACancelar = null;
-      }
+      },
+      error: () => this.MostrarAlerta('Error al procesar cancelación.')
     });
   }
 
 
 
   // 🚨 MÉTODO: Dar de baja la cuenta del usuario de forma definitiva
-  eliminarCuenta(): void {
+eliminarCuenta(): void {
     const usuarioLogueado = this.authService.getUsuarioActual();
     if (!usuarioLogueado || !usuarioLogueado.id) return;
 
-    const palabraClave = prompt('⚠️ ¡ADVERTENCIA CRÍTICA! Si eliminas tu cuenta, perderás todo tu historial de reservaciones. Escribe "ELIMINAR" para confirmar de forma permanente:');
-
-    if (palabraClave === 'ELIMINAR') {
-      this.http.delete(`${this.userApiUrl}/eliminar/${usuarioLogueado.id}`).subscribe({
-        next: (res: any) => {
-          alert('Tu cuenta ha sido eliminada correctamente. Esperamos verte pronto de vuelta.');
-
-          // Aquí ejecutas el logout de tu AuthService para borrar tokens/localStorage y redirigir al login
-          // this.authService.logout();
+    if (prompt('Escribe "ELIMINAR" para confirmar:') === 'ELIMINAR') {
+      // 🟢 Usamos POST para eliminar
+      this.http.post(this.eliminarUrl, { id: usuarioLogueado.id }).subscribe({
+        next: () => {
+          alert('Cuenta eliminada.');
+          this.authService.logout(); // Asumiendo que tienes este método
         },
-        error: (err) => {
-          console.error('❌ Error al eliminar la cuenta:', err);
-          alert('Ocurrió un error al intentar eliminar la cuenta.');
-        }
+        error: () => alert('Error al eliminar cuenta.')
       });
     }
   }

@@ -20,7 +20,7 @@ import { CabinCalendarComponent } from '../cabin-calendar/cabin-calendar.compone
 export class Reservations implements AfterViewInit {
   fechaInicioSel = signal<Date | null>(null);
   fechaFinSel = signal<Date | null>(null);
-
+  private ApiUrl = "http://localhost/api/verificar-disponibilidad.php"
 
   private platformId = inject(PLATFORM_ID);
   private cdr = inject(ChangeDetectorRef);
@@ -122,135 +122,17 @@ export class Reservations implements AfterViewInit {
     }
   }
 
-  enviarReservaReal() {
-    // 1. Obtenemos los datos actuales que ya calculó y guardó tu formulario en el Signal
-    const datosReserva = this.reservaData();
+  // CALENDARIO DE FORMA DINAMICA REFRESCAR
+  @ViewChild(CabinCalendarComponent) calendarComponent!: CabinCalendarComponent;
 
-    // Guardilla de seguridad: Si no hay datos en el Signal, le avisamos al usuario
-    if (!datosReserva) {
-      alert('Por favor, completa correctamente todos los campos del formulario primero.');
-      return;
-    }
-
-    // 2. Activamos el estado de carga mientras se procesa la petición en el servidor
-    this.loading.set(true);
-    console.log('Enviando datos reales al servidor...', datosReserva);
-
-    // 3. Mapeo: Transformamos las propiedades de tu interfaz 'Reserva' al formato que espera tu index.js
-    const payload = {
-      nombre: datosReserva.cliente,
-      email: datosReserva.correo,
-      telefono: datosReserva.telefono,
-      cabin_nombre: datosReserva.cabin,
-      fecha_llegada: datosReserva.fechaLlegada,
-      fecha_salida: datosReserva.fechaSalida,
-      noches: datosReserva.noches,
-      monto_total: datosReserva.montoTotal
-    };
-
-
-
-    // 4. Hacemos la petición POST real a tu Backend
-    this.http.post('http://localhost:3000/api/reservas', payload)
-      .subscribe({
-        next: (response: any) => {
-          this.loading.set(false);
-          console.log('🚀 ¡Servidor respondió con éxito!', response);
-
-          // ✨ CONFIGURACIÓN DE MODAL DE ÉXITO
-          this.alertTitle = '¡Reservación Exitosa! 🎉';
-          this.alertMessage2 = `Tu estancia para la cabaña "${datosReserva.cabin}" ha sido reservada, checa tu bandeja de correo. Tambien puedes revisar tus reservaciones en el apartado de "Mis Compras"`;
-          this.alertType = 'success'; // Cambia el ícono a verde
-          this.showAlert2 = true;
-
-          this.cdr.detectChanges();
-          this.cdr.markForCheck();
-        },
-        error: (error) => {
-          this.loading.set(false);
-          console.error('❌ Error recibido del backend:', error);
-          this.alertType = 'error';
-          this.showAlert2 = true;
-
-          // 🔐 Si el correo electrónico no está registrado en la tabla 'usuarios'
-          if (error.status === 401 && error.error?.requireAuth) {
-            this.alertTitle = 'Inicia Sesión';
-            this.alertMessage2 = error.error.message;
-          } else {
-            // Si es un error de código 500 o base de datos caída
-            this.alertTitle = 'Error en el Servidor ❌';
-            this.alertMessage2 = 'Hubo un error al procesar tu reserva en el servidor.';
-          }
-
-          this.cdr.detectChanges();
-          this.cdr.markForCheck();
-        }
-      });
+  // Cuando ocurra un evento importante (ej. una reserva exitosa)
+  onReservaExitosa() {
+    this.calendarComponent.refrescarDisponibilidad();
   }
-
-
-  // ==============================================================================================================================
-  // 📋 PAYPAL PAYMENT
-  // ==============================================================================================================================
-
-  @ViewChild('paymentRef', { static: false }) set paymentRef(element: ElementRef | undefined) {
-
-    if (isPlatformBrowser(this.platformId) && element && element.nativeElement) {
-      if (this.paypalRendered) return;
-      const paypalObj = (window as any).paypal;
-      if (paypalObj) {
-        // Limpiamos residuos por si hace múltiples clics
-        element.nativeElement.innerHTML = '';
-
-        // Renderizamos directamente porque aquí ya es 100% seguro que el DIV existe
-        paypalObj.Buttons({
-          createOrder: (data: any, actions: any) => {
-            return actions.order.create({
-              purchase_units: [{
-                amount: {
-                  value: this.reservaData()?.montoTotal?.toString() || '0.00'
-                }
-              }]
-            });
-          },
-          onApprove: (data: any, actions: any) => {
-            return actions.order.capture().then((details: any) => {
-              alert('¡Pago completado con éxito por ' + details.payer.name.given_name + '!');
-              console.log('Detalles del pago:', details);
-
-              this.EnviarCorreo(this.reservaData(), details.id);
-            });
-          },
-          onError: (err: any) => {
-            console.error('Error en la pasarela de PayPal:', err);
-          }
-        }).render(element.nativeElement)
-          .then(() => {
-            console.log('¡Botones de PayPal dibujados con éxito en el resumen!');
-          })
-          .catch((err: any) => {
-            console.error('Error al renderizar los botones:', err);
-          });
-      }
-    }
-  }
-
-  viewportScroller: any;
-
-
-
 
   // ==============================================================================================================================
   // 📋 INICIAR PAGO
   // ==============================================================================================================================
-  formatuearFechaParaInput(fecha: Date | undefined | null): string {
-    if (!fecha) return '';
-    const ano = fecha.getFullYear();
-    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-    const dia = String(fecha.getDate()).padStart(2, '0');
-    return `${ano}-${mes}-${dia}`;
-  }
-
   loading = signal(false);
   reservaData = signal<any>(null);
   cabinSeleccionadaForm = signal<string>('');
@@ -366,7 +248,7 @@ export class Reservations implements AfterViewInit {
 
     this.loading.set(true);
 
-    this.http.post('http://localhost/api/verificar-disponibilidad.php', {
+    this.http.post(this.ApiUrl, {
       cabin_nombre: cabin,
       fecha_llegada: llegada,
       fecha_salida: salida
@@ -407,6 +289,14 @@ export class Reservations implements AfterViewInit {
     });
   }
 
+  formatuearFechaParaInput(fecha: Date | undefined | null): string {
+    if (!fecha) return '';
+    const ano = fecha.getFullYear();
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    return `${ano}-${mes}-${dia}`;
+  }
+
   MostrarAlerta(mensaje: string) {
     this.alertMessage = mensaje;
     this.showAlert = true;
@@ -438,44 +328,6 @@ export class Reservations implements AfterViewInit {
 
     }
   }
-  // ==============================================================================================================================
-  // 📋 ENVIAR CORREOS
-  // ==============================================================================================================================
-
-  EnviarCorreo(data: any, paypalOrderId: string = 'N/A') {
-    if (!data) return;
-
-    const payload = {
-      nombre: data.cliente, // ✨ Mapeado de 'cliente' a 'nombre' según tu señal
-      email: data.correo,
-      telefono: data.telefono,
-      cabin_nombre: data.cabin,
-      fecha_llegada: data.fechaLlegada,
-      fecha_salida: data.fechaSalida,
-      noches: data.noches,
-      monto_total: data.montoTotal,
-      folio_pago: paypalOrderId // Se envía el ID de orden real de PayPal si existe
-    };
-
-    console.log('Despachando registro y correos hacia Node.js...', payload);
-
-    // Reemplaza con la dirección exacta asignada a tu backend en HostGator
-    this.http.post('http://localhost:3000/api/reservas/enviar-confirmacion', payload)
-      .subscribe({
-        next: (res: any) => {
-          if (res.success) {
-            alert('¡Tu reservación ha sido guardada en el sistema y los correos de confirmación fueron enviados!');
-            this.cerrarModal();
-          }
-        },
-        error: (err) => {
-          console.error('Error al insertar la reservación:', err);
-          alert('Hubo un inconveniente al conectarse con el servidor para guardar tu reserva.');
-        }
-      });
-  }
-
-
 
   scrollToForm(cabin: any) {
     this.cabinSeleccionadaForm.set(cabin.title);

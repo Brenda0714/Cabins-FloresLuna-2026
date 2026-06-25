@@ -11,7 +11,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class MySales implements OnInit {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/ventas-admin'; // Servidor Express
+  private apiUrl = 'http://localhost/api/ventas-admin.php'; // Backend
 
   // 🚦 Signals Principales de Control
   public ventas = signal<any[]>([]);
@@ -164,7 +164,7 @@ this.http.get<any[]>(this.apiUrl).subscribe({
   actualizarEstadoPago(reservaId: number, nuevoEstado: 'pendiente' | 'confirmada' | 'cancelada'): void {
 
     // 🎯 Enviamos SOLO el ID y el nuevo estado al Backend
-    this.http.put(`${this.apiUrl}/actualizar-estado`, {
+    this.http.post(this.apiUrl, {
       reservaId,
       nuevoEstado
     }).subscribe({

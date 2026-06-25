@@ -55,7 +55,7 @@ transporter.verify((error, success) => {
 });
 
 // ==============================================================================================================================
-// RUTA 1: Obtener todos los usuarios (Angular)
+// 🟢 RUTA 1: Obtener todos los usuarios (Angular)
 // ==============================================================================================================================
 
 // RUTA: Obtener todos los usuarios para mostrarlos en Angular
@@ -75,7 +75,7 @@ app.get('/api/usuarios', (req, res) => {
 
 
 // ==============================================================================================================================
-// RUTA 2: Login de usuarios
+// 🟢 RUTA 2: Login de usuarios
 // ==============================================================================================================================
 app.post('/api/usuarios', (req, res) => {
   const correo = req.body.correo ? req.body.correo.trim() : '';
@@ -110,7 +110,7 @@ app.post('/api/usuarios', (req, res) => {
 });
 
 // ==========================================
-// ✨ NUEVA RUTA 3: Registrar nuevo usuario con Bcrypt
+// 🟢 NUEVA RUTA 3: Registrar nuevo usuario con Bcrypt
 // ==========================================
 app.post('/api/usuarios/register', (req, res) => {
   const { nombre_completo, correo, telefono, contrasena } = req.body;
@@ -146,61 +146,6 @@ app.post('/api/usuarios/register', (req, res) => {
     });
   });
 });
-
-
-
-// 🟢 GET: Devuelve los datos reales almacenados en la BD
-app.get('/api/mis-compras/perfil/:id', (req, res) => {
-  const idUsuario = req.params.id;
-  const query = "SELECT nombre_completo, correo, telefono FROM usuarios WHERE id = ?";
-
-  db.query(query, [idUsuario], (err, results) => {
-    if (err) {
-      console.error("❌ Error en BD al traer perfil:", err);
-      return res.status(500).json({ success: false, message: "Error interno." });
-    }
-    if (results.length === 0) {
-      return res.status(404).json({ success: false, message: "No se encontró el usuario." });
-    }
-    return res.status(200).json(results[0]);
-  });
-});
-
-
-// 🟢 PUT: Guarda los datos e intercepta y encripta la contraseña si viene en el cuerpo
-app.put('/api/mis-compras/perfil/:id', (req, res) => {
-  const idUsuario = req.params.id;
-  const { nombre, telefono, contrasenia } = req.body;
-
-  if (!nombre || !telefono) {
-    return res.status(400).json({ success: false, message: "Campos requeridos vacíos." });
-  }
-
-  // Si el usuario NO mandó contraseña, hacemos un UPDATE sencillo
-  if (!contrasenia) {
-    const querySencilla = "UPDATE usuarios SET nombre = ?, telefono = ? WHERE id = ?";
-    db.query(querySencilla, [nombre, telefono, idUsuario], (err, result) => {
-      if (err) return res.status(500).json({ success: false, message: "Error al actualizar." });
-      return res.status(200).json({ success: true, message: "Datos actualizados." });
-    });
-  } else {
-    // Si SÍ mandó contraseña, le aplicamos hash con bcrypt antes de guardarla
-    const saltRounds = 10;
-    bcrypt.hash(contrasenia, saltRounds, (err, hash) => {
-      if (err) return res.status(500).json({ success: false, message: "Error de encriptación." });
-
-      const queryCompleta = "UPDATE usuarios SET nombre = ?, telefono = ?, contrasenia = ? WHERE id = ?";
-      db.query(queryCompleta, [nombre, telefono, hash, idUsuario], (err, result) => {
-        if (err) return res.status(500).json({ success: false, message: "Error al actualizar." });
-        return res.status(200).json({ success: true, message: "Datos y contraseña actualizados." });
-      });
-    });
-  }
-});
-
-
-
-
 
 
 
@@ -555,7 +500,7 @@ app.post('/api/reservas/hacer-pago', (req, res) => {
 
 
 // ==========================================
-// 🌲 RUTA 6: Mostrar Reservaciones USUARIO
+// 🟢 RUTA 6: Mostrar Reservaciones USUARIO
 // ==========================================
 
 app.get('/api/mis-compras/:usuarioId', (req, res) => {
@@ -591,11 +536,60 @@ app.get('/api/mis-compras/:usuarioId', (req, res) => {
 })
 
 
+// 🟢 GET: Devuelve los datos reales almacenados en la BD
+app.get('/api/mis-compras/perfil/:id', (req, res) => {
+  const idUsuario = req.params.id;
+  const query = "SELECT nombre_completo, correo, telefono FROM usuarios WHERE id = ?";
+
+  db.query(query, [idUsuario], (err, results) => {
+    if (err) {
+      console.error("❌ Error en BD al traer perfil:", err);
+      return res.status(500).json({ success: false, message: "Error interno." });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ success: false, message: "No se encontró el usuario." });
+    }
+    return res.status(200).json(results[0]);
+  });
+});
+
+
+// 🟢 PUT: Guarda los datos e intercepta y encripta la contraseña si viene en el cuerpo
+app.put('/api/mis-compras/perfil/:id', (req, res) => {
+  const idUsuario = req.params.id;
+  const { nombre, telefono, contrasenia } = req.body;
+
+  if (!nombre || !telefono) {
+    return res.status(400).json({ success: false, message: "Campos requeridos vacíos." });
+  }
+
+  // Si el usuario NO mandó contraseña, hacemos un UPDATE sencillo
+  if (!contrasenia) {
+    const querySencilla = "UPDATE usuarios SET nombre = ?, telefono = ? WHERE id = ?";
+    db.query(querySencilla, [nombre, telefono, idUsuario], (err, result) => {
+      if (err) return res.status(500).json({ success: false, message: "Error al actualizar." });
+      return res.status(200).json({ success: true, message: "Datos actualizados." });
+    });
+  } else {
+    // Si SÍ mandó contraseña, le aplicamos hash con bcrypt antes de guardarla
+    const saltRounds = 10;
+    bcrypt.hash(contrasenia, saltRounds, (err, hash) => {
+      if (err) return res.status(500).json({ success: false, message: "Error de encriptación." });
+
+      const queryCompleta = "UPDATE usuarios SET nombre = ?, telefono = ?, contrasenia = ? WHERE id = ?";
+      db.query(queryCompleta, [nombre, telefono, hash, idUsuario], (err, result) => {
+        if (err) return res.status(500).json({ success: false, message: "Error al actualizar." });
+        return res.status(200).json({ success: true, message: "Datos y contraseña actualizados." });
+      });
+    });
+  }
+});
+
 
 // ==========================================
-// 🌲 RUTA 6: CANCELAR RESERVACIONES  USUARIO
+// 🟢 RUTA 6: CANCELAR RESERVACIONES  USUARIO
 // ==========================================
-// 🔄 ENDPOINT: Cancelar una reservación mediante actualización de estado (Borrado Lógico)
+// 🟢 ENDPOINT: Cancelar una reservación mediante actualización de estado (Borrado Lógico)
 app.put('/api/mis-compras/cancelar/:id', (req, res) => {
   const idReserva = req.params.id;
 
@@ -624,7 +618,7 @@ app.put('/api/mis-compras/cancelar/:id', (req, res) => {
 
 
 // ==========================================
-// 🌲 RUTA 7: Mostrar Pagos ADMIN
+// 🟢 RUTA 7: Mostrar Pagos ADMIN
 // ==========================================
 app.get('/api/ventas-admin', (req, res) => {
   const query = `
@@ -658,7 +652,7 @@ app.get('/api/ventas-admin', (req, res) => {
 
 
 // ==========================================
-// 🌲 RUTA 8: Actualizar Pagos ADMIN
+// 🟢 RUTA 8: Actualizar Pagos ADMIN
 // ==========================================
 app.put('/api/ventas-admin/actualizar-estado', (req, res) => {
   const { reservaId, nuevoEstado, folio } = req.body;
@@ -716,6 +710,9 @@ function actualizarEstadoReserva(reservaId, nuevoEstado, res) {
     res.json({ message: 'Estado actualizado correctamente.' });
   });
 }
+
+
+
 
 
 // ==============================================================================================================================
@@ -804,8 +801,11 @@ app.post('/api/reservas', (req, res) => {
 });
 
 
+
+
+
 // ==========================================
-// 🌲 RUTA 8: Verificar si la Cabaña esta Libre
+// 🟢 RUTA 8: Verificar si la Cabaña esta Libre
 // ==========================================
 app.post('/api/reservas/verificar-disponibilidad', (req, res) => {
   const { cabin_nombre, fecha_llegada, fecha_salida } = req.body;
@@ -841,7 +841,7 @@ app.post('/api/reservas/verificar-disponibilidad', (req, res) => {
 });
 
 // ==========================================
-// 🌲 RUTA 9: FECHAS OCUPADAS CALENDARIO
+// 🟢 RUTA 9: FECHAS OCUPADAS CALENDARIO
 // ==========================================
 app.get('/api/reservas/fechas-ocupadas/:cabin_nombre', (req, res) => {
   const { cabin_nombre } = req.params;
