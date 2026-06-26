@@ -6,9 +6,9 @@ $pass = "Floresdeluna1+";
 $db   = "angelc12_Cabins_FloresLuna";
 
 // Asegúrate de que esta variable sea $conn
-//$conn = new mysqli($host, $user, $pass, $db);
+$conn = new mysqli($host, $user, $pass, $db);
 
-$conn = new mysqli("localhost", "root", "", $db);
+//$conn = new mysqli("localhost", "root", "", $db);
 
 
 

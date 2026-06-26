@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 export class CabinCalendarComponent implements OnInit {
   fechaInicioSel = model<Date | null>(null);
   fechaFinSel = model<Date | null>(null);
-  private ApiUrl = "http://localhost/api/fechas-ocupadas.php"
+  private ApiUrl = "https://floresdelaluna.mx/api/fechas-ocupadas.php"
   readonly FECHA_ACTUAL_SISTEMA = new Date();
   @Input() cabinNombre!: string;
   private http = inject(HttpClient);

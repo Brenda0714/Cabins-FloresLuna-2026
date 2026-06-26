@@ -21,10 +21,10 @@ export class MyPurchases implements OnInit {
 
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  private apiUrl = 'http://localhost/api/mis-compras.php';
-  private perfilUrl = 'http://localhost/api/perfil.php';
-  private cancelarUrl = 'http://localhost/api/cancelar-reserva.php';
-  private eliminarUrl = 'http://localhost/api/eliminar-cuenta.php';
+  private apiUrl = 'https://floresdelaluna.mx/api/mis-compras.php';
+  private perfilUrl = 'https://floresdelaluna.mx/api/perfil.php';
+  private cancelarUrl = 'https://floresdelaluna.mx/api/cancelar-reserva.php';
+  private eliminarUrl = 'https://floresdelaluna.mx/api/eliminar-cuenta.php';
 
   public compras = signal<any[]>([]);
 

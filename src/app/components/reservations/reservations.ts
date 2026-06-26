@@ -20,7 +20,7 @@ import { CabinCalendarComponent } from '../cabin-calendar/cabin-calendar.compone
 export class Reservations implements AfterViewInit {
   fechaInicioSel = signal<Date | null>(null);
   fechaFinSel = signal<Date | null>(null);
-  private ApiUrl = "http://localhost/api/verificar-disponibilidad.php"
+  private ApiUrl = "https://floresdelaluna.mx/api/verificar-disponibilidad.php"
 
   private platformId = inject(PLATFORM_ID);
   private cdr = inject(ChangeDetectorRef);

@@ -13,7 +13,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class Login {
   loginForm: FormGroup;
-  apiUrl = 'http://localhost/api/login.php'; // Ruta para validar en HostGator
+  private apiUrl = 'https://floresdelaluna.mx/api/login.php'; // Ruta para validar en HostGator
 
   // 🔔 Variables para nuestra alerta bonita con Tailwind
   showAlert: boolean = false;

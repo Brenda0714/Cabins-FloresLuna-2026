@@ -11,7 +11,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class MySales implements OnInit {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost/api/ventas-admin.php'; // Backend
+  private apiUrl = 'https://floresdelaluna.mx/api/ventas-admin.php'; // Backend
 
   // 🚦 Signals Principales de Control
   public ventas = signal<any[]>([]);
