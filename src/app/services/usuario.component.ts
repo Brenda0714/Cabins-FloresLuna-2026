@@ -18,7 +18,7 @@ export class UsuariosComponent implements OnInit {
     this.usuarioService.getUsuarios().subscribe({
       next: (data: any) => {
         this.listaUsuarios = data;
-        console.log('¡Usuarios recibidos en Angular!:', this.listaUsuarios);
+        console.log('Backend conectado!');
       },
       error: (err: any) => {
         console.error('Error al conectar Angular con el backend:', err);

@@ -76,6 +76,8 @@ export class GoToPay implements OnInit, OnDestroy {
 
         // Renderizamos directamente porque aquí ya es 100% seguro que el DIV existe
         paypalObj.Buttons({
+          fundingSource: paypalObj.FUNDING.PAYPAL,
+
           createOrder: (data: any, actions: any) => {
 
             const total = this.data()?.montoTotal;
