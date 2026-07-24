@@ -82,6 +82,7 @@ export class GoToPay implements OnInit, OnDestroy {
 
             const total = this.data()?.montoTotal;
             const montoFormateado = total ? Number(total).toFixed(2) : '0.00';
+            //const montoFormateado = '10.00';
 
             console.log('Monto enviado a la ventana de PayPal:', montoFormateado);
 

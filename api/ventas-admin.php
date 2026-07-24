@@ -28,7 +28,8 @@ if ($method === 'GET') {
                 r.monto_total,
                 r.estado,
                 p.folio,
-                p.metodo_pago,
+                DATE_FORMAT(p.fecha_pago, '%Y-%m-%d') AS fecha_pago,
+                IFNULL(p.metodo_pago, 'transferencia') AS metodo_pago,
                 IFNULL(p.estado_pago, 'pendiente') AS estado_pago
               FROM pagos p
               LEFT JOIN reservas r ON p.reserva_id = r.id

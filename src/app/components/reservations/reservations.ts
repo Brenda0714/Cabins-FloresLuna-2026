@@ -21,6 +21,7 @@ export class Reservations implements AfterViewInit {
   fechaInicioSel = signal<Date | null>(null);
   fechaFinSel = signal<Date | null>(null);
   private ApiUrl = "https://floresdelaluna.mx/api/verificar-disponibilidad.php"
+  private ApiGuardarReservaADMIN = "https://floresdelaluna.mx/api/test-email.php";
 
   private platformId = inject(PLATFORM_ID);
   private cdr = inject(ChangeDetectorRef);
@@ -135,6 +136,7 @@ export class Reservations implements AfterViewInit {
   // ==============================================================================================================================
   loading = signal(false);
   reservaData = signal<any>(null);
+  reservaDataADMIN = signal<any>(null);
   cabinSeleccionadaForm = signal<string>('');
   fechaInicioForm = signal<Date | null>(null);
   fechaFinForm = signal<Date | null>(null);
@@ -177,7 +179,10 @@ export class Reservations implements AfterViewInit {
     this.formTouched.set(false);
 
     const usuarioSesion = JSON.parse(usuarioSesionString);
-    if (email !== usuarioSesion.correo) {
+
+    const esAdmin = usuarioSesion.rol === 'admin' || usuarioSesion.es_admin === 1 || usuarioSesion.rol === 'ADMIN';
+
+    if (!esAdmin && email !== usuarioSesion.correo) {
       this.alertMessage = 'El correo ingresado no coincide con tu cuenta activa.';
       this.showAlert = true;
       this.cdr.detectChanges();
@@ -261,7 +266,31 @@ export class Reservations implements AfterViewInit {
           this.MostrarAlerta(`Lo sentimos, la cabaña ${cabin} ya se encuentra reservada en las fechas seleccionadas.`);
           return;
         }
+
+
         // 2. información en el servicio compartido
+        if (esAdmin) {
+          const datosAdmin = {
+              cliente_nombre: nombre,
+              cliente_correo: email,
+              cliente_telefono: tel,
+              admin_correo: usuarioSesion.correo || 'cabanasfloresdeluna@gmail.com',
+              fechaLlegada: llegada,
+              fechaSalida: salida,
+              cabin: cabin,
+              noches: nochesCalculadas,
+              montoTotal: totalPagar,
+              usuario_id: usuarioSesion.id
+            };
+        // 1. Guardamos en la Signal local para poder ver los datos en el console.log
+          this.reservaDataADMIN.set(datosAdmin);
+          console.log('Datos de la reservación admin listos para procesar:', this.reservaDataADMIN());
+
+          // 2. ¡CRÍTICO! Llamamos al método que manda la petición a PHP para enviar el correo
+          this.crearReservaManualAdmin(datosAdmin);
+
+          this.cdr.detectChanges();
+      }else{
         this.transferService.datosParaPagar.set({
           cliente: nombre,
           correo: email,
@@ -279,6 +308,8 @@ export class Reservations implements AfterViewInit {
         // 3. Mostramos en consola para validar
         console.log('Datos de la reservación listos para procesar:', this.reservaData());
         this.cdr.detectChanges();
+      }
+
       },
       error: (error) => {
         this.loading.set(false);
@@ -288,6 +319,40 @@ export class Reservations implements AfterViewInit {
       }
     });
   }
+
+  crearReservaManualAdmin(datos: any): void {
+  this.loading.set(true);
+
+  this.http.post(this.ApiGuardarReservaADMIN, datos).subscribe({
+    next: (res: any) => {
+      this.loading.set(false);
+// 🔍 CONSOLE.LOGS SEGUROS (Sin riesgo de que truene)
+      console.log('====================================');
+      console.log('📬 RESPUESTA COMPLETA DEL SERVIDOR:', res);
+      console.log('📧 Correo configurado para el Cliente:', datos.cliente_correo || datos.correo);
+      console.log('📧 Correo configurado para el Admin:', datos.admin_correo || null);
+      console.log('✉️ ¿Se enviaron los correos en PHP?:', res.correosEnviados ? '✅ SÍ' : '❌ NO');
+      console.log('====================================');
+
+      this.alertTitle = '¡Reserva Registrada! 📝';
+      this.alertMessage2 = `Las noches para la cabaña ${datos.cabin} quedaron bloqueadas exitosamente por transferencia/manual.`;
+      this.alertType = 'success';
+      this.showAlert2 = true;
+
+      // 🔄 Refresca el calendario de disponibilidad inmediatamente
+      if (this.calendarComponent) {
+        this.calendarComponent.refrescarDisponibilidad();
+      }
+
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      this.loading.set(false);
+      console.error('Error al registrar reserva manual:', err);
+      this.MostrarAlerta('No se pudo guardar la reserva manual en la base de datos.');
+    }
+  });
+}
 
   formatuearFechaParaInput(fecha: Date | undefined | null): string {
     if (!fecha) return '';

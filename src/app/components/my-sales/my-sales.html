@@ -27,6 +27,7 @@
         <thead class="sticky top-0 bg-olive-100 z-10 shadow-[0_1px_0_0_rgba(163,163,140,0.15)]">
           <tr class="bg-olive-100/90 text-xs font-bold uppercase tracking-wider text-olive-700">
             <th class="p-4">Folio / ID</th>
+            <th class="p-4">Fecha de Pago</th>
             <th class="p-4">Cliente</th>
             <th class="p-4">Cabaña</th>
             <th class="p-4">Fechas (Estancia)</th>
@@ -42,6 +43,11 @@
               <td class="p-4 font-mono font-semibold text-olive-600">
                 #{{ venta.folio || 'N/A' }} <br>
                 <span class="text-[10px] text-gray-400 font-sans font-normal">ID: {{ venta.id }}</span>
+              </td>
+              <td class="p-4 font-mono font-semibold text-olive-600">
+                <div class="flex flex-col font-medium text-olive-800">
+                  <span><i class="far fa-calendar-alt text-[#D18B73] mr-1.5"></i>{{ venta.fecha_pago || 'Sin fecha' }}</span>
+                </div>
               </td>
               <td class="p-4">
                 <h4 class="text-sm font-bold text-olive-900">{{ venta.nombre_completo }}</h4>
