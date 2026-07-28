@@ -21,7 +21,7 @@ export class Reservations implements AfterViewInit {
   fechaInicioSel = signal<Date | null>(null);
   fechaFinSel = signal<Date | null>(null);
   private ApiUrl = "https://floresdelaluna.mx/api/verificar-disponibilidad.php"
-  private ApiGuardarReservaADMIN = "https://floresdelaluna.mx/api/test-email.php";
+  private ApiGuardarReservaADMIN = "https://floresdelaluna.mx/api/reservas-admin.php";
 
   private platformId = inject(PLATFORM_ID);
   private cdr = inject(ChangeDetectorRef);
@@ -274,7 +274,7 @@ export class Reservations implements AfterViewInit {
               cliente_nombre: nombre,
               cliente_correo: email,
               cliente_telefono: tel,
-              admin_correo: usuarioSesion.correo || 'cabanasfloresdeluna@gmail.com',
+              admin_correo: 'cabanasfloresdeluna@gmail.com',
               fechaLlegada: llegada,
               fechaSalida: salida,
               cabin: cabin,

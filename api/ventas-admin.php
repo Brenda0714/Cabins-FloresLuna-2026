@@ -1,10 +1,10 @@
 <?php
 //ventas-admin.php
 
-header("Access-Control-Allow-Origin: http://localhost:4200");
+header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
-header("Content-Type: application/json");
+header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -17,7 +17,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 // 🟢 GET: Obtener ventas (Ruta 7)
 if ($method === 'GET') {
-    $query = "SELECT
+$query = "SELECT
                 r.id,
                 r.usuario_id,
                 u.nombre_completo,
@@ -28,9 +28,9 @@ if ($method === 'GET') {
                 r.monto_total,
                 r.estado,
                 p.folio,
-                DATE_FORMAT(p.fecha_pago, '%Y-%m-%d') AS fecha_pago,
+                DATE_FORMAT(IFNULL(p.fecha_pago, r.fecha_creacion), '%d-%m-%Y') AS fecha_pago,
                 IFNULL(p.metodo_pago, 'transferencia') AS metodo_pago,
-                IFNULL(p.estado_pago, 'pendiente') AS estado_pago
+                IFNULL(p.estado_pago, 'confirmada') AS estado_pago
               FROM pagos p
               LEFT JOIN reservas r ON p.reserva_id = r.id
               LEFT JOIN usuarios u ON r.usuario_id = u.id

@@ -1,6 +1,6 @@
 <?php
 // usuarios.php
-header("Access-Control-Allow-Origin: http://localhost:4200"); // Permite a Angular acceder
+header("Access-Control-Allow-Origin: *"); // Permite a Angular acceder
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 

@@ -40,16 +40,16 @@ $data = json_decode(file_get_contents("php://input"), true);
 if (!$data) { die(json_encode(['success' => false, 'message' => 'No hay datos'])); }
 
 
-$nombre = $data['nombre'];
-$email = $data['email'];
-$cabin_nombre = $data['cabin_nombre'];
-$monto_total = $data['monto_total'];
-$noches = $data['noches'];
-$estado_pago = $data['estado_pago'];
-$fecha_llegada = $data['fecha_llegada'];
-$fecha_salida = $data['fecha_salida'];
-$telefono = $data['telefono'] ?? '';
-$referenciaPayPalReal = $data['referencia_pago'] ?? 'N/A';
+$nombre = trim($data['nombre'] ?? '');
+$email = trim($data['email'] ?? '');
+$cabin_nombre = trim($data['cabin_nombre'] ?? '');
+$monto_total = floatval($data['monto_total'] ?? 0);
+$noches = intval($data['noches'] ?? 1);
+$estado_pago = trim($data['estado_pago'] ?? 'confirmada');
+$fecha_llegada = trim($data['fecha_llegada'] ?? '');
+$fecha_salida = trim($data['fecha_salida'] ?? '');
+$telefono = trim($data['telefono'] ?? '');
+$referenciaPayPalReal = trim($data['referencia_pago'] ?? 'N/A');
 $finalEstadoReserva = ($estado_pago === 'confirmada') ? 'confirmada' : 'pendiente';
 
 
@@ -70,11 +70,12 @@ $usuarioId = $userResults->fetch_assoc()['id'];
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 2. INSERTAR RESERVA
-$precioUnitario = floatval($monto_total) / intval($noches);
+$nochesValidadas = max(1, $noches); // Evita división entre cero
+$precioUnitario  = $monto_total / $nochesValidadas;
 $stmtReserva = $conn->prepare("INSERT INTO reservas (usuario_id, cabin_nombre, fecha_llegada, fecha_salida, noches, precio_unitario, monto_total, estado)
                                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
-$stmtReserva->bind_param("issssdds", $usuarioId, $cabin_nombre, $fecha_llegada, $fecha_salida, $noches, $precioUnitario, $monto_total, $finalEstadoReserva);
+$stmtReserva->bind_param("isssidds", $usuarioId, $cabin_nombre, $fecha_llegada, $fecha_salida, $noches, $precioUnitario, $monto_total, $finalEstadoReserva);
 $stmtReserva->execute();
 $idDeLaReservaCreada = $conn->insert_id;
 
@@ -151,47 +152,98 @@ $amenCabana = $datosExtraCabana['amenidades'];
 
 // 2. Bloque Heredoc (Nota: sin llaves, solo $variable)
 $htmlCliente = <<<EOD
-<div style="background-color: #fcfaf7; padding: 30px 15px; color: #4a3e3d;">
-  <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 25px rgba(139, 69, 19, 0.05); border: 1px solid #f3e9dc;">
+<div style="background-color: #fcfaf7; padding: 30px 15px; color: #4a3e3d; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+  <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #f3e9dc;">
 
-    <div style="background-color: #ff8B64; padding: 35px 30px; text-align: center;">
-      <h1 style="color: #ffffff; margin: 0; font-size: 26px; font-weight: 700; letter-spacing: 1px;">Cabañas Flores de la Luna</h1>
+    <!-- Encabezado Naranja -->
+    <div style="background-color: #ff8b64; padding: 25px 20px; text-align: center;">
+      <h1 style="color: #ffffff; margin: 0; font-size: 26px; font-weight: 700;">Cabañas Flores de la Luna</h1>
+      <p style="color: #ffffff; margin: 5px 0 0 0; font-size: 14px; opacity: 0.9;">Resumen de tu Estancia</p>
     </div>
 
+    <!-- Mensaje de Bienvenida -->
     <div style="padding: 30px 30px 15px 30px;">
-      <h2 style="color: #5c2c16; font-size: 20px;">$pagoExitoso_titulo</h2>
-      <p>$mensajeIntroduccionHTML</p>
+      <h2 style="color: #5c2c16; font-size: 20px; margin-top: 0; font-weight: 700;">$pagoExitoso_titulo</h2>
+      <p style="color: #6b5b55; margin: 0; font-size: 14px;">$mensajeIntroduccionHTML</p>
     </div>
 
-    <div style="padding: 0 30px 15px 30px;">
-      <table style="width: 100%; border-collapse: collapse;">
-        <tr>
-          <td>Cabaña:</td>
-          <td>$cabin_nombre</td>
+    <!-- Tabla con Filas Alternadas -->
+    <div style="padding: 0 30px 20px 30px;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 13px; border: 1px solid #f0e6df;">
+        <tr style="background-color: #ffffff; border-bottom: 1px solid #f0e6df;">
+          <td style="padding: 12px 15px; color: #5c2c16; font-weight: 600; width: 45%;">Cabaña:</td>
+          <td style="padding: 12px 15px; text-align: right; font-weight: 700; color: #333333;">$cabin_nombre</td>
         </tr>
-        <tr>
-          <td>Llegada:</td>
-          <td>$fecha_llegada</td>
+        <tr style="background-color: #faf6f2; border-bottom: 1px solid #f0e6df;">
+          <td style="padding: 12px 15px; color: #5c2c16; font-weight: 600;">Fecha de Llegada:</td>
+          <td style="padding: 12px 15px; text-align: right; color: #555555;">$fecha_llegada</td>
         </tr>
-        <tr>
-          <td>Salida:</td>
-          <td>$fecha_salida</td>
+        <tr style="background-color: #ffffff; border-bottom: 1px solid #f0e6df;">
+          <td style="padding: 12px 15px; color: #5c2c16; font-weight: 600;">Fecha de Salida:</td>
+          <td style="padding: 12px 15px; text-align: right; color: #555555;">$fecha_salida</td>
+        </tr>
+        <tr style="background-color: #faf6f2;">
+          <td style="padding: 12px 15px; color: #5c2c16; font-weight: 600;">Estancia:</td>
+          <td style="padding: 12px 15px; text-align: right; font-weight: 700; color: #333333;">$noches noches</td>
         </tr>
       </table>
     </div>
 
-    <div style="padding: 0 30px 15px 30px;">
-      <div style="background-color: #ffffff; border: 1px solid #f5eadd; padding: 22px;">
-        <h3>🏡 Detalles: Cabaña $cabin_nombre</h3>
-        <p style="color: #ff8B64;">$caracCabana</p>
-        <p>$descCabana</p>
-        <p><strong>Amenidades:</strong> $amenCabana</p>
+    <!-- Bloque Cabaña y Amenidades -->
+    <div style="padding: 0 30px 20px 30px;">
+      <div style="background-color: #ffffff; border: 1px solid #f0e6df; border-radius: 12px; padding: 20px;">
+        <h3 style="margin-top: 0; color: #5c2c16; font-size: 15px; font-weight: 700;">🏡 Detalles del hospedaje: Cabaña $cabin_nombre</h3>
+        <p style="color: #ff8b64; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin: 6px 0 10px 0;">$caracCabana</p>
+        <p style="font-size: 13px; color: #6b5b55; line-height: 1.5; margin-bottom: 15px;">$descCabana</p>
+
+        <div style="background-color: #fcf9f6; border-radius: 8px; padding: 12px 15px; border: 1px dashed #f0e6df;">
+          <p style="color: #ff8b64; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin: 0 0 5px 0;">SERVICIOS E INSTALACIONES INCLUIDAS:</p>
+          <p style="font-size: 12px; color: #555555; margin: 0; line-height: 1.4;">$amenCabana</p>
+        </div>
       </div>
     </div>
 
-    <div style="padding: 15px 30px 35px 30px;">
-      <p><strong># Folio:</strong> $folioSimulado</p>
-      <p><strong>Monto Total:</strong> $$montoFormateado MXN</p>
+    <!-- Tarjeta de Pago Punteada (Recibo PayPal) -->
+    <div style="padding: 0 30px 25px 30px;">
+      <div style="border: 1.5px dashed #e0d5cb; border-radius: 12px; padding: 20px; background-color: #ffffff;">
+        <div style="margin-bottom: 15px;">
+          <span style="font-size: 16px; font-weight: bold; color: #003087; font-style: italic; font-family: sans-serif;">PayPal <span style="color: #8e7a74; font-weight: normal; font-style: normal; font-size: 11px; text-transform: uppercase;">✓ RECIBO DE PAGO</span></span>
+        </div>
+
+        <table style="width: 100%; font-size: 13px; line-height: 2;">
+          <tr>
+            <td style="color: #8e7a74;"># Folio:</td>
+            <td style="text-align: right; font-weight: 600; color: #333333;">$folioSimulado</td>
+          </tr>
+          <tr>
+            <td style="color: #8e7a74;">Fecha de Pago:</td>
+            <td style="text-align: right; color: #555555;">$fechaRecibo</td>
+          </tr>
+          <tr>
+            <td style="color: #8e7a74;">Estado:</td>
+            <td style="text-align: right;">
+              <span style="background-color: $badgeColor; color: $badgeTextoColor; border-radius: 20px; padding: 3px 12px; font-size: 11px; font-weight: bold;">$badgeTexto</span>
+            </td>
+          </tr>
+        </table>
+
+        <div style="border-top: 1px dashed #e0d5cb; margin-top: 15px; padding-top: 15px;">
+          <table style="width: 100%;">
+            <tr>
+              <td style="font-weight: bold; color: #5c2c16; font-size: 14px;">Monto Total:</td>
+              <td style="text-align: right; font-weight: 800; color: #ff8b64; font-size: 22px;">$$montoFormateado MXN</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pie de página con Contacto -->
+    <div style="padding: 0 30px 30px 30px; text-align: center; font-size: 12px; color: #8e7a74; line-height: 1.6;">
+      <p style="margin: 0 0 5px 0;">Si tienes alguna duda sobre tu reservación, ponte en contacto con nosotros.</p>
+      <p style="margin: 0;"><a href="mailto:katyasandoval@editraka.com" style="color: #0066cc; text-decoration: underline; font-weight: bold;">katyasandoval@editraka.com</a></p>
+      <p style="margin: 3px 0 15px 0;">Tel. +52 (812) 2329 9930</p>
+      <p style="color: #ff8b64; font-weight: bold; font-size: 14px; margin: 0;">¡Te esperamos pronto en Flores de la Luna!</p>
     </div>
 
   </div>
@@ -212,45 +264,100 @@ $adminInstruccion = $pagoExitoso
 
 // 2. Bloque Heredoc del Admin
 $htmlAdmin = <<<EOD
-<div style="background-color: #fcfaf7; padding: 30px 15px; color: #4a3e3d;">
-  <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #f3e9dc;">
+<div style="background-color: #fcfaf7; padding: 30px 15px; color: #4a3e3d; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+  <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #f3e9dc;">
 
-    <div style="background-color: $adminColorFondo; padding: 30px; text-align: center;">
-      <span style="background-color: #ba4a23; color: #ffffff; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">Notificación de Sistema</span>
-      <h1 style="color: #ffffff; margin: 10px 0 0 0; font-size: 24px; font-weight: 700;">$adminTitulo</h1>
+    <!-- Header Marrón u Oscuro -->
+    <div style="background-color: $adminColorFondo; padding: 30px 20px; text-align: center;">
+      <span style="background-color: #ba4a23; color: #ffffff; padding: 4px 14px; border-radius: 20px; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">NOTIFICACIÓN DE SISTEMA</span>
+      <h1 style="color: #ffffff; margin: 12px 0 0 0; font-size: 24px; font-weight: 700;">$adminTitulo</h1>
     </div>
 
-    <div style="padding: 30px 30px 15px 30px;">
-      <p style="margin: 0; color: #6b5b55; line-height: 1.6; font-size: 15px;">$adminIntro</p>
+    <!-- Texto Introductorio -->
+    <div style="padding: 25px 30px 15px 30px;">
+      <p style="margin: 0; color: #6b5b55; line-height: 1.6; font-size: 13px;">$adminIntro</p>
     </div>
 
-    <div style="padding: 0 30px 15px 30px;">
-      <h3 style="color: #ff8B64; font-size: 14px; text-transform: uppercase; border-bottom: 1px solid #f5eadd; padding-bottom: 5px;">Datos del Huésped</h3>
-      <table style="width: 100%; font-size: 14px;">
-        <tr><td style="color: #8e7a74; width: 35%;">Nombre:</td><td style="font-weight: 600;">$nombre</td></tr>
-        <tr><td style="color: #8e7a74;">Correo:</td><td style="font-weight: 600;">$email</td></tr>
-        <tr><td style="color: #8e7a74;">Teléfono:</td><td style="font-weight: 600;">$telefono</td></tr>
-        <tr><td style="color: #8e7a74;">Fecha Pago:</td><td style="font-weight: 600;">$fechaRecibo</td></tr>
+    <!-- Sección: Datos del Huésped -->
+    <div style="padding: 0 30px 20px 30px;">
+      <h3 style="color: #ff8b64; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 10px 0; border-bottom: 1px solid #f0e6df; padding-bottom: 6px;">DATOS DEL HUÉSPED</h3>
+      <table style="width: 100%; font-size: 13px; border-collapse: collapse; line-height: 2;">
+        <tr>
+          <td style="color: #8e7a74; width: 40%;">Nombre completo:</td>
+          <td style="font-weight: 700; color: #333333;">$nombre</td>
+        </tr>
+        <tr>
+          <td style="color: #8e7a74;">Correo electrónico:</td>
+          <td style="font-weight: 700;"><a href="mailto:$email" style="color: #0066cc; text-decoration: underline;">$email</a></td>
+        </tr>
+        <tr>
+          <td style="color: #8e7a74;">Teléfono de contacto:</td>
+          <td style="font-weight: 700; color: #333333;">$telefono</td>
+        </tr>
+        <tr>
+          <td style="color: #8e7a74;">Fecha de Pago:</td>
+          <td style="font-weight: 700; color: #333333;">$fechaRecibo</td>
+        </tr>
       </table>
     </div>
 
-    <div style="padding: 0 30px 30px 30px;">
-      <h3 style="color: #ff8B64; font-size: 14px; text-transform: uppercase; border-bottom: 1px solid #f5eadd; padding-bottom: 5px;">Detalles del Hospedaje</h3>
-      <div style="background-color: #fdfbf9; border: 1px solid #f5eadd; border-radius: 12px; padding: 20px;">
-        <table style="width: 100%; font-size: 14px; line-height: 1.8;">
-          <tr><td>Cabaña:</td><td style="text-align: right; font-weight: bold;">$cabin_nombre</td></tr>
-          <tr><td>Check-In:</td><td style="text-align: right;">$fecha_llegada</td></tr>
-          <tr><td>Check-Out:</td><td style="text-align: right;">$fecha_salida</td></tr>
-          <tr><td>Noches:</td><td style="text-align: right;">$noches</td></tr>
-          <tr><td>Estatus:</td><td style="text-align: right; background-color: $badgeColor; color: $badgeTextoColor; border-radius: 30px; padding: 0 10px;">$badgeTexto</td></tr>
-          <tr><td style="padding-top: 10px; font-weight: bold;">Monto Total:</td><td style="padding-top: 10px; text-align: right; font-weight: 800; font-size: 16px;">$$montoFormateado MXN</td></tr>
+    <!-- Sección: Detalles del Hospedaje -->
+    <div style="padding: 0 30px 25px 30px;">
+      <h3 style="color: #ff8b64; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 12px 0; border-bottom: 1px solid #f0e6df; padding-bottom: 6px;">DETALLES DEL HOSPEDAJE</h3>
+
+      <div style="background-color: #faf6f2; border: 1px solid #f0e6df; border-radius: 12px; padding: 20px;">
+        <table style="width: 100%; font-size: 13px; border-collapse: collapse; line-height: 2;">
+          <tr>
+            <td style="color: #5c2c16; font-weight: 700;">Cabaña Solicitada:</td>
+            <td style="text-align: right; font-weight: 700; color: #333333;">$cabin_nombre</td>
+          </tr>
+          <tr>
+            <td style="color: #6b5b55;">Fecha de Check-In:</td>
+            <td style="text-align: right; font-weight: 700; color: #333333;">$fecha_llegada</td>
+          </tr>
+          <tr>
+            <td style="color: #6b5b55;">Fecha de Check-Out:</td>
+            <td style="text-align: right; font-weight: 700; color: #333333;">$fecha_salida</td>
+          </tr>
+          <tr>
+            <td style="color: #6b5b55;">Total de Noches:</td>
+            <td style="text-align: right; font-weight: 700; color: #333333;">$noches noches</td>
+          </tr>
+        </table>
+
+        <!-- Divisor Punteado -->
+        <div style="border-top: 1px dashed #e0d5cb; margin: 12px 0 15px 0;"></div>
+
+        <table style="width: 100%; font-size: 13px; border-collapse: collapse; line-height: 2;">
+          <tr>
+            <td style="color: #6b5b55;">Estatus Financiero:</td>
+            <td style="text-align: right;">
+              <span style="background-color: $badgeColor; color: $badgeTextoColor; border-radius: 20px; padding: 3px 12px; font-size: 11px; font-weight: 700; text-transform: uppercase;">$badgeTexto</span>
+            </td>
+          </tr>
+          <tr>
+            <td style="color: #6b5b55;"># Folio:</td>
+            <td style="text-align: right; color: #555555;">$folioSimulado</td>
+          </tr>
+        </table>
+
+        <table style="width: 100%; margin-top: 15px;">
+          <tr>
+            <td style="font-weight: 700; color: #5c2c16; font-size: 14px;">Monto de la Operación:</td>
+            <td style="text-align: right; font-weight: 800; color: #2e7d32; font-size: 20px;">$$montoFormateado MXN</td>
+          </tr>
         </table>
       </div>
     </div>
 
-    <div style="background-color: #fdfbf9; padding: 20px; text-align: center; border-top: 1px solid #f5eadd; font-size: 11px; color: #8e7a74;">
-      <p style="margin: 0;">$adminInstruccion</p>
+    <!-- Pie de Página -->
+    <div style="padding: 20px 30px; text-align: center; border-top: 1px solid #f5eadd; font-size: 11px; color: #8e7a74; line-height: 1.5; background-color: #ffffff;">
+      <p style="margin: 0;">Este es un mensaje generado automáticamente por el servidor de Flores de la Luna.</p>
+      <p style="margin: 3px 0 15px 0;">$adminInstruccion</p>
+      <p style="margin: 0; color: #ff8b64; font-weight: 700;">floresdelaluna.mx</p>
+      <p style="margin: 2px 0 0 0; font-size: 10px; color: #a3958f;">© 2026 FLORES DE LA LUNA — CABAÑAS & JARDÍN</p>
     </div>
+
   </div>
 </div>
 EOD;
@@ -310,7 +417,14 @@ $c = enviarCorreo($email, 'Confirmación de Reserva', $htmlCliente);
 //ENVIAR ADMINISTRADOR
 $a = enviarCorreo('cabanasfloresdeluna@gmail.com', 'Nueva Reserva', $htmlAdmin);
 
-responder(['success' => true, 'correosEnviados' => ($c && $a)]);
+$a2 = enviarCorreo('katyasandoval@editraka.com', 'Nueva Reserva', $htmlAdmin);
+
+responder([
+        'success' => true,
+        'usuario_encontrado' => ($usuarioId !== null),
+        'usuario_id' => $usuarioId,
+        'correosEnviados' => ($c && $a && $a2)
+    ]);
 }
 catch( Exception $e){
 responder(['success' => false, 'error_smtp' => $e->getMessage()], 500);
