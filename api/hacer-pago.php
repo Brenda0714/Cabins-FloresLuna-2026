@@ -75,9 +75,10 @@ $precioUnitario  = $monto_total / $nochesValidadas;
 $stmtReserva = $conn->prepare("INSERT INTO reservas (usuario_id, cabin_nombre, fecha_llegada, fecha_salida, noches, precio_unitario, monto_total, estado)
                                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
-$stmtReserva->bind_param("isssidds", $usuarioId, $cabin_nombre, $fecha_llegada, $fecha_salida, $noches, $precioUnitario, $monto_total, $finalEstadoReserva);
+$stmtReserva->bind_param("isssidds", $usuarioId, $cabin_nombre, $fecha_llegada, $fecha_salida, $nochesValidadas, $precioUnitario, $monto_total, $finalEstadoReserva);
 $stmtReserva->execute();
 $idDeLaReservaCreada = $conn->insert_id;
+$stmtReserva->close();
 
 
 
@@ -90,6 +91,7 @@ $stmtPago = $conn->prepare("  INSERT INTO pagos (reserva_id, folio, monto, metod
                                   VALUES (?, ?, ?, 'PayPal', ?, ?, NOW())");
 $stmtPago->bind_param("isdss", $idDeLaReservaCreada, $folioSimulado, $monto_total, $estadoPagoDB, $referenciaPayPalReal);
 $stmtPago->execute();
+$stmtPago->close();
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -184,7 +186,7 @@ $htmlCliente = <<<EOD
         </tr>
         <tr style="background-color: #faf6f2;">
           <td style="padding: 12px 15px; color: #5c2c16; font-weight: 600;">Estancia:</td>
-          <td style="padding: 12px 15px; text-align: right; font-weight: 700; color: #333333;">$noches noches</td>
+          <td style="padding: 12px 15px; text-align: right; font-weight: 700; color: #333333;">$nochesValidadas noches</td>
         </tr>
       </table>
     </div>
@@ -321,7 +323,7 @@ $htmlAdmin = <<<EOD
           </tr>
           <tr>
             <td style="color: #6b5b55;">Total de Noches:</td>
-            <td style="text-align: right; font-weight: 700; color: #333333;">$noches noches</td>
+            <td style="text-align: right; font-weight: 700; color: #333333;">$nochesValidadas noches</td>
           </tr>
         </table>
 

@@ -80,10 +80,10 @@ $precioUnitario  = $monto_total / $nochesValidadas;
 $stmtReserva = $conn->prepare("INSERT INTO reservas (usuario_id, cabin_nombre, fecha_llegada, fecha_salida, noches, precio_unitario, monto_total, estado)
                                 VALUES (?, ?, ?, ?, ?, ?, ?, 'confirmada')");
 
-$stmtReserva->bind_param("isssidd", $usuarioId, $cabin_nombre, $fecha_llegada, $fecha_salida, $noches, $precioUnitario, $monto_total);
+$stmtReserva->bind_param("isssidd", $usuarioId, $cabin_nombre, $fecha_llegada, $fecha_salida, $nochesValidadas, $precioUnitario, $monto_total);
 $stmtReserva->execute();
 $idDeLaReservaCreada = $conn->insert_id;
-
+$stmtReserva->close();
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $folioSimulado = $data['folio'] ?? ('FL-' . rand(100000, 999999));
@@ -93,6 +93,7 @@ $stmtPago = $conn->prepare("INSERT INTO pagos (reserva_id, folio, monto, metodo_
                             VALUES (?, ?, ?, 'Transferencia', ? , 'ADMIN_MANUAL', NOW())");
 $stmtPago->bind_param("isds", $idDeLaReservaCreada, $folioSimulado, $monto_total, $estadoPagoDB);
 $stmtPago->execute();
+$stmtPago->close();
 
 // 4. PREPARAR DATOS Y PLANTILLA DE CORREOS
   $infoCabanas = [
@@ -133,7 +134,7 @@ $datosExtraCabana = $infoCabanas[trim($cabin_nombre)] ??
 
 $montoFormateado = number_format($monto_total, 2);
 $fechaRecibo     = date('d/m/Y');
-$pagoExitoso     = ($estado_pago === 'confirmada');
+$pagoExitoso     = ($estadoPagoDB === 'confirmada');
 
 $badgeColor      = $pagoExitoso ? '#e8f5e9' : '#ffebee';
 $badgeTextoColor = $pagoExitoso ? '#2e7d32' : '#c62828';
@@ -184,7 +185,7 @@ $htmlCliente = <<<EOD
         </tr>
         <tr style="background-color: #faf6f2;">
           <td style="padding: 12px 15px; color: #5c2c16; font-weight: 600;">Estancia:</td>
-          <td style="padding: 12px 15px; text-align: right; font-weight: 700; color: #333333;">$noches noches</td>
+          <td style="padding: 12px 15px; text-align: right; font-weight: 700; color: #333333;">$nochesValidadas noches</td>
         </tr>
       </table>
     </div>
@@ -213,7 +214,7 @@ $htmlCliente = <<<EOD
         <table style="width: 100%; font-size: 13px; line-height: 2;">
           <tr>
             <td style="color: #8e7a74;"># Folio:</td>
-            <td style="text-align: right; font-weight: 600; color: #333333;">$folioAdmin</td>
+            <td style="text-align: right; font-weight: 600; color: #333333;">$folioSimulado</td>
           </tr>
           <tr>
             <td style="color: #8e7a74;">Fecha de Registro:</td>
@@ -322,7 +323,7 @@ $htmlAdmin = <<<EOD
           </tr>
           <tr>
             <td style="color: #6b5b55;">Total de Noches:</td>
-            <td style="text-align: right; font-weight: 700; color: #333333;">$noches noches</td>
+            <td style="text-align: right; font-weight: 700; color: #333333;">$nochesValidadas noches</td>
           </tr>
         </table>
 
@@ -338,7 +339,7 @@ $htmlAdmin = <<<EOD
           </tr>
           <tr>
             <td style="color: #6b5b55;"># Folio:</td>
-            <td style="text-align: right; color: #555555;">$folioAdmin</td>
+            <td style="text-align: right; color: #555555;">$folioSimulado</td>
           </tr>
         </table>
 
@@ -397,7 +398,7 @@ $a2 = enviarCorreo('katyasandoval@editraka.com', 'Nueva Reserva', $htmlAdmin);
 responder(['success' => true,
             'usuario_encontrado' => ($usuarioId !== null),
             'usuario_id' => $usuarioId,
-            'correosEnviados' => ($c && $a1 && $a2)]);
+            'correosEnviados' => ($c && $a && $a2)]);
 }
 catch( Exception $e){
 responder(['success' => false, 'error_smtp' => $e->getMessage()], 500);
