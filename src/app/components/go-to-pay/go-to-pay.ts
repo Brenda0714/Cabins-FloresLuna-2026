@@ -3,6 +3,7 @@ import { ReservaTransferService } from '../../services/reserva-transfer.service'
 import { Router, RouterModule } from '@angular/router';
 import { DecimalPipe, isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { PromoService } from '../../services/promo.service'; // Ajusta la ruta
 
 @Component({
   selector: 'app-go-to-pay',
@@ -19,6 +20,7 @@ export class GoToPay implements OnInit, OnDestroy {
   private transferService = inject(ReservaTransferService);
   private router = inject(Router);
   private renderer = inject(Renderer2);
+  public promoService = inject(PromoService);
 
 
   showAlert2: boolean = false;

@@ -43,16 +43,23 @@
           </div>
           <div class="g-text flex justify-between items-center">
             <span class="g-text text-olive-600 text-base">Precio por noche:</span>
-            <span class="g-text font-semibold text-olive-900 text-base">${{ data().precioUnitario | number }} MX</span>
+            <span class="g-text font-semibold text-olive-900 text-base">${{ data().precioUnitario | number }} MXN</span>
           </div>
           <!-- <hr class="text-olive-300"> -->
-          <div class="g-text border-t border-olive-200 pt-3 flex justify-between items-center">
-            <span class="g-text font-bold text-base text-green-700">Descuento 50%</span>
-            <span class="g-text font-bold text-base text-green-600 ">${{ data().montoTotal | number }} MX</span>
+          <!-- 🟢 RENGLÓN DINÁMICO DE DESCUENTO PROMO (Solo se dibuja si hubo ahorro) -->
+          @if (data()?.ahorroTotal > 0) {
+          <div class="flex justify-between text-sm bg-emerald-50 p-2 rounded-lg border border-emerald-100">
+            <span class="font-bold text-emerald-700 flex items-center gap-1">
+              Descuento {{ promoService.promoState().descuento }}% OFF:
+            </span>
+            <span class="font-bold text-emerald-700">
+              -${{ data()?.ahorroTotal | number:'1.0-0' }} MXN
+            </span>
           </div>
+          }
           <div class="g-text border-t border-olive-200 pt-3 flex justify-between items-center">
             <span class="g-text font-bold text-base text-olive-900">Total a pagar:</span>
-            <span class="g-text font-bold text-xl text-[#ff8B64] ">${{ data().montoTotal | number }} MX</span>
+            <span class="g-text font-bold text-xl text-[#ff8B64] ">${{ data().montoTotal | number }} MXN</span>
           </div>
         </div>
 
@@ -125,6 +132,9 @@
       <h3 class="g-text text-lg font-bold text-olive-900 mb-1 tracking-tight">
         Pago por Transferencia
       </h3>
+      <p class="g-text text-xs text-olive-600 mb-4 px-2 leading-relaxed">
+        El horario de pagos por transferencias son de Lunes a Viernes de 9 AM a 2 PM.
+      </p>
       <p class="g-text text-xs text-olive-600 mb-4 px-2 leading-relaxed">
         Usa los siguientes datos bancarios para realizar tu depósito o SPEI.
       </p>

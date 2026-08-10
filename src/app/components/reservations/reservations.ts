@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ReservaTransferService } from '../../services/reserva-transfer.service'; // Ajusta la ruta
 import { CabinCalendarComponent } from '../cabin-calendar/cabin-calendar.component';
+import { PromoService } from '../../services/promo.service'; // Ajusta la ruta
 
 
 @Component({
@@ -18,6 +19,7 @@ import { CabinCalendarComponent } from '../cabin-calendar/cabin-calendar.compone
 })
 
 export class Reservations implements AfterViewInit {
+  public promoService = inject(PromoService); // 👈 Inyección pública del servicio
   fechaInicioSel = signal<Date | null>(null);
   fechaFinSel = signal<Date | null>(null);
   private ApiUrl = "https://floresdelaluna.mx/api/verificar-disponibilidad.php"
@@ -201,9 +203,10 @@ export class Reservations implements AfterViewInit {
     const fechaIn = new Date(anoIn, mesIn - 1, diaIn, 0, 0, 0);
     const fechaOut = new Date(anoOut, mesOut - 1, diaOut, 0, 0, 0);
 
-
+    // Variables para el desglose en el ticket de pago
     let totalPagar = 0;
     let nochesCalculadas = 0;
+    let totalSinDescuento = 0;
 
     if (fechaOut <= fechaIn) {
       this.alertMessage = 'La fecha de salida debe ser posterior a la de llegada.';
@@ -222,27 +225,38 @@ export class Reservations implements AfterViewInit {
     // ====================================================================
 
 
-    if (infoCabana) {
-      // Convertimos los precios quitando las comas de los strings
-      const precioSemana = Number(infoCabana.precio.replace(/,/g, ''));    // Lun a Jue
-      const precioFinSemana = Number(infoCabana.precio2.replace(/,/g, '')); // Vie a Dom
 
-      // Creamos un objeto auxiliar para recorrer el rango noche por noche
+
+    if (infoCabana) {
+      // 1. Precios base regulares (sin comas)
+      const precioSemanaBase = Number(infoCabana.precio.replace(/,/g, ''));    // Lun a Jue
+      const precioFinSemanaBase = Number(infoCabana.precio2.replace(/,/g, '')); // Vie a Dom
+
+      const promoInfo = this.promoService.promoState();
       let fechaAux = new Date(fechaIn);
 
+      // 2. Recorremos noche por noche
       while (fechaAux < fechaOut) {
-        const diaSemana = fechaAux.getDay(); // 0 = Domingo, 1 = Lunes, ..., 5 = Viernes, 6 = Sábado
+        const diaSemana = fechaAux.getDay(); // 0 = Dom, 1 = Lun, ..., 6 = Sáb
+        const esFinDeSemana = (diaSemana === 5 || diaSemana === 6 || diaSemana === 0);
 
-        // Si la noche es Viernes (5), Sábado (6) o Domingo (0)
-        if (diaSemana === 5 || diaSemana === 6 || diaSemana === 0) {
-          totalPagar += precioFinSemana;
-        } else {
-          // Si es Lunes (1), Martes (2), Miércoles (3) o Jueves (4)
-          totalPagar += precioSemana;
+        // Asignamos el precio base normal del día
+        const precioBase = esFinDeSemana ? precioFinSemanaBase : precioSemanaBase;
+        let precioNoche = precioBase;
+
+        // 3. SOLO SI HAY PROMO ACTIVA Y LA NOCHE ES EN AGOSTO (Mes 7), APLICAMOS EL DESCUENTO
+        if (promoInfo.promocion_activa && promoInfo.descuento > 0 && fechaAux.getMonth() === 7) {
+          const factor = 1 - (promoInfo.descuento / 100);
+          precioNoche = Math.round(precioNoche * factor);
         }
 
+        // 4. Sumamos el precio (se mantiene igual a tu lógica anterior)
+        totalSinDescuento += precioBase;
+        totalPagar += precioNoche;
         nochesCalculadas++;
-        fechaAux.setDate(fechaAux.getDate() + 1); // Avanzar al siguiente día
+
+        // Avanzamos al siguiente día
+        fechaAux.setDate(fechaAux.getDate() + 1);
       }
     }
 
@@ -267,22 +281,22 @@ export class Reservations implements AfterViewInit {
           return;
         }
 
-
+        const ahorroTotal = totalSinDescuento - totalPagar;
         // 2. información en el servicio compartido
         if (esAdmin) {
           const datosAdmin = {
-              cliente_nombre: nombre,
-              cliente_correo: email,
-              cliente_telefono: tel,
-              admin_correo: 'cabanasfloresdeluna@gmail.com',
-              fechaLlegada: llegada,
-              fechaSalida: salida,
-              cabin: cabin,
-              noches: nochesCalculadas,
-              montoTotal: totalPagar,
-              usuario_id: usuarioSesion.id
-            };
-        // 1. Guardamos en la Signal local para poder ver los datos en el console.log
+            cliente_nombre: nombre,
+            cliente_correo: email,
+            cliente_telefono: tel,
+            admin_correo: 'cabanasfloresdeluna@gmail.com',
+            fechaLlegada: llegada,
+            fechaSalida: salida,
+            cabin: cabin,
+            noches: nochesCalculadas,
+            montoTotal: totalPagar,
+            usuario_id: usuarioSesion.id
+          };
+          // 1. Guardamos en la Signal local para poder ver los datos en el console.log
           this.reservaDataADMIN.set(datosAdmin);
           console.log('Datos de la reservación admin listos para procesar:', this.reservaDataADMIN());
 
@@ -290,25 +304,27 @@ export class Reservations implements AfterViewInit {
           this.crearReservaManualAdmin(datosAdmin);
 
           this.cdr.detectChanges();
-      }else{
-        this.transferService.datosParaPagar.set({
-          cliente: nombre,
-          correo: email,
-          telefono: tel,
-          fechaLlegada: llegada,
-          fechaSalida: salida,
-          cabin: cabin,
-          noches: nochesCalculadas,
-          precioUnitario: precioPorNochePromedio,
-          montoTotal: totalPagar
-        });
+        } else {
+          this.transferService.datosParaPagar.set({
+            cliente: nombre,
+            correo: email,
+            telefono: tel,
+            fechaLlegada: llegada,
+            fechaSalida: salida,
+            cabin: cabin,
+            noches: nochesCalculadas,
+            precioUnitario: nochesCalculadas > 0 ? totalPagar / nochesCalculadas : 0,
+            montoTotal: totalPagar,
+            ahorroTotal: ahorroTotal, // 👈 Nuevo dato de ahorro
+            porcentajePromo: this.promoService.promoState().descuento // 👈 Porcentaje dinámico
+          });
 
-        this.router.navigate(['/go-to-pay']);
+          this.router.navigate(['/go-to-pay']);
 
-        // 3. Mostramos en consola para validar
-        console.log('Datos de la reservación listos para procesar:', this.reservaData());
-        this.cdr.detectChanges();
-      }
+          // 3. Mostramos en consola para validar
+          console.log('Datos de la reservación listos para procesar:', this.reservaData());
+          this.cdr.detectChanges();
+        }
 
       },
       error: (error) => {
@@ -321,38 +337,38 @@ export class Reservations implements AfterViewInit {
   }
 
   crearReservaManualAdmin(datos: any): void {
-  this.loading.set(true);
+    this.loading.set(true);
 
-  this.http.post(this.ApiGuardarReservaADMIN, datos).subscribe({
-    next: (res: any) => {
-      this.loading.set(false);
-// 🔍 CONSOLE.LOGS SEGUROS (Sin riesgo de que truene)
-      console.log('====================================');
-      console.log('📬 RESPUESTA COMPLETA DEL SERVIDOR:', res);
-      console.log('📧 Correo configurado para el Cliente:', datos.cliente_correo || datos.correo);
-      console.log('📧 Correo configurado para el Admin:', datos.admin_correo || null);
-      console.log('✉️ ¿Se enviaron los correos en PHP?:', res.correosEnviados ? '✅ SÍ' : '❌ NO');
-      console.log('====================================');
+    this.http.post(this.ApiGuardarReservaADMIN, datos).subscribe({
+      next: (res: any) => {
+        this.loading.set(false);
+        // 🔍 CONSOLE.LOGS SEGUROS (Sin riesgo de que truene)
+        console.log('====================================');
+        console.log('📬 RESPUESTA COMPLETA DEL SERVIDOR:', res);
+        console.log('📧 Correo configurado para el Cliente:', datos.cliente_correo || datos.correo);
+        console.log('📧 Correo configurado para el Admin:', datos.admin_correo || null);
+        console.log('✉️ ¿Se enviaron los correos en PHP?:', res.correosEnviados ? '✅ SÍ' : '❌ NO');
+        console.log('====================================');
 
-      this.alertTitle = '¡Reserva Registrada! 📝';
-      this.alertMessage2 = `Las noches para la cabaña ${datos.cabin} quedaron bloqueadas exitosamente por transferencia/manual.`;
-      this.alertType = 'success';
-      this.showAlert2 = true;
+        this.alertTitle = '¡Reserva Registrada! 📝';
+        this.alertMessage2 = `Las noches para la cabaña ${datos.cabin} quedaron bloqueadas exitosamente por transferencia/manual.`;
+        this.alertType = 'success';
+        this.showAlert2 = true;
 
-      // 🔄 Refresca el calendario de disponibilidad inmediatamente
-      if (this.calendarComponent) {
-        this.calendarComponent.refrescarDisponibilidad();
+        // 🔄 Refresca el calendario de disponibilidad inmediatamente
+        if (this.calendarComponent) {
+          this.calendarComponent.refrescarDisponibilidad();
+        }
+
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.loading.set(false);
+        console.error('Error al registrar reserva manual:', err);
+        this.MostrarAlerta('No se pudo guardar la reserva manual en la base de datos.');
       }
-
-      this.cdr.detectChanges();
-    },
-    error: (err) => {
-      this.loading.set(false);
-      console.error('Error al registrar reserva manual:', err);
-      this.MostrarAlerta('No se pudo guardar la reserva manual en la base de datos.');
-    }
-  });
-}
+    });
+  }
 
   formatuearFechaParaInput(fecha: Date | undefined | null): string {
     if (!fecha) return '';

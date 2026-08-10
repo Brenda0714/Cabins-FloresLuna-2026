@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { Sidebar } from "../sidebar/sidebar";
 import { AuthService } from '../../services/auth.service';
+import { PromoService } from '../../services/promo.service';
 import { filter } from 'rxjs';
 
 @Component({
@@ -12,7 +13,7 @@ import { filter } from 'rxjs';
 })
 export class Navbar {
 
-
+  public promoService = inject(PromoService);
   isMenuOpen: boolean = false;
   nombreUsuario: string = '';
 
