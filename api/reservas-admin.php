@@ -69,16 +69,37 @@ $userResults = $stmt->get_result();
 if ($userResults->num_rows > 0) {
     $usuarioId = $userResults->fetch_assoc()['id'];
 } else {
-    // Si el cliente no tiene cuenta, usamos la del admin en sesión (o por defecto ID 1)
-    $usuarioId = intval($data['usuario_id'] ?? 1);
+    // 🟢 Si el cliente no existe, lo creamos dinámicamente
+    // Generamos un hash seguro para cumplir con el campo NOT NULL de la contraseña
+    $passwordTextoPlano = 'Luna' . rand(1000, 9999);
+    $passwordEncriptada = hash('sha256', $passwordTextoPlano);
+    $rol = 'cliente';
+
+    $stmtNewUser = $conn->prepare("INSERT INTO usuarios (nombre_completo, correo, telefono, contraseña, rol) VALUES (?, ?, ?, ?, ?)");
+    $stmtNewUser->bind_param("sssss", $cliente_nombre, $cliente_correo, $telefono, $passwordEncriptada, $rol);
+
+    if ($stmtNewUser->execute()) {
+        $usuarioId = $conn->insert_id;
+
+        // 💡 Solo si entra a este 'else' se asigna el párrafo con la contraseña
+        $mensajeCuentaNueva = '<p style="font-size: 13px; color: #555; margin-top: 15px;">
+          Hemos creado una cuenta para ti en nuestro sitio web. Puedes acceder usando tu correo y esta clave temporal:
+          <strong style="color: #ff8b64;">' . $passwordTextoPlano . '</strong>
+        </p>';
+    } else {
+        $usuarioId = intval($data['usuario_id'] ?? 1);
+    }
+
+    $stmtNewUser->close();
 }
+$stmt->close();
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 2. INSERTAR RESERVA (Confirmada directamente)
 $nochesValidadas = max(1, $noches); // Evita división entre cero
 $precioUnitario  = $monto_total / $nochesValidadas;
 $stmtReserva = $conn->prepare("INSERT INTO reservas (usuario_id, cabin_nombre, fecha_llegada, fecha_salida, noches, precio_unitario, monto_total, estado)
-                                VALUES (?, ?, ?, ?, ?, ?, ?, 'confirmada')");
+                                VALUES (?, ?, ?, ?, ?, ?, ?, 'pendiente')");
 
 $stmtReserva->bind_param("isssidd", $usuarioId, $cabin_nombre, $fecha_llegada, $fecha_salida, $nochesValidadas, $precioUnitario, $monto_total);
 $stmtReserva->execute();
@@ -87,7 +108,7 @@ $stmtReserva->close();
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $folioSimulado = $data['folio'] ?? ('FL-' . rand(100000, 999999));
-$estadoPagoDB = $data['estado_pago'] ?? 'confirmada';
+$estadoPagoDB = $data['estado_pago'] ?? 'pendiente';
 
 $stmtPago = $conn->prepare("INSERT INTO pagos (reserva_id, folio, monto, metodo_pago, estado_pago, referencia_pago, fecha_pago)
                             VALUES (?, ?, ?, 'Transferencia', ? , 'ADMIN_MANUAL', NOW())");
@@ -166,6 +187,8 @@ $htmlCliente = <<<EOD
     <div style="padding: 30px 30px 15px 30px;">
       <h2 style="color: #5c2c16; font-size: 20px; margin-top: 0; font-weight: 700;">$pagoExitoso_titulo</h2>
       <p style="color: #6b5b55; margin: 0; font-size: 14px;">$mensajeIntroduccionHTML</p>
+    <!-- 💡 Se imprime únicamente si el usuario fue creado nuevo por el backend -->
+      $mensajeCuentaNueva
     </div>
 
     <!-- Tabla con Filas Alternadas -->

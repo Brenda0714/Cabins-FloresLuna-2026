@@ -8,7 +8,7 @@
 
   <div class="flex gap-2 justify-center mb-4">
     <select (change)="cambiarFiltro($event)"
-            class="g-text px-6 py-4 border border-olive-300 bg-white rounded-xl text-base font-medium text-olive-800 focus:outline-none focus:border-[#D18B73] cursor-pointer shadow-sm">
+      class="g-text px-6 py-4 border border-olive-300 bg-white rounded-xl text-base font-medium text-olive-800 focus:outline-none focus:border-[#D18B73] cursor-pointer shadow-sm">
       <option value="todos">Todas las Ventas</option>
       <option value="confirmada">Pagadas</option>
       <option value="pendiente">Pendientes</option>
@@ -16,13 +16,13 @@
     </select>
   </div>
 
-  <div class="bg-white rounded-2xl border border-olive-100 shadow-sm overflow-hidden g-text max-w-6xl mx-auto mb-10">
+  <div class="bg-white rounded-2xl border border-olive-100 shadow-sm overflow-hidden g-text max-w-8xl mx-auto mb-10">
 
     <div class="p-5 border-b border-olive-50 bg-olive-50/30">
       <h2 class="text-xl font-bold text-olive-900 uppercase tracking-wider">Historial de Transacciones</h2>
     </div>
 
-  <div class="hidden lg:block overflow-y-auto overflow-x-auto max-h-95 border-b border-olive-100 custom-scroll">
+    <div class="hidden lg:block overflow-y-auto overflow-x-auto max-h-95 border-b border-olive-100 custom-scroll">
       <table class="w-full text-left border-collapse relative">
         <thead class="sticky top-0 bg-olive-100 z-10 shadow-[0_1px_0_0_rgba(163,163,140,0.15)]">
           <tr class="bg-olive-100/90 text-xs font-bold uppercase tracking-wider text-olive-700">
@@ -32,6 +32,8 @@
             <th class="p-4">Cabaña</th>
             <th class="p-4">Fechas (Estancia)</th>
             <th class="p-4 text-center">Noches</th>
+            <th class="p-4 text-right">Pago Inicial (Anticipo)</th>
+            <th class="p-4 text-right">Pago Final (Finiquito)</th>
             <th class="p-4 text-right">Monto Total</th>
             <th class="p-4 text-center">Estado de Pago</th>
             <th class="p-4 text-center">Tiempo</th>
@@ -39,70 +41,135 @@
         </thead>
         <tbody class="text-xs text-olive-900 divide-y divide-olive-50">
           @for (venta of ventasFiltradas(); track venta.id) {
-            <tr class="hover:bg-olive-50/40 transition-colors">
-              <td class="p-4 font-mono font-semibold text-olive-600">
-                #{{ venta.folio || 'N/A' }} <br>
-                <span class="text-[10px] text-gray-400 font-sans font-normal">ID: {{ venta.id }}</span>
-              </td>
-              <td class="p-4 font-mono font-semibold text-olive-600">
-                <div class="flex flex-col font-medium text-olive-800">
-                  <span><i class="far fa-calendar-alt text-[#D18B73] mr-1.5"></i>{{ venta.fecha_pago || 'Sin fecha' }}</span>
-                </div>
-              </td>
-              <td class="p-4">
-                <h4 class="text-sm font-bold text-olive-900">{{ venta.nombre_completo }}</h4>
-                <span class="text-[10px] text-olive-500">ID Usr: {{ venta.usuario_id }}</span>
-              </td>
-              <td class="p-4">
-                <div class="font-bold text-sm text-olive-900">{{ venta.cabin_nombre }}</div>
-                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-olive-100 text-olive-600 border border-olive-200">
-                  {{ venta.metodo_pago || 'N/A' }}
-                </span>
-              </td>
-              <td class="p-4">
-                <div class="flex flex-col font-medium text-olive-800">
-                  <span><i class="far fa-calendar-alt text-[#D18B73] mr-1.5"></i>{{ venta.fecha_llegada | date:'dd MMM' }} – {{ venta.fecha_salida | date:'dd MMM, yyyy' }}</span>
-                  <span class="text-gray-400 text-[10px] font-normal">Ocupación total</span>
-                </div>
-              </td>
-              <td class="p-4 text-center font-semibold">{{ venta.noches }}</td>
-              <td class="p-4 text-right font-bold text-sm text-olive-900">${{ venta.monto_total | number:'1.2-2' }}</td>
+          <tr class="hover:bg-olive-50/40 transition-colors">
+            <td class="p-4 font-mono font-semibold text-olive-600">
+              #{{ venta.folio || 'N/A' }} <br>
+              <span class="text-[10px] text-gray-400 font-sans font-normal">ID: {{ venta.id }}</span>
+            </td>
+            <td class="p-4 font-mono font-semibold text-olive-600">
+              <div class="flex flex-col font-medium text-olive-800">
+                <span><i class="far fa-calendar-alt text-[#D18B73] mr-1.5"></i>{{ venta.fecha_pago || 'Sin fecha'
+                  }}</span>
+              </div>
+            </td>
+            <td class="p-4">
+              <h4 class="text-sm font-bold text-olive-900">{{ venta.nombre_completo }}</h4>
+              <span class="text-[10px] text-olive-500">ID Usr: {{ venta.usuario_id }}</span>
+            </td>
+            <td class="p-4">
+              <div class="font-bold text-sm text-olive-900">{{ venta.cabin_nombre }}</div>
+              <span
+                class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-olive-100 text-olive-600 border border-olive-200">
+                {{ venta.metodo_pago || 'N/A' }}
+              </span>
+            </td>
+            <td class="p-4">
+              <div class="flex flex-col font-medium text-olive-800">
+                <span><i class="far fa-calendar-alt text-[#D18B73] mr-1.5"></i>{{ venta.fecha_llegada | date:'dd MMM' }}
+                  – {{ venta.fecha_salida | date:'dd MMM, yyyy' }}</span>
+                <span class="text-gray-400 text-[10px] font-normal">Ocupación total</span>
+              </div>
+            </td>
+            <td class="p-4 text-center font-semibold">{{ venta.noches }}</td>
 
-              <td class="p-4 text-center">
-                <div class="relative inline-block w-32">
-                  <select [value]="venta.estado_pago"
-                          (change)="cambiarEstadoDirecto(venta.id, $event)"
-                          [disabled]="obtenerEstadoTemporal(venta.fecha_llegada, venta.fecha_salida) === 'vencida'"
-                          [class]="venta.estado_pago === 'confirmada' ? 'bg-emerald-50 text-emerald-700 border-emerald-200 focus:border-emerald-400' :
+
+            <!-- Columna: Pago Inicial (Anticipo) -->
+            <td class="p-4 text-center">
+              @if (venta.metodo_pago?.toLowerCase() === 'transferencia') {
+              <div class="flex flex-col items-center gap-1">
+                <div class="flex items-center justify-center gap-1">
+                  <span class="text-olive-500 font-bold">$</span>
+                  <input type="number" step="0.01" [value]="venta.monto1 || ''"
+                    (change)="actualizarMonto1(venta, $event)" placeholder="0.00"
+                    class="w-24 px-2 py-1 text-right font-bold text-sm text-olive-900 border border-olive-200 rounded focus:outline-none focus:border-[#D18B73] bg-stone-50/50">
+                </div>
+
+                <!-- Fecha de monto1 -->
+                <span class="text-[10px] font-medium text-olive-500 flex items-center gap-1">
+                  @if (venta.monto1 && venta.fecha_pago1) {
+                  <i class="far fa-calendar-alt text-[#D18B73]"></i>
+                  <span>{{ venta.fecha_pago1 | date:'dd MMM, yyyy' }}</span>
+                  } @else if (venta.monto1) {
+                  <span class="text-emerald-600 font-semibold">Registrado hoy</span>
+                  } @else {
+                  <span class="text-gray-300 font-normal">Sin registro</span>
+                  }
+                </span>
+              </div>
+              } @else {
+              <span
+                class="px-3 py-1 text-[10px] font-bold text-gray-400 bg-gray-50 border border-gray-100 rounded-full tracking-wider">
+                N/A
+              </span>
+              }
+            </td>
+
+            <!-- Columna: Pago Final (Finiquito) -->
+            <td class="p-4 text-center">
+              @if (venta.metodo_pago?.toLowerCase() === 'transferencia') {
+              <div class="flex flex-col items-center gap-1">
+                <div class="flex items-center justify-center gap-1">
+                  <span class="text-olive-500 font-bold">$</span>
+                  <input type="number" step="0.01" [value]="venta.monto2 || ''"
+                    (change)="actualizarMonto2(venta, $event)" placeholder="0.00"
+                    class="w-24 px-2 py-1 text-right font-bold text-sm text-olive-900 border border-olive-200 rounded focus:outline-none focus:border-[#D18B73] bg-stone-50/50">
+                </div>
+
+                <!-- Fecha de monto2 -->
+                <span class="text-[10px] font-medium text-olive-500 flex items-center gap-1">
+                  @if (venta.monto2 && venta.fecha_pago2) {
+                  <i class="far fa-calendar-alt text-[#D18B73]"></i>
+                  <span>{{ venta.fecha_pago2 | date:'dd MMM, yyyy' }}</span>
+                  } @else if (venta.monto2) {
+                  <span class="text-emerald-600 font-semibold">Registrado hoy</span>
+                  } @else {
+                  <span class="text-gray-300 font-normal">Sin registro</span>
+                  }
+                </span>
+              </div>
+              } @else {
+              <span
+                class="px-3 py-1 text-[10px] font-bold text-gray-400 bg-gray-50 border border-gray-100 rounded-full tracking-wider">
+                N/A
+              </span>
+              }
+            </td>
+
+            <td class="p-4 text-right font-bold text-sm text-olive-900">${{ venta.monto_total | number:'1.2-2' }}</td>
+
+            <td class="p-4 text-center">
+              <div class="relative inline-block w-32">
+                <select [value]="venta.estado_pago" (change)="cambiarEstadoDirecto(venta.id, $event)"
+                  [disabled]="obtenerEstadoTemporal(venta.fecha_llegada, venta.fecha_salida) === 'vencida'" [class]="venta.estado_pago === 'confirmada' ? 'bg-emerald-50 text-emerald-700 border-emerald-200 focus:border-emerald-400' :
                                    venta.estado_pago === 'pendiente' ? 'bg-amber-50 text-amber-700 border-amber-200 focus:border-amber-400' :
                                    'bg-rose-50 text-rose-700 border-rose-200 focus:border-rose-400'"
-                          class="appearance-none w-full px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider border text-center focus:outline-none cursor-pointer font-sans transition-all pr-6">
-                    <option value="confirmada" class="bg-white text-emerald-700 font-bold">Pagado</option>
-                    <option value="pendiente" class="bg-white text-amber-700 font-bold">Pendiente</option>
-                    <option value="cancelada" class="bg-white text-rose-700 font-bold">Cancelado</option>
-                  </select>
-                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 opacity-60">
-                    <i class="fas fa-chevron-down text-[8px]"></i>
-                  </div>
+                  class="appearance-none w-full px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider border text-center focus:outline-none cursor-pointer font-sans transition-all pr-6">
+                  <option value="confirmada" class="bg-white text-emerald-700 font-bold">Pagado</option>
+                  <option value="pendiente" class="bg-white text-amber-700 font-bold">Pendiente</option>
+                  <option value="cancelada" class="bg-white text-rose-700 font-bold">Cancelado</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 opacity-60">
+                  <i class="fas fa-chevron-down text-[8px]"></i>
                 </div>
-              </td>
+              </div>
+            </td>
 
-              <td class="p-4 text-center">
-                @let tempStatus = obtenerEstadoTemporal(venta.fecha_llegada, venta.fecha_salida);
-                <span [class]="tempStatus === 'vencida' ? 'bg-gray-100 text-gray-600 border-gray-200' :
+            <td class="p-4 text-center">
+              @let tempStatus = obtenerEstadoTemporal(venta.fecha_llegada, venta.fecha_salida);
+              <span [class]="tempStatus === 'vencida' ? 'bg-gray-100 text-gray-600 border-gray-200' :
                                tempStatus === 'En Curso' ? 'bg-blue-50 text-blue-700 border-blue-200 animate-pulse' :
                                'bg-purple-50 text-purple-700 border-purple-200'"
-                      class="px-2.5 py-1 rounded text-[9px] font-bold border uppercase tracking-wider w-24 inline-block text-center">
-                  {{ tempStatus }}
-                </span>
-              </td>
-            </tr>
+                class="px-2.5 py-1 rounded text-[9px] font-bold border uppercase tracking-wider w-24 inline-block text-center">
+                {{ tempStatus }}
+              </span>
+            </td>
+          </tr>
           } @empty {
-            <tr>
-              <td colspan="8" class="p-8 text-center text-olive-500 font-medium bg-white">
-                <i class="fas fa-folder-open mr-2"></i> No hay transacciones con este criterio.
-              </td>
-            </tr>
+          <tr>
+            <td colspan="8" class="p-8 text-center text-olive-500 font-medium bg-white">
+              <i class="fas fa-folder-open mr-2"></i> No hay transacciones con este criterio.
+            </td>
+          </tr>
           }
         </tbody>
       </table>
@@ -110,58 +177,58 @@
 
     <div class="block lg:hidden overflow-y-auto max-h-145 divide-y divide-olive-100 custom-scroll">
       @for (venta of ventasFiltradas(); track venta.id) {
-        <div class="p-4 hover:bg-olive-50/20 transition-colors bg-white">
-          <div class="flex items-center justify-between mb-2">
-            <span class="font-mono text-xs font-bold text-olive-600">Folio: #{{ venta.folio || 'N/A' }}</span>
+      <div class="p-4 hover:bg-olive-50/20 transition-colors bg-white">
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-mono text-xs font-bold text-olive-600">Folio: #{{ venta.folio || 'N/A' }}</span>
 
-            <div class="relative inline-block w-28">
-              <select [value]="venta.estado_pago"
-                      (change)="cambiarEstadoDirecto(venta.id, $event)"
-                      [disabled]="obtenerEstadoTemporal(venta.fecha_llegada, venta.fecha_salida) === 'Vencida'"
-                      [class]="venta.estado_pago === 'confirmada' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+          <div class="relative inline-block w-28">
+            <select [value]="venta.estado_pago" (change)="cambiarEstadoDirecto(venta.id, $event)"
+              [disabled]="obtenerEstadoTemporal(venta.fecha_llegada, venta.fecha_salida) === 'Vencida'" [class]="venta.estado_pago === 'confirmada' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
                                venta.estado_pago === 'pendiente' ? 'bg-amber-50 text-amber-700 border-amber-200' :
                                'bg-rose-50 text-rose-700 border-rose-200'"
-                      class="appearance-none w-full px-2.5 py-1 rounded-full text-[9px] font-bold uppercase border text-center focus:outline-none cursor-pointer font-sans pr-5">
-                <option value="confirmada" class="bg-white text-emerald-700 font-bold">Pagado</option>
-                <option value="pendiente" class="bg-white text-amber-700 font-bold">Pendiente</option>
-                <option value="cancelada" class="bg-white text-rose-700 font-bold">Cancelado</option>
-              </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 opacity-60">
-                <i class="fas fa-chevron-down text-[7px]"></i>
-              </div>
+              class="appearance-none w-full px-2.5 py-1 rounded-full text-[9px] font-bold uppercase border text-center focus:outline-none cursor-pointer font-sans pr-5">
+              <option value="confirmada" class="bg-white text-emerald-700 font-bold">Pagado</option>
+              <option value="pendiente" class="bg-white text-amber-700 font-bold">Pendiente</option>
+              <option value="cancelada" class="bg-white text-rose-700 font-bold">Cancelado</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 opacity-60">
+              <i class="fas fa-chevron-down text-[7px]"></i>
             </div>
           </div>
-
-          <h4 class="text-sm font-bold text-olive-900 mb-0.5">{{ venta.cabin_nombre }}</h4>
-
-          <div class="flex items-center justify-between mb-2">
-            <p class="text-xs text-olive-600 font-medium">Cliente: {{ venta.nombre_completo }}</p>
-            @let tempStatusMovil = obtenerEstadoTemporal(venta.fecha_llegada, venta.fecha_salida);
-            <span [class]="tempStatusMovil === 'Vencida' ? 'text-gray-400' : tempStatusMovil === 'En Curso' ? 'text-blue-600 font-bold' : 'text-purple-600'"
-                  class="text-[9px] font-bold uppercase tracking-wider">
-              • {{ tempStatusMovil }}
-            </span>
-          </div>
-
-          <p class="text-xs font-medium text-olive-700 mb-3 flex items-center gap-1.5">
-            <i class="far fa-calendar-alt text-[#D18B73]"></i>
-            <span>{{ venta.fecha_llegada | date:'dd MMM' }}</span>
-            <span class="text-olive-400 font-normal">al</span>
-            <span>{{ venta.fecha_salida | date:'dd MMM, yyyy' }}</span>
-            <span class="text-[10px] bg-olive-100 border border-olive-200 text-olive-600 px-1.5 py-0.5 rounded ml-auto font-bold">
-              {{ venta.noches }} Noches
-            </span>
-          </p>
-
-          <div class="border-t border-dashed border-olive-200 pt-2 mt-2">
-            <span class="text-[10px] text-gray-400 block uppercase font-medium tracking-wider">Total cobrado</span>
-            <span class="text-base font-black text-olive-900">${{ venta.monto_total | number:'1.2-2' }}</span>
-          </div>
         </div>
+
+        <h4 class="text-sm font-bold text-olive-900 mb-0.5">{{ venta.cabin_nombre }}</h4>
+
+        <div class="flex items-center justify-between mb-2">
+          <p class="text-xs text-olive-600 font-medium">Cliente: {{ venta.nombre_completo }}</p>
+          @let tempStatusMovil = obtenerEstadoTemporal(venta.fecha_llegada, venta.fecha_salida);
+          <span
+            [class]="tempStatusMovil === 'Vencida' ? 'text-gray-400' : tempStatusMovil === 'En Curso' ? 'text-blue-600 font-bold' : 'text-purple-600'"
+            class="text-[9px] font-bold uppercase tracking-wider">
+            • {{ tempStatusMovil }}
+          </span>
+        </div>
+
+        <p class="text-xs font-medium text-olive-700 mb-3 flex items-center gap-1.5">
+          <i class="far fa-calendar-alt text-[#D18B73]"></i>
+          <span>{{ venta.fecha_llegada | date:'dd MMM' }}</span>
+          <span class="text-olive-400 font-normal">al</span>
+          <span>{{ venta.fecha_salida | date:'dd MMM, yyyy' }}</span>
+          <span
+            class="text-[10px] bg-olive-100 border border-olive-200 text-olive-600 px-1.5 py-0.5 rounded ml-auto font-bold">
+            {{ venta.noches }} Noches
+          </span>
+        </p>
+
+        <div class="border-t border-dashed border-olive-200 pt-2 mt-2">
+          <span class="text-[10px] text-gray-400 block uppercase font-medium tracking-wider">Total cobrado</span>
+          <span class="text-base font-black text-olive-900">${{ venta.monto_total | number:'1.2-2' }}</span>
+        </div>
+      </div>
       } @empty {
-        <div class="p-8 text-center text-olive-500 font-medium bg-white">
-          <i class="fas fa-folder-open mr-2"></i> No hay transacciones con este criterio.
-        </div>
+      <div class="p-8 text-center text-olive-500 font-medium bg-white">
+        <i class="fas fa-folder-open mr-2"></i> No hay transacciones con este criterio.
+      </div>
       }
     </div>
 

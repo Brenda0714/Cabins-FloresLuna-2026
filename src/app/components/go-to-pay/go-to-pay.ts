@@ -215,4 +215,35 @@ export class GoToPay implements OnInit, OnDestroy {
     }
   }
 
+
+
+  mostrarModalTransferencia = false;
+  telefonoAdmin = 'https://wa.me/message/EHTO5WIU5EMVI1'; // Teléfono para WhatsApp
+
+  obtenerLinkWhatsApp(): string {
+    const cabin = this.data()?.cabin || 'la cabaña';
+    const monto = this.data()?.montoTotal || 0;
+    const mensaje = encodeURIComponent(
+      `¡Hola! Quisiera realizar el pago por transferencia para la Cabaña ${cabin} por el total de $${monto} MXN.`
+    );
+    return `https://wa.me/message/EHTO5WIU5EMVI1?text=${mensaje}`;
+  }
+
+
+  // En la clase de tu componente:
+  clabeCopiada = signal<boolean>(false);
+
+  async copiarClabe(clabe: string) {
+    try {
+      await navigator.clipboard.writeText(clabe);
+      this.clabeCopiada.set(true);
+
+      setTimeout(() => {
+        this.clabeCopiada.set(false);
+      }, 2000);
+    } catch (err) {
+      console.error('Error al copiar la CLABE:', err);
+    }
+  }
+
 }

@@ -45,22 +45,51 @@
             <span class="g-text text-olive-600 text-base">Precio por noche:</span>
             <span class="g-text font-semibold text-olive-900 text-base">${{ data().precioUnitario | number }} MX</span>
           </div>
-          <hr class="text-olive-300">
+          <!-- <hr class="text-olive-300"> -->
+          <div class="g-text border-t border-olive-200 pt-3 flex justify-between items-center">
+            <span class="g-text font-bold text-base text-green-700">Descuento 50%</span>
+            <span class="g-text font-bold text-base text-green-600 ">${{ data().montoTotal | number }} MX</span>
+          </div>
           <div class="g-text border-t border-olive-200 pt-3 flex justify-between items-center">
             <span class="g-text font-bold text-base text-olive-900">Total a pagar:</span>
             <span class="g-text font-bold text-xl text-[#ff8B64] ">${{ data().montoTotal | number }} MX</span>
           </div>
         </div>
 
-        <div class="pt-10">
+        <div class="pt-4">
           <h4
             class="g-text text-[#ff8B64] w-full font-extrabold pb-3 uppercase tracking-widest text-base text-center border-b border-dashed border-olive-200 mb-5">
             Proceder a pagar
           </h4>
 
-          <div class="p-1rounded-xl  mt-4">
-            <div #paymentRef class="w-full min-h-37.5 bg-transparent rounded-lg"></div>
+          <div class="flex flex-col w-full space-y-3">
+
+            <!-- Opción 1: PayPal (Arriba) -->
+            <div class="w-full relative min-h-12">
+              <div #paymentRef class="w-full bg-transparent z-10 relative"></div>
+            </div>
+            <br>
+
+            <!-- Separador "O" bien centrado -->
+            <div class="relative flex items-center justify-center my-3 w-full">
+              <div class="border-t border-olive-200 w-full"></div>
+              <span class="bg-olive-50 px-3 texT-lg text-olive-500 font-bold uppercase tracking-wider absolute">
+                O
+              </span>
+            </div>
+            <br>
+            <!-- Opción 2: Transferencia / SPEI (Abajo) -->
+            <button (click)="mostrarModalTransferencia = true" type="button"
+              class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl transition-all duration-200 flex items-center justify-center gap-2.5 shadow-md cursor-pointer border border-emerald-500 hover:shadow-lg">
+              <svg class="w-5 h-5 fill-current shrink-0" viewBox="0 0 24 24">
+                <path
+                  d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zm0 4v10h16V8H4zm2 3h12v2H6v-2z" />
+              </svg>
+              <span class="text-sm tracking-wide">Pagar por Transferencia / SPEI</span>
+            </button>
+
           </div>
+
         </div>
 
       </div>
@@ -71,12 +100,118 @@
 
   }
 
+  <!-- Pop-up Modal para pago por Transferencia (SPEI) -->
+  @if (mostrarModalTransferencia) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+    <div
+      class="bg-white w-full max-w-sm rounded-2xl p-6 shadow-2xl border border-olive-200 text-center relative overflow-hidden">
+
+      <!-- Botón para cerrar modal -->
+      <button (click)="mostrarModalTransferencia = false" type="button"
+        class="absolute top-3.5 right-3.5 w-8 h-8 flex items-center justify-center rounded-full bg-olive-100 hover:bg-olive-200 text-olive-500 hover:text-olive-800 transition-colors cursor-pointer">
+        ✕
+      </button>
+
+      <!-- Icono Ilustrativo -->
+      <div
+        class="mx-auto flex items-center justify-center h-12 w-12 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 mb-3 shadow-xs">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+        </svg>
+      </div>
+
+      <!-- Encabezado -->
+      <h3 class="g-text text-lg font-bold text-olive-900 mb-1 tracking-tight">
+        Pago por Transferencia
+      </h3>
+      <p class="g-text text-xs text-olive-600 mb-4 px-2 leading-relaxed">
+        Usa los siguientes datos bancarios para realizar tu depósito o SPEI.
+      </p>
+
+      <!-- Tarjeta Estilo Ticket Bancario -->
+      <div
+        class="g-text bg-olive-50/80 border border-dashed border-olive-300 rounded-xl p-3.5 text-left mb-4 relative space-y-2.5">
+
+        <div>
+          <span class="block text-[10px] uppercase font-bold tracking-wider text-olive-400">Beneficiario</span>
+          <span class="block text-xs font-bold text-olive-800">INMOBILIARIA KEIGI</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 pt-1 border-t border-olive-200/60">
+          <div>
+            <span class="block text-[10px] uppercase font-bold tracking-wider text-olive-400">Banco</span>
+            <span class="block text-xs font-semibold text-olive-700">BANREGIO</span>
+          </div>
+          <div>
+            <span class="block text-[10px] uppercase font-bold tracking-wider text-olive-400">Cuenta</span>
+            <span class="block text-xs font-semibold text-olive-700">01472455001-1</span>
+          </div>
+        </div>
+
+        <!-- Bloque CLABE con Acción de Copiar -->
+        <div
+          class="pt-2 border-t border-olive-200/60 flex items-center justify-between bg-white p-2 rounded-lg border border-olive-200/80 shadow-2xs">
+          <div>
+            <span class="g-text block text-[9px] uppercase font-extrabold tracking-wider text-emerald-700">CLABE
+              Interbancaria</span>
+            <span
+              class="g-text block text-xs font-mono font-bold text-olive-900 tracking-tight">058580147245500114</span>
+          </div>
+          <button (click)="copiarClabe('058580147245500114')" type="button"
+            [class]="this.clabeCopiada()
+                ? 'bg-emerald-500 text-white border-emerald-600 scale-105 shadow-xs text-[11px] font-bold py-1.5 px-2.5 rounded-md transition-all duration-200 flex items-center gap-1 border cursor-pointer'
+                : 'bg-olive-100 hover:bg-olive-200 text-olive-700 border-olive-200 text-[11px] font-bold py-1.5 px-2.5 rounded-md transition-all duration-200 flex items-center gap-1 border cursor-pointer'">
+
+            @if (this.clabeCopiada()) {
+            <!-- Ícono de Palomita / Check al copiar -->
+            <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+            </svg>
+            } @else {
+            <!-- Ícono de Copiar original -->
+            <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z">
+              </path>
+            </svg>
+            }
+
+            {{ this.clabeCopiada() ? '¡Copiada!' : 'Copiar' }}
+          </button>
+        </div>
+
+      </div>
+
+      <p class="g-text text-[11px] text-olive-500 leading-snug mb-4 px-1">
+        Envíanos tu comprobante por WhatsApp para confirmar y asegurar tus fechas inmediatamente.
+      </p>
+
+      <!-- Botón WhatsApp -->
+      <a [href]="obtenerLinkWhatsApp()" target="_blank"
+        class="g-text w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl shadow-md transition-all duration-200 flex items-center justify-center gap-2 mb-2.5">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+          <path
+            d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z" />
+        </svg>
+        Enviar comprobante por WhatsApp
+      </a>
+
+      <button (click)="mostrarModalTransferencia = false" type="button"
+        class="g-text text-xs text-olive-400 hover:text-olive-600 underline font-semibold transition-colors cursor-pointer">
+        Volver al resumen
+      </button>
+
+    </div>
+  </div>
+  }
+
   @if (showAlert2) {
   <div
     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/65 backdrop-blur-md transition-all duration-300">
 
     <div
-      class="bg-white w-full max-w-sm rounded-2xl p-6 shadow-2xl border border-stone-100 text-center animate-fade-center transform scale-100 transition-transform">
+      class="bg-white w-full max-w-sm rounded-2xl p-6 shadow-2xl border border-olive-100 text-center animate-fade-center transform scale-100 transition-transform">
 
       <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full mb-4">
         @if (alertType === 'success') {
@@ -96,18 +231,18 @@
         }
       </div>
 
-      <h3 class="text-xl font-bold text-stone-850 mb-2 tracking-wide">
+      <h3 class="text-xl font-bold text-olive-850 mb-2 tracking-wide">
         {{ alertTitle }}
       </h3>
 
-      <p class="text-sm text-stone-600 leading-relaxed mb-6 px-2">
+      <p class="text-sm text-olive-600 leading-relaxed mb-6 px-2">
         {{ alertMessage2 }}
       </p>
 
       <button (click)="manejarClickAlerta()"
         [class]="alertType === 'success'
             ? 'w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition-colors duration-250 cursor-pointer'
-            : 'w-full py-3 px-4 bg-stone-800 hover:bg-stone-900 text-white font-bold rounded-xl shadow-md transition-colors duration-250 cursor-pointer'">
+            : 'w-full py-3 px-4 bg-olive-800 hover:bg-olive-900 text-white font-bold rounded-xl shadow-md transition-colors duration-250 cursor-pointer'">
         {{ alertType === 'success' ? 'Entendido' : 'Intentar de nuevo' }}
       </button>
 

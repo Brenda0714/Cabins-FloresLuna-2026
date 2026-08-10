@@ -11,16 +11,13 @@ import { HttpClient } from '@angular/common/http';
 })
 export class MySales implements OnInit {
   private http = inject(HttpClient);
-  private apiUrl = 'https://floresdelaluna.mx/api/ventas-admin.php'; // Backend
+  private apiUrl = 'https://floresdelaluna.mx/api/ventas-admin.php';
 
-  // 🚦 Signals Principales de Control
   public ventas = signal<any[]>([]);
   public filtroActual = signal<'todos' | 'confirmada' | 'pendiente' | 'cancelada'>('todos');
-
-  // 🔘 Nuevo Signal para rastrear qué Dropdown está abierto en la vista (guarda el ID)
   public dropdownAbierto = signal<number | string | null>(null);
 
-  // ⚡ Computed Signal: Filtrado en tiempo real
+  // ⚡ Computed Signal: Corregido a v.estado_pago
   public ventasFiltradas = computed(() => {
     const listaVentas = this.ventas();
     const filtro = this.filtroActual();
@@ -28,13 +25,12 @@ export class MySales implements OnInit {
     if (filtro === 'todos') {
       return listaVentas;
     }
-    return listaVentas.filter(v => v.estado === filtro);
+    return listaVentas.filter(v => v.estado_pago === filtro);
   });
 
-  // 📊 Computed Signals para las Tarjetas Métricas
   public totalIngresos = computed(() => {
     return this.ventas()
-      .filter(v => v.estado_pago === 'confirmada') // Suma solo las confirmadas
+      .filter(v => v.estado_pago === 'confirmada')
       .reduce((sum, v) => sum + Number(v.monto_total || 0), 0);
   });
 
@@ -45,7 +41,6 @@ export class MySales implements OnInit {
   });
 
   constructor() {
-    // Escucha clicks globales en la ventana para cerrar el dropdown si el usuario hace click afuera
     if (typeof window !== 'undefined') {
       window.addEventListener('click', () => {
         if (this.dropdownAbierto()) {
@@ -59,11 +54,8 @@ export class MySales implements OnInit {
     this.cargarVentas();
   }
 
-  /**
-   * 🗺️ Abre o cierra el menú desplegable de una fila específica sin interferir con los eventos globales
-   */
   toggleDropdown(ventaId: number | string, event: Event): void {
-    event.stopPropagation(); // Evita que el evento 'click' suba a la ventana y lo cierre de golpe
+    event.stopPropagation();
     if (this.dropdownAbierto() === ventaId) {
       this.dropdownAbierto.set(null);
     } else {
@@ -71,12 +63,9 @@ export class MySales implements OnInit {
     }
   }
 
-  /**
-   * ⏳ Calcula reactivamente en el cliente si la estancia ya pasó, está activa o es futura
-   */
   obtenerEstadoTemporal(fechaLlegada: string | Date, fechaSalida: string | Date): string {
     const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0); // Normalizamos horas para comparar solo días
+    hoy.setHours(0, 0, 0, 0);
 
     const llegada = new Date(fechaLlegada);
     llegada.setHours(0, 0, 0, 0);
@@ -93,27 +82,20 @@ export class MySales implements OnInit {
     }
   }
 
-  /**
-   * 🔄 Carga los datos reales desde MySQL / Express
-   */
   cargarVentas(): void {
-this.http.get<any[]>(this.apiUrl).subscribe({
+    this.http.get<any[]>(this.apiUrl).subscribe({
       next: (data) => {
-        // Mapeamos los datos asegurando que lea 'estado' de la base de datos
         const datosMapeados = data.map(v => {
-          // Tomamos 'v.estado' (de tu MySQL) o 'v.estado_pago' si viniera de otra petición
           const campoEstado = v.estado || v.estado_pago;
           const estadoLimpio = campoEstado ? campoEstado.toLowerCase() : 'pendiente';
 
           return {
             ...v,
-            // Guardamos el estado homologado en 'estado_pago' que es el que usa tu HTML
             estado_pago: estadoLimpio === 'completado' ? 'confirmada' : estadoLimpio
           };
         });
 
         this.ventas.set(datosMapeados);
-        console.log('Datos cargados y homologados:', datosMapeados); // Para verificar en consola
       },
       error: (err) => {
         console.error('❌ Error al cargar ventas del servidor:', err);
@@ -121,65 +103,92 @@ this.http.get<any[]>(this.apiUrl).subscribe({
     });
   }
 
-  /**
-   * 🧪 Manejador del Select de filtrado en el HTML
-   */
   cambiarFiltro(evento: Event): void {
     const elemento = evento.target as HTMLSelectElement;
     this.filtroActual.set(elemento.value as any);
   }
 
-  /**
-   * 🎯 Ejecuta la acción directa elegida desde el nuevo Dropdown del HTML
-   */
   cambiarEstadoDirecto(reservaId: number, evento: any): void {
-
     const elemento = evento.target as HTMLSelectElement;
     if (!elemento) return;
 
-
-
-  const ventaActual = this.ventas().find(v => v.id === reservaId);
+    const ventaActual = this.ventas().find(v => (v.reserva_id || v.id) === reservaId);
     if (!ventaActual) return;
 
-    // 🛡️ CANDADO DE SEGURIDAD INTERNO
     if (this.obtenerEstadoTemporal(ventaActual.fecha_llegada, ventaActual.fecha_salida) === 'vencida') {
-      console.warn(`⛔ No puedes modificar la reserva #${reservaId} porque su fecha ya venció.`);
-      return; // Frena la ejecución y evita mandar la petición PUT al backend
-    }
-
-  const nuevoEstado = elemento.value as 'pendiente' | 'confirmada' | 'cancelada';
-
-  if (ventaActual.estado_pago === nuevoEstado) {
       return;
     }
 
-    // Ejecutamos tu lógica existente de persistencia en la Base de Datos
+    const nuevoEstado = elemento.value as 'pendiente' | 'confirmada' | 'cancelada';
+    if (ventaActual.estado_pago === nuevoEstado) return;
+
     this.actualizarEstadoPago(reservaId, nuevoEstado);
   }
 
-  /**
-   * 🛠️ Persiste el cambio de estado de manera limpia directamente en la Base de Datos
-   */
   actualizarEstadoPago(reservaId: number, nuevoEstado: 'pendiente' | 'confirmada' | 'cancelada'): void {
-
-    // 🎯 Enviamos SOLO el ID y el nuevo estado al Backend
     this.http.post(this.apiUrl, {
       reservaId,
       nuevoEstado
     }).subscribe({
       next: () => {
-        // Actualizamos de forma reactiva el Signal modificando EXCLUSIVAMENTE el estado_pago
         this.ventas.update(lista =>
-          lista.map(v => v.id === reservaId ? {
+          lista.map(v => (v.reserva_id || v.id) === reservaId ? {
             ...v,
-            estado_pago: nuevoEstado // 👈 Solo cambia esto, los folios y métodos no se tocan
+            estado_pago: nuevoEstado
           } : v)
         );
-        console.log(`✨ Estado de reserva #${reservaId} actualizado con éxito a: ${nuevoEstado}`);
       },
       error: (err) => {
         console.error('❌ Error al actualizar el estado de pago:', err);
+      }
+    });
+  }
+
+  actualizarMonto1(venta: any, evento: Event): void {
+    if (venta.metodo_pago?.toLowerCase() !== 'transferencia') return;
+
+    const input = evento.target as HTMLInputElement;
+    const valor = input.value.trim();
+    venta.monto1 = valor !== '' ? parseFloat(valor) : null;
+    this.guardarMontos(venta);
+  }
+
+  actualizarMonto2(venta: any, evento: Event): void {
+    if (venta.metodo_pago?.toLowerCase() !== 'transferencia') return;
+
+    const input = evento.target as HTMLInputElement;
+    const valor = input.value.trim();
+    venta.monto2 = valor !== '' ? parseFloat(valor) : null;
+    this.guardarMontos(venta);
+  }
+
+  guardarMontos(venta: any): void {
+    const idReserva = venta.reserva_id || venta.id;
+
+    const body = {
+      reservaId: idReserva,
+      monto1: venta.monto1 !== null && venta.monto1 !== undefined ? Number(venta.monto1) : null,
+      monto2: venta.monto2 !== null && venta.monto2 !== undefined ? Number(venta.monto2) : null
+    };
+
+    this.http.post<any>(this.apiUrl, body).subscribe({
+      next: (res) => {
+        this.ventas.update(lista =>
+          lista.map(v => {
+            if ((v.reserva_id || v.id) === idReserva) {
+              return {
+                ...v,
+                estado_pago: res.nuevoEstado,
+                fecha_pago1: res.fecha_pago1,
+                fecha_pago2: res.fecha_pago2
+              };
+            }
+            return v;
+          })
+        );
+      },
+      error: (err) => {
+        console.error('❌ Error al guardar en la base de datos:', err);
       }
     });
   }

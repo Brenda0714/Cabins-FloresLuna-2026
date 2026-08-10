@@ -21,7 +21,7 @@ $conn->query($updateQuery);
 // 5. Consulta de fechas ocupadas
 $sql = "SELECT fecha_llegada, fecha_salida
         FROM reservas
-        WHERE cabin_nombre = ? AND estado = 'confirmada'";
+        WHERE cabin_nombre = ? AND estado IN ('confirmada', 'pendiente')";
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $cabin_nombre);
