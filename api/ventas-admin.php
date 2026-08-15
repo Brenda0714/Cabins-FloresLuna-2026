@@ -21,6 +21,7 @@ $query = "SELECT
                 r.id,
                 r.usuario_id,
                 u.nombre_completo,
+                u.telefono,
                 r.cabin_nombre,
                 DATE_FORMAT(r.fecha_llegada, '%Y-%m-%d') AS fecha_llegada,
                 DATE_FORMAT(r.fecha_salida, '%Y-%m-%d') AS fecha_salida,

@@ -70,8 +70,9 @@
       <div>
         <div class="flex justify-between items-center mb-2">
           <label class="g-text block text-xs font-medium text-olive-700 uppercase tracking-wider">Contraseña</label>
-          <a class="g-text text-xs text-olive-400 hover:text-[#D18B73] transition-colors cursor-pointer">¿La
-            olvidaste?</a>
+          <a (click)="abrirModalPassword()" class="g-text text-xs text-olive-400 hover:text-[#D18B73] transition-colors cursor-pointer">¿La
+            olvidaste?
+          </a>
         </div>
         <input type="password" formControlName="contrasena" placeholder="••••••••" autocomplete="new-contra"
           style="font-size: 1rem; letter-spacing: 0.3em;"
@@ -94,3 +95,81 @@
 
   </div>
 </div>
+
+
+<!-- POP-UP / MODAL PARA ACTUALIZAR CONTRASEÑA DIRECTO -->
+@if (mostrarModalPassword) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+    <div class="bg-white rounded-2xl shadow-xl border border-olive-100 max-w-md w-full p-6 relative g-text">
+
+      <!-- Botón Cerrar (X) -->
+      <button type="button" (click)="cerrarModalPassword()" class="absolute top-4 right-4 text-olive-400 hover:text-olive-700 transition-colors cursor-pointer">
+        <i class="fas fa-times text-lg"></i>
+      </button>
+
+      <div class="text-center mb-6">
+        <div class="w-12 h-12 bg-olive-50 rounded-full flex items-center justify-center mx-auto mb-3 text-[#D18B73]">
+          <i class="fas fa-lock text-xl"></i>
+        </div>
+        <h3 class="g-text text-xl font-bold text-olive-900 uppercase tracking-wide">Actualizar Contraseña</h3>
+        <p class="g-text text-xs text-olive-600 mt-1">Ingresa tu usuario o correo y la nueva contraseña que deseas asignar.</p>
+      </div>
+
+      <!-- Reemplazamos <form> por un <div> estático -->
+      <div class="space-y-4">
+
+        <!-- Usuario o Correo -->
+        <div>
+          <label class="block text-xs font-medium text-olive-700 uppercase tracking-wider mb-1">Correo o Usuario</label>
+          <input
+            #usuarioInput
+            type="text"
+            placeholder="ejemplo@correo.com"
+            (keyup.enter)="actualizarPasswordDirecto(usuarioInput.value, passwordInput.value)"
+            class="g-text w-full px-4 py-2.5 text-sm rounded-xl border border-olive-200 text-olive-900 focus:outline-none focus:border-[#D18B73] bg-stone-50/50">
+        </div>
+
+        <!-- Nueva Contraseña -->
+        <div>
+          <label class="block text-xs font-medium text-olive-700 uppercase tracking-wider mb-1">Nueva Contraseña</label>
+          <div class="relative">
+            <input
+              #passwordInput
+              [type]="mostrarPasswordInput ? 'text' : 'password'"
+              placeholder="••••••••"
+              style="font-size: 1rem; letter-spacing: 0.3em;"
+              (keyup.enter)="actualizarPasswordDirecto(usuarioInput.value, passwordInput.value)"
+              class="g-text w-full px-4 py-2.5 text-sm rounded-xl border border-olive-200 text-olive-900 focus:outline-none focus:border-[#D18B73] bg-stone-50/50 pr-10">
+
+            <button
+              type="button"
+              (click)="toggleMostrarPassword()"
+              class="absolute inset-y-0 right-0 pr-3 flex items-center text-olive-400 hover:text-olive-600 cursor-pointer">
+              <i [class]="mostrarPasswordInput ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="flex gap-3 pt-2">
+          <button
+            type="button"
+            (click)="cerrarModalPassword()"
+            class="g-text w-1/2 py-2.5 px-4 rounded-xl border border-olive-200 text-xs font-bold text-olive-700 hover:bg-olive-50 transition-colors uppercase cursor-pointer">
+            Cancelar
+          </button>
+
+          <!-- Disparo mediante el click nativo -->
+          <button
+            type="button"
+            (click)="actualizarPasswordDirecto(usuarioInput.value, passwordInput.value)"
+            class="g-text w-1/2 py-2.5 px-4 rounded-xl bg-[#D18B73] hover:bg-[#f3997b] text-white text-xs font-bold transition-colors uppercase shadow-sm cursor-pointer">
+            Guardar
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+}

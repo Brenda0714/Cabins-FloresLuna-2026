@@ -20,6 +20,22 @@
       <a routerLink="/gallery" routerLinkActive="link-activo" (click)="onClose()" class="side-link">Galería</a>
       <a routerLink="/reservations" routerLinkActive="link-activo" (click)="onClose()"
         class="side-link">Reservaciones</a>
+
+            @if (isLoggedIn) {
+      @if (userRol === 'admin' || userRol === 'administrador') {
+      <a [routerLink]="['/my-sales']" routerLinkActive="!text-[#ff8B64]"
+        class="nav-link font-semibold text-olive-600 animate-fade-down">
+        Mis Ventas
+      </a>
+      }
+      @else {
+      <a [routerLink]="['/my-purchases']" routerLinkActive="!text-[#ff8B64]"
+        class="nav-link font-semibold text-olive-600 animate-fade-down">
+        Mis Compras
+      </a>
+      }
+
+      }
       <a routerLink="/how-to-get" routerLinkActive="link-activo" (click)="onClose()" class="side-link">Cómo llegar</a>
       <a routerLink="/cancellations" routerLinkActive="link-activo" (click)="onClose()" class="side-link">Políticas y
         Cancelaciones</a>

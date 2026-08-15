@@ -82,5 +82,57 @@ export class Login {
       this.triggerAlert('Por favor, ingresa tus datos correctamente.', 'error');
     }
   }
+// Variables del modal
+  mostrarModalPassword = false;
+  usuarioRecuperacion = '';
+  nuevaPassword = '';
+  mostrarPasswordInput = false;
+abrirModalPassword() {
+    this.mostrarModalPassword = true;
+  }
+
+  cerrarModalPassword() {
+    this.mostrarModalPassword = false;
+    this.usuarioRecuperacion = '';
+    this.nuevaPassword = '';
+    this.mostrarPasswordInput = false;
+  }
+
+  toggleMostrarPassword() {
+    this.mostrarPasswordInput = !this.mostrarPasswordInput;
+  }
+
+actualizarPasswordDirecto(usuario: string, nuevaPassword: string) {
+  if (!usuario || !nuevaPassword) {
+      this.triggerAlert('Por favor, completa todos los campos del formulario.', 'error');
+      return;
+  }
+
+  this.authService.actualizarPassword(usuario, nuevaPassword).subscribe({
+    next: (res: any) => {
+        // Cierra el modal primero para que la alerta flotante sea bien visible
+        this.cerrarModalPassword();
+
+        // Muestra el mensaje de éxito usando tu alerta bonita
+        const mensajeExito = res.message || 'Contraseña actualizada exitosamente.';
+        this.triggerAlert(mensajeExito, 'success');
+            setTimeout(() => {
+
+            }, 2000);
+    },
+    error: (err: any) => {
+      console.error('Detalle del error HTTP:', err);
+// Extrae el mensaje dinámico según el tipo de respuesta
+      const mensajeError =
+        err.error?.message ||
+        (typeof err.error === 'string' ? err.error : null) ||
+        'Error al conectar con el servidor o actualizar la contraseña.';
+        this.triggerAlert(mensajeError, 'error');
+            setTimeout(() => {
+
+            }, 2000);
+    }
+  });
+}
 
 }

@@ -1,4 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -6,8 +8,9 @@ import { Injectable } from '@angular/core';
 export class AuthService {
   private loggedInKey = 'isLoggedIn';
   private userKey = 'usuario';
+  private apiUrl = 'https://floresdelaluna.mx/api/olvide-contraseña.php';
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   // Revisa si el usuario tiene sesión guardada en el navegador
   isLoggedIn(): boolean {
@@ -34,5 +37,12 @@ export class AuthService {
     const userJson = sessionStorage.getItem(this.userKey);
     return userJson ? JSON.parse(userJson) : null;
   }
+
+  actualizarPassword(usuario: string, nuevaPassword: string): Observable<any> {
+  return this.http.post<any>('https://floresdelaluna.mx/api/olvide-password.php', {
+    usuario: usuario,
+    nuevaPassword: nuevaPassword
+  });
+}
 
 }
