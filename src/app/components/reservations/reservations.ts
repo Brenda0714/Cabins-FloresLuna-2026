@@ -6,13 +6,14 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ReservaTransferService } from '../../services/reserva-transfer.service'; // Ajusta la ruta
 import { CabinCalendarComponent } from '../cabin-calendar/cabin-calendar.component';
-import { PromoService } from '../../services/promo.service'; // Ajusta la ruta
+import { PromoService } from '../../services/promo.service';
+import { TermsConditions } from '../terms-conditions/terms-conditions'; // Ajusta la ruta
 
 
 @Component({
   selector: 'app-reservations',
   standalone: true,
-  imports: [DecimalPipe, CabinCalendarComponent],
+  imports: [DecimalPipe, CabinCalendarComponent, TermsConditions],
   templateUrl: './reservations.html',
   styleUrl: './reservations.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -144,6 +145,9 @@ export class Reservations implements AfterViewInit {
   fechaFinForm = signal<Date | null>(null);
   formTouched = signal(false);
   private transferService = inject(ReservaTransferService);
+
+  showTerminosModal = signal(false);
+  datosReservaPendiente = signal<any>(null);
 
   iniciarPago(nombre: string, email: string, tel: string, llegada: string, salida: string, cabin: string) {
 
@@ -319,11 +323,13 @@ export class Reservations implements AfterViewInit {
             porcentajePromo: this.promoService.promoState().descuento // 👈 Porcentaje dinámico
           });
 
-          this.router.navigate(['/go-to-pay']);
+          // Guardamos datos temporalmente y abrimos el modal
 
-          // 3. Mostramos en consola para validar
-          console.log('Datos de la reservación listos para procesar:', this.reservaData());
+          this.showTerminosModal.set(true);
+          document.documentElement.style.overflow = 'hidden';
+          document.body.style.overflow = 'hidden';
           this.cdr.detectChanges();
+
         }
 
       },
@@ -334,6 +340,43 @@ export class Reservations implements AfterViewInit {
 
       }
     });
+  }
+
+  aceptarTerminosYProceder() {
+    document.documentElement.style.overflow = '';
+  document.body.style.overflow = '';
+// 1. Cerramos el modal
+  this.showTerminosModal.set(false);
+
+  // 2. Navegamos directo a la pasarela (los datos ya están en transferService)
+  this.router.navigate(['/go-to-pay']);
+  }
+
+
+
+
+  // Estado para saber si llegó al final del contrato
+  terminosLeidos = signal<boolean>(false);
+
+  onScrollTerminos(event: Event) {
+    // Si ya los leyó, no necesitamos seguir calculando
+    if (this.terminosLeidos()) return;
+
+    const elemento = event.target as HTMLElement;
+
+    // Margen de tolerancia de 15px por decimales o zoom de pantalla
+    const llegoAlFinal = elemento.scrollTop + elemento.clientHeight >= elemento.scrollHeight - 15;
+
+    if (llegoAlFinal) {
+      this.terminosLeidos.set(true);
+    }
+  }
+
+  cancelarTerminos() {
+    document.documentElement.style.overflow = '';
+  document.body.style.overflow = '';
+    this.showTerminosModal.set(false);
+    this.terminosLeidos.set(false); // Resetea el scroll
   }
 
   crearReservaManualAdmin(datos: any): void {
