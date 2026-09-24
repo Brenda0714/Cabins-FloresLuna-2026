@@ -46,7 +46,7 @@ export class Reservations implements AfterViewInit {
   Cabins = signal([
     {
       id: 1, img: 'assets/img/GALERIA/01_Orquidea_pareja.png', title: 'Orquídea', subtitle: 'Cabaña para Parejas (2 Personas)',
-      precio: '2,900', precio2: '3,500',
+      precio: '3,500', precio2: '3,500',
       text: 'Cama matrimonial, Cajonera, Buró y Espejo',
       amenities: [
         'Baño completo',
@@ -62,7 +62,7 @@ export class Reservations implements AfterViewInit {
     },
     {
       id: 2, img: 'assets/img/GALERIA/02_Girasol_familiar.png', title: 'Girasol', subtitle: 'Cabaña Familiar (6 Personas)',
-      precio: '3,500', precio2: '4,200',
+      precio: '3,500', precio2: '3,500',
       text: `Habitación 1: Cama matrimonial, Tv, Burós y Espejo.
              Habitación 2: Dos literas con colchón individual, Tv y Cajonera`,
       amenities: [
@@ -79,7 +79,7 @@ export class Reservations implements AfterViewInit {
     },
     {
       id: 3, img: 'assets/img/GALERIA/03_Tulipan_familiar.png', title: 'Tulipán', subtitle: 'Cabaña Familiar (6 Personas)',
-      precio: '3,500', precio2: '4,200',
+      precio: '3,500', precio2: '3,500',
       text: `Habitación 1: Cama matrimonial, Tv , Burós y Espejo.
              Habitación 2: Dos literas con colchón individual , Tv y Cajonera.`,
       amenities: [
@@ -95,10 +95,19 @@ export class Reservations implements AfterViewInit {
       fechaFin: null as Date | null
     },
     {
-      id: 4, img: 'assets/img/GALERIA/tu-imagen-7.jpg', title: 'Dalia House', subtitle: 'Cabaña Grupal (12 Personas)',
-      precio: '6,000', precio2: '6,000',
-      text: 'PROXIMAMENTE',
-      amenities: [],
+      id: 4, img: 'assets/img/GALERIA/dalia-1.jpeg', title: 'Dalia House', subtitle: 'Cabaña Grupal (9 Personas)',
+      precio: '7,500', precio2: '7,500',
+      text: `2 Habitaciónes: Cama matrimonial, Tv , Burós y Espejo.
+             2 Habitaciónes: Cama canguro , Tv y Cajonera.`,
+      amenities: [
+        '2 Baños completos',
+        'WIFI',
+        'Patio (Asador personal Weber, Toldo, mesa y sillas)',
+        'Cocina (Parrilla,microondas,cafetera y refrigerador)',
+        'Comedor (Mesa, Sillas y utensilios)',
+        'Sala (Tv y Sillas Sillon)',
+        '1 Sofá Cama'
+      ],
       fondo: this.BackImg()[1],
       fechaInicio: null as Date | null,
       fechaFin: null as Date | null
@@ -343,7 +352,7 @@ export class Reservations implements AfterViewInit {
   }
 
   aceptarTerminosYProceder() {
-    document.documentElement.style.overflow = '';
+  document.documentElement.style.overflow = '';
   document.body.style.overflow = '';
 // 1. Cerramos el modal
   this.showTerminosModal.set(false);
