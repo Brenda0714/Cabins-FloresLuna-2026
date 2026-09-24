@@ -1,0 +1,91 @@
+.text-title{
+font-family: 'Times New Roman', Times, serif;
+text-decoration: underline;
+font-size: 1.5em;
+font-weight: bold;
+color: #111111;
+justify-content: center;
+
+}
+
+.text-principal{
+font-family: 'Times New Roman', Times, serif;
+font-size: 1em;
+color: #111111;
+}
+
+.text-subtext{
+font-family: 'Times New Roman', Times, serif;
+font-size: 1em;
+color: #111111;
+font-weight: bold;
+}
+
+.declaraciones-container {
+  font-family: 'Times New Roman', Times, serif;
+  color: #111111;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.roman-numeral {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 1.1em;
+  font-weight: bold;
+  min-width: 25px;
+}
+
+/* Flexbox structure to keep roman numeral aligned */
+.section-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+.content-body {
+  flex: 1;
+}
+
+
+.letter-list {
+  margin: 0;
+  padding-left: 25px;
+  list-style-type: none;
+  counter-reset: custom-counter;
+}
+
+.letter-list li {
+  counter-increment: custom-counter;
+  margin-bottom: 6px;
+  text-align: justify;
+  position: relative;
+  padding-left: 30px;
+}
+
+.letter-list li::before {
+  content: counter(custom-counter, upper-alpha) ") ";
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.lower-alpha-list {
+  margin: 0;
+  padding-left: 25px;
+  list-style-type: none;
+  counter-reset: inciso-prohibido;
+}
+
+.lower-alpha-list li {
+  counter-increment: inciso-prohibido;
+  position: relative;
+  padding-left: 28px;
+  margin-bottom: 4px;
+}
+
+.lower-alpha-list li::before {
+  content: counter(inciso-prohibido, lower-alpha) ") ";
+  position: absolute;
+  left: 0;
+  top: 0;
+}

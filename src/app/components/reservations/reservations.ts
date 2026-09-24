@@ -7,13 +7,13 @@ import { Router } from '@angular/router';
 import { ReservaTransferService } from '../../services/reserva-transfer.service'; // Ajusta la ruta
 import { CabinCalendarComponent } from '../cabin-calendar/cabin-calendar.component';
 import { PromoService } from '../../services/promo.service';
-import { TermsConditions } from '../terms-conditions/terms-conditions'; // Ajusta la ruta
+import { TermsConditionsTemplate } from '../terms-conditions-template/terms-conditions-template'; // Ajusta la ruta
 
 
 @Component({
   selector: 'app-reservations',
   standalone: true,
-  imports: [DecimalPipe, CabinCalendarComponent, TermsConditions],
+  imports: [DecimalPipe, CabinCalendarComponent, TermsConditionsTemplate],
   templateUrl: './reservations.html',
   styleUrl: './reservations.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
